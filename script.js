@@ -4,10 +4,10 @@
    contact form, project modal, typing animation, etc.
    ============================================================ */
 
-// Initialize EmailJS
-emailjs.init('oq3QckoJwy4K07siy'); // Replace with your EmailJS Public Key
-
 document.addEventListener('DOMContentLoaded', () => {
+  // Initialize EmailJS
+  emailjs.init('oq3QckoJwy4K07siy');
+
   // ─── Year ───
   document.getElementById('year').textContent = new Date().getFullYear();
 

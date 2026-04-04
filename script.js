@@ -4,6 +4,9 @@
    contact form, project modal, typing animation, etc.
    ============================================================ */
 
+// Initialize EmailJS
+emailjs.init('oq3QckoJwy4K07siy'); // Replace with your EmailJS Public Key
+
 document.addEventListener('DOMContentLoaded', () => {
   // ─── Year ───
   document.getElementById('year').textContent = new Date().getFullYear();
@@ -265,12 +268,19 @@ document.addEventListener('DOMContentLoaded', () => {
         Sending...
       `;
 
-      setTimeout(() => {
+      // Send email using EmailJS
+      emailjs.send('service_oxo99ul', 'template_381oosj', {
+        from_name: nameVal,
+        from_email: emailVal,
+        subject: subjectVal,
+        message: messageVal,
+        to_email: 'paneslawrence8@gmail.com', // Replace with your email
+      }).then(() => {
         contactForm.style.display = 'none';
         formSuccess.classList.add('show');
         showToast('✅ Message sent successfully!');
 
-        // Store message in localStorage
+        // Store message in localStorage as backup
         const messages = JSON.parse(localStorage.getItem('portfolio_messages') || '[]');
         messages.push({
           name: nameVal,
@@ -280,7 +290,15 @@ document.addEventListener('DOMContentLoaded', () => {
           timestamp: new Date().toISOString(),
         });
         localStorage.setItem('portfolio_messages', JSON.stringify(messages));
-      }, 1500);
+      }).catch((error) => {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = `
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          Send Message
+        `;
+        showToast('❌ Failed to send message. Please try again.');
+        console.error('EmailJS Error:', error);
+      });
     }
   });
 

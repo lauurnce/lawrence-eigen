@@ -5,8 +5,12 @@
    ============================================================ */
 
 document.addEventListener('DOMContentLoaded', () => {
-  // Initialize EmailJS
-  emailjs.init('oq3QckoJwy4K07siy');
+  // Initialize EmailJS (with error handling)
+  if (typeof emailjs !== 'undefined') {
+    emailjs.init('oq3QckoJwy4K07siy');
+  } else {
+    console.warn('EmailJS library not loaded');
+  }
 
   // ─── Year ───
   document.getElementById('year').textContent = new Date().getFullYear();
@@ -268,14 +272,27 @@ document.addEventListener('DOMContentLoaded', () => {
         Sending...
       `;
 
+      // Check if EmailJS is available
+      if (typeof emailjs === 'undefined') {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = `
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          Send Message
+        `;
+        showToast('❌ Email service not available. Please try again later.');
+        console.error('EmailJS library not loaded');
+        return;
+      }
+
       // Send email using EmailJS
       emailjs.send('service_oxo99ul', 'template_381oosj', {
         from_name: nameVal,
         from_email: emailVal,
         subject: subjectVal,
         message: messageVal,
-        to_email: 'paneslawrence8@gmail.com', // Replace with your email
-      }).then(() => {
+        to_email: 'paneslawrence8@gmail.com',
+      }).then((response) => {
+        console.log('Email sent successfully:', response);
         contactForm.style.display = 'none';
         formSuccess.classList.add('show');
         showToast('✅ Message sent successfully!');
@@ -291,13 +308,13 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         localStorage.setItem('portfolio_messages', JSON.stringify(messages));
       }).catch((error) => {
+        console.error('EmailJS Error Details:', error);
         submitBtn.disabled = false;
         submitBtn.innerHTML = `
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
           Send Message
         `;
         showToast('❌ Failed to send message. Please try again.');
-        console.error('EmailJS Error:', error);
       });
     }
   });

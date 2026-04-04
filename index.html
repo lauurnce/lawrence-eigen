@@ -492,6 +492,16 @@
   <div class="toast" id="toast"></div>
 
   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/index.min.js"></script>
+  <script>
+    // Debug: Check if EmailJS loaded
+    window.addEventListener('load', () => {
+      if (typeof emailjs !== 'undefined') {
+        console.log('✅ EmailJS loaded successfully');
+      } else {
+        console.error('❌ EmailJS failed to load - check network');
+      }
+    });
+  </script>
   <script src="script.js"></script>
 </body>
 </html>

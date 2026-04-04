@@ -4,12 +4,20 @@
    contact form, project modal, typing animation, etc.
    ============================================================ */
 
+let emailjsReady = false;
+
 document.addEventListener('DOMContentLoaded', () => {
-  // Initialize EmailJS (with error handling)
+  // Initialize EmailJS (with better error handling)
   if (typeof emailjs !== 'undefined') {
-    emailjs.init('oq3QckoJwy4K07siy');
+    try {
+      emailjs.init('oq3QckoJwy4K07siy');
+      emailjsReady = true;
+      console.log('✅ EmailJS initialized successfully');
+    } catch (error) {
+      console.error('❌ EmailJS init error:', error);
+    }
   } else {
-    console.warn('EmailJS library not loaded');
+    console.warn('⚠️ EmailJS library not loaded yet, will retry on form submit');
   }
 
   // ─── Year ───
@@ -264,7 +272,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (valid) {
-      // Simulate form submission
       const submitBtn = contactForm.querySelector('button[type="submit"]');
       submitBtn.disabled = true;
       submitBtn.innerHTML = `
@@ -272,50 +279,68 @@ document.addEventListener('DOMContentLoaded', () => {
         Sending...
       `;
 
-      // Check if EmailJS is available
+      // Check if EmailJS is available, try to init if not
       if (typeof emailjs === 'undefined') {
+        console.error('EmailJS not available');
         submitBtn.disabled = false;
         submitBtn.innerHTML = `
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
           Send Message
         `;
-        showToast('❌ Email service not available. Please try again later.');
-        console.error('EmailJS library not loaded');
+        showToast('❌ Email service not available. Refresh page and try again.');
         return;
       }
 
-      // Send email using EmailJS
-      emailjs.send('service_oxo99ul', 'template_381oosj', {
-        from_name: nameVal,
-        from_email: emailVal,
-        subject: subjectVal,
-        message: messageVal,
-        to_email: 'paneslawrence8@gmail.com',
-      }).then((response) => {
-        console.log('Email sent successfully:', response);
-        contactForm.style.display = 'none';
-        formSuccess.classList.add('show');
-        showToast('✅ Message sent successfully!');
+      try {
+        // Try to initialize if not done yet
+        if (!emailjsReady) {
+          emailjs.init('oq3QckoJwy4K07siy');
+          emailjsReady = true;
+        }
 
-        // Store message in localStorage as backup
-        const messages = JSON.parse(localStorage.getItem('portfolio_messages') || '[]');
-        messages.push({
-          name: nameVal,
-          email: emailVal,
+        console.log('Sending email with data:', { from_name: nameVal, from_email: emailVal, subject: subjectVal });
+
+        // Send email using EmailJS
+        emailjs.send('service_oxo99ul', 'template_381oosj', {
+          from_name: nameVal,
+          from_email: emailVal,
           subject: subjectVal,
           message: messageVal,
-          timestamp: new Date().toISOString(),
+          to_email: 'paneslawrence8@gmail.com',
+        }).then((response) => {
+          console.log('✅ Email sent successfully:', response);
+          contactForm.style.display = 'none';
+          formSuccess.classList.add('show');
+          showToast('✅ Message sent successfully!');
+
+          // Store message in localStorage as backup
+          const messages = JSON.parse(localStorage.getItem('portfolio_messages') || '[]');
+          messages.push({
+            name: nameVal,
+            email: emailVal,
+            subject: subjectVal,
+            message: messageVal,
+            timestamp: new Date().toISOString(),
+          });
+          localStorage.setItem('portfolio_messages', JSON.stringify(messages));
+        }).catch((error) => {
+          console.error('❌ EmailJS Error:', error);
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = `
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            Send Message
+          `;
+          showToast(`❌ Failed to send message: ${error.text || error.message}`);
         });
-        localStorage.setItem('portfolio_messages', JSON.stringify(messages));
-      }).catch((error) => {
-        console.error('EmailJS Error Details:', error);
+      } catch (error) {
+        console.error('❌ Form submission error:', error);
         submitBtn.disabled = false;
         submitBtn.innerHTML = `
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
           Send Message
         `;
-        showToast('❌ Failed to send message. Please try again.');
-      });
+        showToast('❌ An error occurred. Please try again.');
+      }
     }
   });
 

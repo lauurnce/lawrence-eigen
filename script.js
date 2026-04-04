@@ -211,89 +211,9 @@ document.addEventListener('DOMContentLoaded', () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
 
-  // ─── Resume Button (Generate & Download) ───
-  document.getElementById('resumeBtn').addEventListener('click', (e) => {
-    e.preventDefault();
-    showToast('📄 Resume download starting...');
-
-    // Generate a simple resume text file
-    const resumeContent = `
-╔══════════════════════════════════════════════════════════════╗
-║                        LAWRENCE                              ║
-║              Full-Stack Developer & AI Engineer              ║
-╚══════════════════════════════════════════════════════════════╝
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-EXPERIENCE
-──────────
-
-► Senior Full-Stack Engineer | TechVanguard Solutions | 2022 — Present
-  • Leading the development of a cloud-native ERP platform
-  • Architected monolith to microservices transition (+40% deployment freq.)
-  • Managing cross-functional team of 8 engineers
-
-► Backend Developer | DataStream Corp | 2020 — 2022
-  • Optimized DB queries & API response times for high-traffic e-commerce
-  • Reduced latency by 150ms using Redis caching strategies
-  • Handled 2M+ daily requests
-
-► Junior Developer | NovaTech Labs | 2018 — 2020
-  • Built internal tooling dashboards
-  • Contributed to company's first React SPA (-60% page load time)
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-PROJECTS
-────────
-
-► HyperLedger Interface : Decentralized financial dashboard | Web3, React, Solidity
-► Nebula OS Kernel      : Experimental microkernel in Rust | Systems, Low-Level
-► Amber Flow UI         : Terminal-inspired design system | React, Figma
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-TECH STACK
-──────────
-
-Frontend  : React, Next.js, TypeScript, Vue.js, Tailwind CSS
-Backend   : Node.js, Express, Python, FastAPI, Rust, GraphQL
-DevOps    : Docker, Kubernetes, AWS, GCP, GitHub Actions, Terraform
-Data & AI : PostgreSQL, Redis, MongoDB, TensorFlow, PyTorch, LangChain
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-CERTIFICATIONS
-──────────────
-
-• AWS Solutions Architect – Professional (2024)
-• Google Cloud Professional Cloud Architect (2023)
-• Certified Kubernetes Administrator — CKA (2023)
-• TensorFlow Developer Certificate (2024)
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-CONTACT
-───────
-Email  : paneslawrence8@gmail.com
-GitHub : github.com/lauurnce
-LinkedIn : linkedin.com/in/lawrencepanes
-`.trim();
-
-    const blob = new Blob([resumeContent], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'Lawrence_Resume.txt';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-
-    setTimeout(() => showToast('✅ Resume downloaded!'), 1000);
-  });
-
   // ─── Contact Form Validation & Submission ───
+  const contactForm = document.getElementById('contactForm');
+  const formSuccess = document.getElementById('formSuccess');
   const contactForm = document.getElementById('contactForm');
   const formSuccess = document.getElementById('formSuccess');
 

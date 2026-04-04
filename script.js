@@ -214,8 +214,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // ─── Contact Form Validation & Submission ───
   const contactForm = document.getElementById('contactForm');
   const formSuccess = document.getElementById('formSuccess');
-  const contactForm = document.getElementById('contactForm');
-  const formSuccess = document.getElementById('formSuccess');
 
   contactForm.addEventListener('submit', (e) => {
     e.preventDefault();

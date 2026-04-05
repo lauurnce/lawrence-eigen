@@ -6,19 +6,49 @@
 
 let emailjsReady = false;
 
-document.addEventListener('DOMContentLoaded', () => {
-  // Initialize EmailJS (with better error handling)
-  if (typeof emailjs !== 'undefined') {
-    try {
-      emailjs.init('oq3QckoJwy4K07siy');
-      emailjsReady = true;
-      console.log('✅ EmailJS initialized successfully');
-    } catch (error) {
-      console.error('❌ EmailJS init error:', error);
+// Function to ensure EmailJS is ready
+function ensureEmailJSReady() {
+  return new Promise((resolve) => {
+    if (typeof emailjs !== 'undefined' && emailjs.init) {
+      if (!emailjsReady) {
+        try {
+          emailjs.init('oq3QckoJwy4K07siy');
+          emailjsReady = true;
+          console.log('✅ EmailJS initialized successfully');
+        } catch (error) {
+          console.error('❌ EmailJS init error:', error);
+        }
+      }
+      resolve(emailjsReady);
+    } else {
+      // Try loading EmailJS dynamically if not already loaded
+      console.warn('⚠️ EmailJS not found, attempting dynamic load...');
+      const script = document.createElement('script');
+      script.src = 'https://cdn.emailjs.com/dist/email.min.js';
+      script.onload = () => {
+        if (typeof emailjs !== 'undefined' && emailjs.init) {
+          try {
+            emailjs.init('oq3QckoJwy4K07siy');
+            emailjsReady = true;
+            console.log('✅ EmailJS dynamically loaded and initialized');
+          } catch (error) {
+            console.error('❌ EmailJS dynamic init error:', error);
+          }
+        }
+        resolve(emailjsReady);
+      };
+      script.onerror = () => {
+        console.error('❌ Failed to load EmailJS dynamically');
+        resolve(false);
+      };
+      document.head.appendChild(script);
     }
-  } else {
-    console.warn('⚠️ EmailJS library not loaded yet, will retry on form submit');
-  }
+  });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  // Try to initialize EmailJS
+  ensureEmailJSReady();
 
   // ─── Year ───
   document.getElementById('year').textContent = new Date().getFullYear();
@@ -279,68 +309,64 @@ document.addEventListener('DOMContentLoaded', () => {
         Sending...
       `;
 
-      // Check if EmailJS is available, try to init if not
-      if (typeof emailjs === 'undefined') {
-        console.error('EmailJS not available');
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = `
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-          Send Message
-        `;
-        showToast('❌ Email service not available. Refresh page and try again.');
-        return;
-      }
-
-      try {
-        // Try to initialize if not done yet
-        if (!emailjsReady) {
-          emailjs.init('oq3QckoJwy4K07siy');
-          emailjsReady = true;
-        }
-
-        console.log('Sending email with data:', { from_name: nameVal, from_email: emailVal, subject: subjectVal });
-
-        // Send email using EmailJS
-        emailjs.send('service_oxo99ul', 'template_381oosj', {
-          from_name: nameVal,
-          from_email: emailVal,
-          subject: subjectVal,
-          message: messageVal,
-          to_email: 'paneslawrence8@gmail.com',
-        }).then((response) => {
-          console.log('✅ Email sent successfully:', response);
-          contactForm.style.display = 'none';
-          formSuccess.classList.add('show');
-          showToast('✅ Message sent successfully!');
-
-          // Store message in localStorage as backup
-          const messages = JSON.parse(localStorage.getItem('portfolio_messages') || '[]');
-          messages.push({
-            name: nameVal,
-            email: emailVal,
-            subject: subjectVal,
-            message: messageVal,
-            timestamp: new Date().toISOString(),
-          });
-          localStorage.setItem('portfolio_messages', JSON.stringify(messages));
-        }).catch((error) => {
-          console.error('❌ EmailJS Error:', error);
+      // Ensure EmailJS is ready before sending
+      ensureEmailJSReady().then((ready) => {
+        if (!ready) {
+          console.error('EmailJS not available');
           submitBtn.disabled = false;
           submitBtn.innerHTML = `
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
             Send Message
           `;
-          showToast(`❌ Failed to send message: ${error.text || error.message}`);
-        });
-      } catch (error) {
-        console.error('❌ Form submission error:', error);
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = `
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-          Send Message
-        `;
-        showToast('❌ An error occurred. Please try again.');
-      }
+          showToast('❌ Email service not available. Refresh page and try again.');
+          return;
+        }
+
+        try {
+          console.log('Sending email with data:', { from_name: nameVal, from_email: emailVal, subject: subjectVal });
+
+          // Send email using EmailJS
+          emailjs.send('service_oxo99ul', 'template_381oosj', {
+            from_name: nameVal,
+            from_email: emailVal,
+            subject: subjectVal,
+            message: messageVal,
+            to_email: 'paneslawrence8@gmail.com',
+          }).then((response) => {
+            console.log('✅ Email sent successfully:', response);
+            contactForm.style.display = 'none';
+            formSuccess.classList.add('show');
+            showToast('✅ Message sent successfully!');
+
+            // Store message in localStorage as backup
+            const messages = JSON.parse(localStorage.getItem('portfolio_messages') || '[]');
+            messages.push({
+              name: nameVal,
+              email: emailVal,
+              subject: subjectVal,
+              message: messageVal,
+              timestamp: new Date().toISOString(),
+            });
+            localStorage.setItem('portfolio_messages', JSON.stringify(messages));
+          }).catch((error) => {
+            console.error('❌ EmailJS Error:', error);
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = `
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+              Send Message
+            `;
+            showToast(`❌ Failed to send message: ${error.text || error.message}`);
+          });
+        } catch (error) {
+          console.error('❌ Form submission error:', error);
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = `
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            Send Message
+          `;
+          showToast('❌ An error occurred. Please try again.');
+        }
+      });
     }
   });
 

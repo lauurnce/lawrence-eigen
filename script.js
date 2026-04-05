@@ -4,50 +4,40 @@
    contact form, project modal, typing animation, etc.
    ============================================================ */
 
+// EmailJS is initialized in HTML via ES module import
 let emailjsReady = false;
 
 // Function to ensure EmailJS is ready
 function ensureEmailJSReady() {
   return new Promise((resolve) => {
-    if (typeof emailjs !== 'undefined' && emailjs.init) {
-      if (!emailjsReady) {
-        try {
-          emailjs.init('oq3QckoJwy4K07siy');
-          emailjsReady = true;
-          console.log('✅ EmailJS initialized successfully');
-        } catch (error) {
-          console.error('❌ EmailJS init error:', error);
-        }
-      }
-      resolve(emailjsReady);
+    // Check if EmailJS is available from the module import
+    if (typeof window.emailjs !== 'undefined' && window.emailjs.send) {
+      emailjsReady = true;
+      console.log('✅ EmailJS v4 is ready');
+      resolve(true);
     } else {
-      // Try loading EmailJS dynamically if not already loaded
-      console.warn('⚠️ EmailJS not found, attempting dynamic load...');
-      const script = document.createElement('script');
-      script.src = 'https://cdn.emailjs.com/dist/email.min.js';
-      script.onload = () => {
-        if (typeof emailjs !== 'undefined' && emailjs.init) {
-          try {
-            emailjs.init('oq3QckoJwy4K07siy');
-            emailjsReady = true;
-            console.log('✅ EmailJS dynamically loaded and initialized');
-          } catch (error) {
-            console.error('❌ EmailJS dynamic init error:', error);
-          }
+      // Wait for EmailJS to load
+      let attempts = 0;
+      const maxAttempts = 10;
+      const checkInterval = setInterval(() => {
+        if (typeof window.emailjs !== 'undefined' && window.emailjs.send) {
+          emailjsReady = true;
+          console.log('✅ EmailJS v4 loaded and ready');
+          clearInterval(checkInterval);
+          resolve(true);
+        } else if (attempts >= maxAttempts) {
+          console.error('❌ EmailJS failed to load after multiple attempts');
+          clearInterval(checkInterval);
+          resolve(false);
         }
-        resolve(emailjsReady);
-      };
-      script.onerror = () => {
-        console.error('❌ Failed to load EmailJS dynamically');
-        resolve(false);
-      };
-      document.head.appendChild(script);
+        attempts++;
+      }, 100);
     }
   });
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  // Try to initialize EmailJS
+  // Ensure EmailJS is ready
   ensureEmailJSReady();
 
   // ─── Year ───

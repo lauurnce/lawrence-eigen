@@ -491,41 +491,14 @@
   <!-- ========== TOAST ========== -->
   <div class="toast" id="toast"></div>
 
-  <script async src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/index.min.js"></script>
-  <script async src="https://cdn.emailjs.com/dist/email.min.js"></script>
-  <script>
-    // Initialize EmailJS with proper loading detection
-    let emailjsLoadAttempts = 0;
-    const maxAttempts = 5;
+  <!-- EmailJS v4 (Latest) -->
+  <script type="module" async>
+    import emailjs from 'https://cdn.jsdelivr.net/npm/@emailjs/browser@4/+esm';
     
-    function initializeEmailJS() {
-      if (typeof emailjs !== 'undefined' && emailjs.init) {
-        try {
-          emailjs.init('oq3QckoJwy4K07siy');
-          console.log('✅ EmailJS initialized successfully');
-          window.emailjsInitialized = true;
-          return true;
-        } catch (error) {
-          console.error('❌ EmailJS init error:', error);
-        }
-      }
-      return false;
-    }
-    
-    function checkAndInitEmailJS() {
-      if (typeof emailjs !== 'undefined') {
-        initializeEmailJS();
-      } else if (emailjsLoadAttempts < maxAttempts) {
-        emailjsLoadAttempts++;
-        console.log(`⏳ EmailJS not ready yet (attempt ${emailjsLoadAttempts}/${maxAttempts}), retrying...`);
-        setTimeout(checkAndInitEmailJS, 500);
-      } else {
-        console.warn('⚠️ EmailJS failed to load after multiple attempts');
-      }
-    }
-    
-    checkAndInitEmailJS();
-    window.addEventListener('load', checkAndInitEmailJS);
+    // Initialize EmailJS with public key
+    emailjs.init('oq3QckoJwy4K07siy');
+    console.log('✅ EmailJS v4 initialized successfully');
+    window.emailjs = emailjs;
   </script>
   <script src="script.js"></script>
 </body>

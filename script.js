@@ -4,10 +4,42 @@
    contact form, project modal, typing animation, etc.
    ============================================================ */
 
-// Initialize EmailJS
-emailjs.init('oq3QckoJwy4K07siy'); // Replace with your EmailJS Public Key
+// EmailJS is initialized in HTML via ES module import
+let emailjsReady = false;
+
+// Function to ensure EmailJS is ready
+function ensureEmailJSReady() {
+  return new Promise((resolve) => {
+    // Check if EmailJS is available from the module import
+    if (typeof window.emailjs !== 'undefined' && window.emailjs.send) {
+      emailjsReady = true;
+      console.log('✅ EmailJS v4 is ready');
+      resolve(true);
+    } else {
+      // Wait for EmailJS to load
+      let attempts = 0;
+      const maxAttempts = 10;
+      const checkInterval = setInterval(() => {
+        if (typeof window.emailjs !== 'undefined' && window.emailjs.send) {
+          emailjsReady = true;
+          console.log('✅ EmailJS v4 loaded and ready');
+          clearInterval(checkInterval);
+          resolve(true);
+        } else if (attempts >= maxAttempts) {
+          console.error('❌ EmailJS failed to load after multiple attempts');
+          clearInterval(checkInterval);
+          resolve(false);
+        }
+        attempts++;
+      }, 100);
+    }
+  });
+}
 
 document.addEventListener('DOMContentLoaded', () => {
+  // Ensure EmailJS is ready
+  ensureEmailJSReady();
+
   // ─── Year ───
   document.getElementById('year').textContent = new Date().getFullYear();
 
@@ -260,7 +292,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (valid) {
-      // Simulate form submission
       const submitBtn = contactForm.querySelector('button[type="submit"]');
       submitBtn.disabled = true;
       submitBtn.innerHTML = `
@@ -268,36 +299,63 @@ document.addEventListener('DOMContentLoaded', () => {
         Sending...
       `;
 
-      // Send email using EmailJS
-      emailjs.send('service_oxo99ul', 'template_381oosj', {
-        from_name: nameVal,
-        from_email: emailVal,
-        subject: subjectVal,
-        message: messageVal,
-        to_email: 'paneslawrence8@gmail.com', // Replace with your email
-      }).then(() => {
-        contactForm.style.display = 'none';
-        formSuccess.classList.add('show');
-        showToast('✅ Message sent successfully!');
+      // Ensure EmailJS is ready before sending
+      ensureEmailJSReady().then((ready) => {
+        if (!ready) {
+          console.error('EmailJS not available');
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = `
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            Send Message
+          `;
+          showToast('❌ Email service not available. Refresh page and try again.');
+          return;
+        }
 
-        // Store message in localStorage as backup
-        const messages = JSON.parse(localStorage.getItem('portfolio_messages') || '[]');
-        messages.push({
-          name: nameVal,
-          email: emailVal,
-          subject: subjectVal,
-          message: messageVal,
-          timestamp: new Date().toISOString(),
-        });
-        localStorage.setItem('portfolio_messages', JSON.stringify(messages));
-      }).catch((error) => {
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = `
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-          Send Message
-        `;
-        showToast('❌ Failed to send message. Please try again.');
-        console.error('EmailJS Error:', error);
+        try {
+          console.log('Sending email with data:', { from_name: nameVal, from_email: emailVal, subject: subjectVal });
+
+          // Send email using EmailJS
+          emailjs.send('service_oxo99ul', 'template_381oosj', {
+            from_name: nameVal,
+            from_email: emailVal,
+            subject: subjectVal,
+            message: messageVal,
+            to_email: 'paneslawrence8@gmail.com',
+          }).then((response) => {
+            console.log('✅ Email sent successfully:', response);
+            contactForm.style.display = 'none';
+            formSuccess.classList.add('show');
+            showToast('✅ Message sent successfully!');
+
+            // Store message in localStorage as backup
+            const messages = JSON.parse(localStorage.getItem('portfolio_messages') || '[]');
+            messages.push({
+              name: nameVal,
+              email: emailVal,
+              subject: subjectVal,
+              message: messageVal,
+              timestamp: new Date().toISOString(),
+            });
+            localStorage.setItem('portfolio_messages', JSON.stringify(messages));
+          }).catch((error) => {
+            console.error('❌ EmailJS Error:', error);
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = `
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+              Send Message
+            `;
+            showToast(`❌ Failed to send message: ${error.text || error.message}`);
+          });
+        } catch (error) {
+          console.error('❌ Form submission error:', error);
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = `
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            Send Message
+          `;
+          showToast('❌ An error occurred. Please try again.');
+        }
       });
     }
   });

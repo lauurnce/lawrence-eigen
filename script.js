@@ -219,23 +219,6 @@ document.addEventListener('DOMContentLoaded', () => {
   );
   revealElements.forEach(el => revealObserver.observe(el));
 
-  // ─── Tech Stack Bar Animation ───
-  const stackBars = document.querySelectorAll('.stack-item__bar');
-  const barObserver = new IntersectionObserver(
-    (entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const bar = entry.target;
-          bar.style.width = bar.dataset.width + '%';
-          bar.classList.add('animate');
-          barObserver.unobserve(bar);
-        }
-      });
-    },
-    { threshold: 0.3 }
-  );
-  stackBars.forEach(bar => barObserver.observe(bar));
-
   // ─── Back to Top ───
   const backToTop = document.getElementById('backToTop');
   window.addEventListener('scroll', () => {

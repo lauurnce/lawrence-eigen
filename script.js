@@ -40,6 +40,52 @@ document.addEventListener('DOMContentLoaded', () => {
   // Ensure EmailJS is ready
   ensureEmailJSReady();
 
+  // ─── Certifications Data ───
+  const certifications = [
+    {
+      title: 'OCI 2025 Certified Generative AI Professional',
+      provider: 'Oracle Cloud Infrastructure',
+      year: '2025',
+      image: '/badges/oci-gen-ai.png',
+      verifyLink: 'https://catalog-education.oracle.com/ords/certview/sharebadge?id=3EB572DD3D34A43BCE970A54F66E101690930394DDA52A9F56A561783AFE6C58',
+    },
+    {
+      title: 'OCI 2025 Certified AI Foundations Associate',
+      provider: 'Oracle Cloud Infrastructure',
+      year: '2025',
+      image: '/badges/oci-ai-foundations.png',
+      verifyLink: 'https://catalog-education.oracle.com/ords/certview/sharebadge?id=FC015617CF2E6357A6D4A10F3744606B15038602579AABE43333216C5BFADE04',
+    },
+    {
+      title: 'Multicloud Network Associate',
+      provider: 'Aviatrix',
+      year: '2025',
+      image: '/badges/aviatrix-ace.png',
+      verifyLink: 'https://www.credly.com/badges/a90eb6d7-3f87-41c9-be3e-376f73ef7021/linked_in_profile',
+    },
+    {
+      title: 'Programming (JAVA) National Certificate (NCIII)',
+      provider: 'Technical Education and Skills Development Authority',
+      year: '2025',
+      image: '/badges/tesda-java.png',
+      verifyLink: '',
+    },
+    {
+      title: 'AI Fundamentals',
+      provider: 'DataCamp',
+      year: '2025',
+      image: '/badges/datacamp-ai.avif',
+      verifyLink: 'https://www.datacamp.com/skill-verification/AIF0022200308048',
+    },
+    {
+      title: 'Data Literacy',
+      provider: 'DataCamp',
+      year: '2025',
+      image: '/badges/datacamp-data.avif',
+      verifyLink: 'https://www.datacamp.com/skill-verification/DL0030908107146',
+    },
+  ];
+
   // ─── Year ───
   document.getElementById('year').textContent = new Date().getFullYear();
 
@@ -218,6 +264,37 @@ document.addEventListener('DOMContentLoaded', () => {
     { threshold: 0.15, rootMargin: '0px 0px -40px 0px' }
   );
   revealElements.forEach(el => revealObserver.observe(el));
+
+  // ─── Render Certification Badges ───
+  const certificationsList = document.getElementById('certificationsList');
+  if (certificationsList) {
+    certificationsList.innerHTML = certifications.map((cert, index) => {
+      const hasLink = !!cert.verifyLink;
+      const Tag = hasLink ? 'a' : 'div';
+      const delayClass = `reveal-delay-${(index % 4) + 1}`;
+      const linkAttrs = hasLink
+        ? `href="${cert.verifyLink}" target="_blank" rel="noopener noreferrer"`
+        : '';
+
+      const externalIcon = hasLink ? '<span class="cert-card__external" aria-hidden="true">↗</span>' : '';
+
+      return `
+        <${Tag} class="cert-card reveal ${delayClass}" ${linkAttrs}>
+          <div class="cert-card__badge">
+            <img src="${cert.image}" alt="${cert.title} badge" class="cert-card__badge-img" loading="lazy" />
+          </div>
+          <div class="cert-card__body">
+            <h4 class="cert-card__title">
+              ${cert.title}
+              ${externalIcon}
+            </h4>
+            <p class="cert-card__issuer">${cert.provider}</p>
+            <p class="cert-card__date">${cert.year}</p>
+          </div>
+        </${Tag}>
+      `;
+    }).join('');
+  }
 
   // ─── Back to Top ───
   const backToTop = document.getElementById('backToTop');

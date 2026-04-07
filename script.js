@@ -44,14 +44,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const certifications = [
     {
       title: 'OCI 2025 Certified Generative AI Professional',
-      provider: 'Oracle Cloud Infrastructure',
+      provider: 'Oracle Cloud Infrastructure (OCI)',
       year: '2025',
       image: '/badges/oci-gen-ai.png',
       verifyLink: 'https://catalog-education.oracle.com/ords/certview/sharebadge?id=3EB572DD3D34A43BCE970A54F66E101690930394DDA52A9F56A561783AFE6C58',
     },
     {
       title: 'OCI 2025 Certified AI Foundations Associate',
-      provider: 'Oracle Cloud Infrastructure',
+      provider: 'Oracle Cloud Infrastructure (OCI)',
       year: '2025',
       image: '/badges/oci-ai-foundations.png',
       verifyLink: 'https://catalog-education.oracle.com/ords/certview/sharebadge?id=FC015617CF2E6357A6D4A10F3744606B15038602579AABE43333216C5BFADE04',
@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
     },
     {
       title: 'Programming (JAVA) National Certificate (NCIII)',
-      provider: 'Technical Education and Skills Development Authority',
+      provider: 'Technical Education and Skills Development Authority (TESDA)',
       year: '2025',
       image: '/badges/tesda-java.png',
       verifyLink: '',
@@ -268,10 +268,11 @@ document.addEventListener('DOMContentLoaded', () => {
   // ─── Render Certification Badges ───
   const certificationsList = document.getElementById('certificationsList');
   if (certificationsList) {
+    certificationsList.textContent = 'Loading certifications...';
     certificationsList.innerHTML = certifications.map((cert, index) => {
       const hasLink = !!cert.verifyLink;
       const Tag = hasLink ? 'a' : 'div';
-      const delayClass = `reveal-delay-${(index % 4) + 1}`;
+      const delayClass = '';
       const linkAttrs = hasLink
         ? `href="${cert.verifyLink}" target="_blank" rel="noopener noreferrer"`
         : '';
@@ -279,7 +280,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const externalIcon = hasLink ? '<span class="cert-card__external" aria-hidden="true">↗</span>' : '';
 
       return `
-        <${Tag} class="cert-card reveal ${delayClass}" ${linkAttrs}>
+        <${Tag} class="cert-card ${delayClass}" ${linkAttrs}>
           <div class="cert-card__badge">
             <img src="${cert.image}" alt="${cert.title} badge" class="cert-card__badge-img" loading="lazy" />
           </div>
@@ -294,6 +295,8 @@ document.addEventListener('DOMContentLoaded', () => {
         </${Tag}>
       `;
     }).join('');
+
+    console.log(`✅ Certifications rendered: ${certifications.length}`);
   }
 
   // ─── Back to Top ───

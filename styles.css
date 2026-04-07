@@ -923,7 +923,10 @@ ul, ol {
     border-color var(--transition-base),
     background var(--transition-base);
   text-decoration: none;
-  height: 100%;
+  /* Avoid any collapse/visibility issues from percentage heights and reveal animations */
+  opacity: 1;
+  transform: none;
+  min-height: 280px;
 }
 
 .cert-card:hover {

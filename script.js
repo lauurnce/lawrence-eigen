@@ -432,50 +432,50 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ─── Project Modal ───
   const projectData = {
-    hyperledger: {
-      title: 'HyperLedger Interface',
-      desc: 'A decentralized financial dashboard for real-time asset tracking across multi-chain environments. Built for institutional scalability, this platform aggregates data from Ethereum, Polygon, and Solana into a unified view with sub-second refresh rates.',
-      image: 'assets/project-hyperledger.png',
-      tags: ['Web3', 'React', 'Solidity', 'Node.js', 'Ethers.js'],
+    kalinga: {
+      title: 'Kalinga',
+      desc: 'Kalinga (Filipino for "care") is a React Native app addressing unique mental health challenges faced by BPO agents working overnight shifts. Combines mood tracking, guided breathing exercises, sleep logging, and AI-driven peer support to help users build resilience against burnout, isolation, and circadian disruption.',
+      image: 'assets/project-kalinga.png',
+      tags: ['React Native', 'Expo', 'TypeScript', 'NativeWind', 'Supabase'],
       features: [
-        'Multi-chain wallet aggregation with real-time balance tracking',
-        'Smart contract interaction panel for DeFi protocols',
-        'Portfolio analytics with P&L tracking and risk scoring',
-        'WebSocket-powered live transaction feed',
-        'Role-based access control for institutional teams',
+        'Mood + sleep tracking with night-shift-aware analytics',
+        'Guided breathing & grounding exercises',
+        'AI companion for late-night check-ins',
+        'Anonymous peer support community',
+        'Supabase-backed secure profile + history',
       ],
-      liveUrl: '#',
-      sourceUrl: '#',
+      liveUrl: '',
+      sourceUrl: 'https://github.com/lauurnce/habi-4.0-ws-2026',
     },
-    nebula: {
-      title: 'Nebula OS Kernel',
-      desc: 'An experimental microkernel design written entirely in Rust, focusing on memory safety and isolated task execution for edge computing devices. Nebula implements a capability-based security model and a message-passing IPC system.',
-      image: 'assets/project-nebula.png',
-      tags: ['Rust', 'Systems Programming', 'Low-Level', 'Assembly'],
+    '02a-manila': {
+      title: 'Zero to Agent Manila — Official Website',
+      desc: 'Built and shipped the official Next.js site for Zero to Agent Manila 2026, an AI/agent developer event in the Philippines. Designed for fast load, mobile-first browsing, and conversion-driven CTAs covering schedule, speakers, venue, and registration.',
+      image: 'assets/project-02a-manila.png',
+      tags: ['Next.js', 'TypeScript', 'Tailwind CSS', 'Vercel'],
       features: [
-        'Capability-based security model for process isolation',
-        'Zero-copy message-passing IPC system',
-        'Custom memory allocator with deterministic latency',
-        'WASM runtime for sandboxed user-space applications',
-        'Tested on ARM Cortex-M and RISC-V targets',
+        'Responsive event landing with hero + agenda',
+        'Speaker and sponsor showcase',
+        'Registration CTA flow',
+        'Optimized SEO + OpenGraph cards',
+        'Deployed on Vercel edge',
       ],
-      liveUrl: '#',
-      sourceUrl: '#',
+      liveUrl: 'https://02a-manila-2026.vercel.app',
+      sourceUrl: 'https://github.com/lauurnce/02a-manila-2026',
     },
-    amberflow: {
-      title: 'Amber Flow UI',
-      desc: 'A proprietary design system focused on high-density data visualization and terminal-inspired aesthetics. Amber Flow provides 60+ production-ready components, a Figma plugin for design-to-code, and a Storybook documentation site.',
-      image: 'assets/project-amberflow.png',
-      tags: ['Design System', 'React', 'Figma', 'Storybook', 'CSS'],
+    greenproof: {
+      title: 'GreenProof',
+      desc: 'GreenProof tackles Quezon City\'s 2,500-metric-ton daily waste problem by incentivizing recycling at the barangay level. Residents earn Stellar XLM for verified plastic deposits (1kg = 1 Impact Point), with all transactions recorded on a transparent on-chain ledger. Barangays and LGUs manage collection points and verification, turning waste segregation into a community-owned economic system.',
+      image: 'assets/project-greenproof.png',
+      tags: ['Rust', 'Stellar', 'Soroban', 'Web3', 'TypeScript'],
       features: [
-        '60+ accessible, themeable React components',
-        'Figma plugin for automated design token sync',
-        'Dark and light mode support with dynamic palettes',
-        'Interactive Storybook playground with code examples',
-        'Performance-first: tree-shakable, < 30KB gzipped core',
+        'On-chain Impact Points ledger (Stellar Testnet)',
+        '1kg plastic = 1 XLM reward smart contract logic',
+        'Barangay/LGU verification + collection point management',
+        'Resident dashboard for tracking contributions',
+        'Transparent auditable rewards via Soroban',
       ],
-      liveUrl: '#',
-      sourceUrl: '#',
+      liveUrl: 'https://stellar.expert/explorer/testnet/contract/CCX4HEFCB4SJFG463AN2AC6C66MPKXRESVAI6YPHFNH4S63QRW476BLG',
+      sourceUrl: 'https://github.com/lauurnce/greenproof-ph',
     },
   };
 
@@ -493,8 +493,20 @@ document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('modalImage').alt = data.title;
       document.getElementById('modalTitle').textContent = data.title;
       document.getElementById('modalDesc').textContent = data.desc;
-      document.getElementById('modalLive').href = data.liveUrl;
-      document.getElementById('modalSource').href = data.sourceUrl;
+      const modalLive = document.getElementById('modalLive');
+      const modalSource = document.getElementById('modalSource');
+      if (data.liveUrl) {
+        modalLive.href = data.liveUrl;
+        modalLive.style.display = '';
+      } else {
+        modalLive.style.display = 'none';
+      }
+      if (data.sourceUrl) {
+        modalSource.href = data.sourceUrl;
+        modalSource.style.display = '';
+      } else {
+        modalSource.style.display = 'none';
+      }
 
       const tagsContainer = document.getElementById('modalTags');
       tagsContainer.innerHTML = data.tags.map(t =>

@@ -430,6 +430,22 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  // ─── Competition → Project cross-link highlight ───
+  document.querySelectorAll('.competition-item__project-link').forEach(link => {
+    link.addEventListener('click', () => {
+      const key = link.dataset.projectLink;
+      if (!key) return;
+      const card = document.querySelector(`.project-card[data-project="${key}"]`);
+      if (!card) return;
+      window.setTimeout(() => {
+        card.classList.add('project-card--highlight');
+        window.setTimeout(() => {
+          card.classList.remove('project-card--highlight');
+        }, 1500);
+      }, 400);
+    });
+  });
+
   // ─── Project Modal ───
   const projectData = {
     kalinga: {

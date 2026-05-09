@@ -432,17 +432,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ─── Competition → Project cross-link highlight ───
   document.querySelectorAll('.competition-item__project-link').forEach(link => {
-    link.addEventListener('click', () => {
+    link.addEventListener('click', (e) => {
       const key = link.dataset.projectLink;
       if (!key) return;
+      const projectsSection = document.getElementById('projects');
       const card = document.querySelector(`.project-card[data-project="${key}"]`);
-      if (!card) return;
+      if (!projectsSection || !card) return;
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      const header = projectsSection.querySelector('.section-header') || projectsSection;
+      const navHeight = nav.offsetHeight;
+      const top = header.getBoundingClientRect().top + window.pageYOffset - navHeight - 16;
+      window.scrollTo({ top, behavior: 'smooth' });
       window.setTimeout(() => {
         card.classList.add('project-card--highlight');
         window.setTimeout(() => {
           card.classList.remove('project-card--highlight');
         }, 1500);
-      }, 400);
+      }, 700);
     });
   });
 

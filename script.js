@@ -4,6 +4,26 @@
    contact form, project modal, typing animation, etc.
    ============================================================ */
 
+// ─── Loader (runs before DOMContentLoaded) ───
+;(function() {
+  const loader = document.getElementById('loader');
+  if (!loader) return;
+  if (sessionStorage.getItem('lp-visited')) {
+    loader.remove();
+    return;
+  }
+  sessionStorage.setItem('lp-visited', '1');
+  function hideLoader() {
+    loader.classList.add('hidden');
+    setTimeout(() => { if (loader.parentNode) loader.remove(); }, 550);
+  }
+  if (document.readyState === 'complete') {
+    setTimeout(hideLoader, 1400);
+  } else {
+    window.addEventListener('load', () => setTimeout(hideLoader, 1000));
+  }
+})();
+
 // EmailJS is initialized in HTML via ES module import
 let emailjsReady = false;
 

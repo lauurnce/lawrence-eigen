@@ -7,6 +7,13 @@
   <meta name="description" content="Lawrence — Full-Stack Developer & AI Engineer. Building high-performance applications from concept to deployment. Explore my projects, tech stack, and experience." />
   <meta name="theme-color" content="#0B0B10" />
   <link rel="stylesheet" href="styles.css" />
+  <script>
+    (function() {
+      if (localStorage.getItem('lp-theme') === 'light') {
+        document.documentElement.classList.add('light');
+      }
+    })();
+  </script>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>" />
 </head>
 <body>
@@ -14,6 +21,12 @@
   <div class="scroll-progress" id="scrollProgress"></div>
   <div class="cursor-dot" id="cursorDot" aria-hidden="true"></div>
   <div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
+  <div class="loader" id="loader" aria-hidden="true">
+    <div class="loader__inner">
+      <span class="loader__name">Lawrence</span>
+      <div class="loader__bar"></div>
+    </div>
+  </div>
   <!-- ========== NAVIGATION ========== -->
   <nav class="nav" id="nav">
     <div class="container nav__inner">

@@ -699,6 +699,132 @@ body.cursor-clicking .cursor-dot {
 }
 
 /* ============================================================
+   ABOUT SECTION
+   ============================================================ */
+.about__inner {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: var(--space-4xl);
+  align-items: center;
+}
+
+.about__photo-wrap {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.about__photo-frame {
+  width: 100%;
+  max-width: 340px;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  border-radius: var(--radius-md);
+  background: var(--surface-container);
+  border: 1px solid var(--outline-variant);
+  position: relative;
+}
+
+.about__photo-frame.no-photo::after {
+  content: 'LP';
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 6rem;
+  font-weight: 800;
+  color: var(--primary);
+  letter-spacing: -0.04em;
+  opacity: 0.25;
+}
+
+.about__photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  filter: grayscale(0.15);
+  transition: filter var(--transition-slow), transform var(--transition-slow);
+}
+
+.about__photo-frame:hover .about__photo {
+  filter: grayscale(0);
+  transform: scale(1.03);
+}
+
+.about__location-badge {
+  position: absolute;
+  bottom: -14px;
+  right: -14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 6px 14px;
+  background: var(--primary);
+  color: var(--on-primary);
+  border-radius: 999px;
+  border: 2px solid var(--surface-container-low);
+  white-space: nowrap;
+}
+
+.about__heading {
+  color: var(--on-surface);
+  margin: var(--space-md) 0 var(--space-xl);
+  line-height: 1.08;
+}
+
+.about__bio {
+  color: var(--on-surface-variant);
+  font-size: 1rem;
+  line-height: 1.8;
+  margin-bottom: var(--space-md);
+}
+
+.about__bio:last-of-type {
+  margin-bottom: 0;
+}
+
+.about__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  margin-top: var(--space-xl);
+}
+
+.about__tag {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  color: var(--on-surface-variant);
+  padding: 4px 12px;
+  border: 1px solid var(--outline-variant);
+  border-radius: 999px;
+  letter-spacing: 0.04em;
+}
+
+@media (max-width: 900px) {
+  .about__inner {
+    grid-template-columns: 1fr;
+    gap: var(--space-2xl);
+  }
+
+  .about__photo-wrap {
+    display: flex;
+    justify-content: center;
+  }
+
+  .about__photo-frame {
+    max-width: 240px;
+    aspect-ratio: 1;
+  }
+}
+
+/* ============================================================
    STATS STRIP
    ============================================================ */
 .section--stats {

@@ -36,6 +36,7 @@
       </a>
       <div class="nav__links" id="navLinks">
         <a href="#home" class="nav__link active" data-nav="home">Home</a>
+        <a href="#about" class="nav__link" data-nav="about">About</a>
         <a href="#projects" class="nav__link" data-nav="projects">Projects</a>
         <a href="#competitions" class="nav__link" data-nav="competitions">Competitions</a>
         <a href="#stack" class="nav__link" data-nav="stack">Stack</a>
@@ -89,6 +90,44 @@
     <div class="hero__scroll-hint">
       <span>scroll</span>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="7 13 12 18 17 13"/><polyline points="7 6 12 11 17 6"/></svg>
+    </div>
+  </section>
+
+  <!-- ========== ABOUT ========== -->
+  <section class="section section--alt" id="about">
+    <div class="container">
+      <div class="about__inner reveal">
+        <div class="about__photo-wrap">
+          <div class="about__photo-frame" id="aboutPhotoFrame">
+            <img
+              src="assets/profile.jpg"
+              alt="Lawrence Panes"
+              class="about__photo"
+              loading="lazy"
+              onerror="this.closest('.about__photo-frame').classList.add('no-photo'); this.remove();"
+            />
+          </div>
+          <div class="about__location-badge">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            Manila, PH
+          </div>
+        </div>
+        <div class="about__content">
+          <p class="section-header__label">About</p>
+          <h2 class="about__heading text-display-md">Building at the<br>intersection of AI<br>&amp; engineering.</h2>
+          <p class="about__bio">
+            I'm Lawrence Panes — a Filipino developer and AI engineer studying at the Polytechnic University of the Philippines in Manila. I lead AI initiatives for student tech organizations, ship production-grade applications, and compete in hackathons. Three wins in 2026 alone.
+          </p>
+          <p class="about__bio">
+            Outside the terminal I speak at workshops, mentor aspiring developers, and contribute to open-source data communities. I believe great engineering should create real, measurable impact — not just pass code review.
+          </p>
+          <div class="about__tags">
+            <span class="about__tag">PUP — B.S. Computer Science</span>
+            <span class="about__tag">AI Lead @ AWS Cloud Club PUP</span>
+            <span class="about__tag">Open to collaboration</span>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 

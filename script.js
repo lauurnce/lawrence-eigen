@@ -136,6 +136,46 @@ document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('scroll', updateActiveNav, { passive: true });
   updateActiveNav();
 
+  // ─── Custom Cursor ───
+  const cursorDot = document.getElementById('cursorDot');
+  const cursorRing = document.getElementById('cursorRing');
+  if (cursorDot && cursorRing && window.matchMedia('(hover: hover)').matches) {
+    let ringX = 0, ringY = 0, dotX = 0, dotY = 0;
+
+    window.addEventListener('mousemove', (e) => {
+      dotX = e.clientX;
+      dotY = e.clientY;
+      cursorDot.style.left = dotX + 'px';
+      cursorDot.style.top = dotY + 'px';
+    }, { passive: true });
+
+    (function animateRing() {
+      ringX += (dotX - ringX) * 0.1;
+      ringY += (dotY - ringY) * 0.1;
+      cursorRing.style.left = ringX + 'px';
+      cursorRing.style.top = ringY + 'px';
+      requestAnimationFrame(animateRing);
+    })();
+
+    const hoverSel = 'a, button, .project-card, .stack-pill, .cert-card, .leadership-card, input, textarea, [role="button"]';
+    document.addEventListener('mouseover', (e) => {
+      if (e.target.closest(hoverSel)) document.body.classList.add('cursor-hover');
+    });
+    document.addEventListener('mouseout', (e) => {
+      if (e.target.closest(hoverSel)) document.body.classList.remove('cursor-hover');
+    });
+    document.addEventListener('mousedown', () => document.body.classList.add('cursor-clicking'));
+    document.addEventListener('mouseup', () => document.body.classList.remove('cursor-clicking'));
+    document.addEventListener('mouseleave', () => {
+      cursorDot.style.opacity = '0';
+      cursorRing.style.opacity = '0';
+    });
+    document.addEventListener('mouseenter', () => {
+      cursorDot.style.opacity = '1';
+      cursorRing.style.opacity = '1';
+    });
+  }
+
   // ─── Scroll Progress Bar ───
   const scrollProgress = document.getElementById('scrollProgress');
   if (scrollProgress) {

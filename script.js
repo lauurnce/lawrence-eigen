@@ -218,6 +218,30 @@ document.addEventListener('DOMContentLoaded', () => {
     localStorage.setItem('lp-theme', isLight ? 'light' : 'dark');
   });
 
+  // ─── Stats Count-Up ───
+  const statNumbers = document.querySelectorAll('.stat-item__number[data-target]');
+  if (statNumbers.length) {
+    const countUpObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        const el = entry.target;
+        const target = parseInt(el.dataset.target, 10);
+        const duration = 1400;
+        const start = performance.now();
+        (function tick(now) {
+          const elapsed = now - start;
+          const t = Math.min(elapsed / duration, 1);
+          const eased = 1 - Math.pow(1 - t, 3);
+          el.textContent = Math.round(eased * target);
+          if (t < 1) requestAnimationFrame(tick);
+          else el.textContent = target;
+        })(performance.now());
+        countUpObserver.unobserve(el);
+      });
+    }, { threshold: 0.5 });
+    statNumbers.forEach(el => countUpObserver.observe(el));
+  }
+
   // ─── Scroll Reveal ───
   const revealElements = document.querySelectorAll('.reveal');
   const revealObserver = new IntersectionObserver(

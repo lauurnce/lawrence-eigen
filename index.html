@@ -5,11 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Lawrence | Full-Stack Developer &amp; AI Engineer</title>
   <meta name="description" content="Lawrence — Full-Stack Developer & AI Engineer. Building high-performance applications from concept to deployment. Explore my projects, tech stack, and experience." />
-  <meta name="theme-color" content="#131313" />
+  <meta name="theme-color" content="#0B0B10" />
   <link rel="stylesheet" href="styles.css" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>" />
 </head>
 <body>
+  <div class="grain" aria-hidden="true"></div>
+  <div class="scroll-progress" id="scrollProgress"></div>
   <!-- ========== NAVIGATION ========== -->
   <nav class="nav" id="nav">
     <div class="container nav__inner">
@@ -24,28 +26,36 @@
         <a href="#stack" class="nav__link" data-nav="stack">Stack</a>
         <a href="#experience" class="nav__link" data-nav="experience">Experience</a>
         <a href="#certifications" class="nav__link" data-nav="certifications">Certifications</a>
-        <a href="#contact" class="nav__cta" data-nav="contact">> Get in Touch</a>
+        <a href="#contact" class="nav__cta" data-nav="contact">Get in Touch</a>
       </div>
-      <button class="nav__toggle" id="navToggle" aria-label="Toggle navigation">
-        <span></span><span></span><span></span>
-      </button>
+      <div class="nav__controls">
+        <button class="nav__theme-toggle" id="themeToggle" aria-label="Toggle theme">
+          <svg class="theme-icon theme-icon--sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+          <svg class="theme-icon theme-icon--moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+        <button class="nav__toggle" id="navToggle" aria-label="Toggle navigation">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
     </div>
   </nav>
 
   <!-- ========== HERO ========== -->
   <section class="hero section" id="home">
     <div class="hero__bg">
-      <canvas id="heroCanvas"></canvas>
       <div class="hero__gradient hero__gradient--1"></div>
       <div class="hero__gradient hero__gradient--2"></div>
     </div>
     <div class="container">
       <div class="hero__content">
-        <p class="hero__tag" id="heroTag">initializing portfolio...</p>
+        <div class="hero__status">
+          <span class="hero__status-dot"></span>
+          Available for collaboration
+        </div>
         <h1 class="hero__name text-display-lg">
           <span>Lawrence</span>
         </h1>
-        <p class="hero__subtitle">Full-Stack Developer &amp; AI Engineer.</p>
+        <p class="hero__subtitle">Full-Stack Developer<br>&amp; AI Engineer</p>
         <p class="hero__desc">
           Great engineering is an evolution. I refine my craft bit by bit so that when we build together, we aren't just meeting today's standards—we're defining tomorrow's.
         </p>
@@ -56,7 +66,7 @@
           </a>
           <a href="#contact" class="btn btn--ghost">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-            > Let's Build Together
+            Let's Build Together
           </a>
         </div>
       </div>
@@ -71,7 +81,7 @@
   <section class="section section--alt" id="projects">
     <div class="container">
       <div class="section-header reveal">
-        <p class="section-header__label">02 // Projects</p>
+        <p class="section-header__label">Projects</p>
         <h2 class="section-header__title text-display-md">Featured Work</h2>
         <p class="section-header__desc">A selection of projects spanning decentralized finance, systems programming, and design engineering.</p>
       </div>
@@ -162,7 +172,7 @@
   <section class="section" id="competitions">
     <div class="container">
       <div class="section-header reveal">
-        <p class="section-header__label">03 // Competitions</p>
+        <p class="section-header__label">Competitions</p>
         <h2 class="section-header__title text-display-md">Wins &amp; Arenas</h2>
         <p class="section-header__desc">Hackathons, bootcamps, and innovation challenges where ideas were tested under pressure.</p>
       </div>
@@ -209,7 +219,7 @@
   <section class="section" id="stack">
     <div class="container">
       <div class="section-header reveal">
-        <p class="section-header__label">04 // Stack</p>
+        <p class="section-header__label">Stack</p>
         <h2 class="section-header__title text-display-md">Tech Arsenal</h2>
         <p class="section-header__desc">Tools and technologies I use daily to architect and ship production systems.</p>
       </div>
@@ -352,7 +362,7 @@
   <section class="section section--alt" id="experience">
     <div class="container">
       <div class="section-header reveal">
-        <p class="section-header__label">05 // Experience</p>
+        <p class="section-header__label">Experience</p>
         <h2 class="section-header__title text-display-md">Career Timeline</h2>
         <p class="section-header__desc">Building a strong foundation in developing meaningful and efficient applications</p>
       </div>
@@ -445,7 +455,7 @@
   <section class="section" id="certifications">
     <div class="container">
       <div class="section-header reveal">
-        <p class="section-header__label">06 // Certifications</p>
+        <p class="section-header__label">Certifications</p>
         <h2 class="section-header__title text-display-md">Credentials</h2>
         <p class="section-header__desc">Industry-recognized certifications validating expertise across AI, Data, and Cloud. Click on any badge to view the official verification.</p>
       </div>
@@ -458,7 +468,7 @@
   <section class="section section--alt" id="contact">
     <div class="container">
       <div class="section-header reveal">
-        <p class="section-header__label">07 // Contact</p>
+        <p class="section-header__label">Contact</p>
         <h2 class="section-header__title text-display-md">Let's Connect</h2>
         <p class="section-header__desc">Have a project in mind, or just want to chat about distributed systems? Drop me a line.</p>
       </div>
@@ -529,7 +539,7 @@
   <!-- ========== FOOTER ========== -->
   <footer class="footer">
     <div class="container footer__inner">
-      <p class="footer__copy">&copy; <span id="year"></span> Lawrence. Built with precision.</p>
+      <p class="footer__copy">&copy; <span id="year"></span> Lawrence Panes. Manila, Philippines.</p>
       <div class="footer__links">
         <a href="https://www.linkedin.com/in/lawrencepanes/" target="_blank" class="footer__link" aria-label="LinkedIn">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>

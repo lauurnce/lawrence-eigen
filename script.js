@@ -136,119 +136,27 @@ document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('scroll', updateActiveNav, { passive: true });
   updateActiveNav();
 
-  // ─── Hero Typing Animation ───
-  const heroTag = document.getElementById('heroTag');
-  const tagPhrases = [
-    'Full-Stack Developer & AI Engineer',
-    'Building scalable systems',
-    'Architecting the future',
-    'Open to collaboration',
-  ];
-  let phraseIndex = 0;
-  let charIndex = 0;
-  let isDeleting = false;
-  let typeTimeout;
-
-  function typeWriter() {
-    const currentPhrase = tagPhrases[phraseIndex];
-    if (isDeleting) {
-      heroTag.textContent = currentPhrase.substring(0, charIndex - 1);
-      charIndex--;
-    } else {
-      heroTag.textContent = currentPhrase.substring(0, charIndex + 1);
-      charIndex++;
-    }
-
-    let delay = isDeleting ? 40 : 70;
-
-    if (!isDeleting && charIndex === currentPhrase.length) {
-      delay = 2500;
-      isDeleting = true;
-    } else if (isDeleting && charIndex === 0) {
-      isDeleting = false;
-      phraseIndex = (phraseIndex + 1) % tagPhrases.length;
-      delay = 500;
-    }
-
-    typeTimeout = setTimeout(typeWriter, delay);
+  // ─── Scroll Progress Bar ───
+  const scrollProgress = document.getElementById('scrollProgress');
+  if (scrollProgress) {
+    window.addEventListener('scroll', () => {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+      scrollProgress.style.width = pct + '%';
+    }, { passive: true });
   }
-  typeWriter();
 
-  // ─── Particle Canvas (Hero Background) ───
-  const canvas = document.getElementById('heroCanvas');
-  if (canvas) {
-    const ctx = canvas.getContext('2d');
-    let particles = [];
-    let animFrame;
-
-    function resizeCanvas() {
-      canvas.width = canvas.offsetWidth * window.devicePixelRatio;
-      canvas.height = canvas.offsetHeight * window.devicePixelRatio;
-      ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
-    }
-
-    function createParticles() {
-      particles = [];
-      const count = Math.min(80, Math.floor((canvas.offsetWidth * canvas.offsetHeight) / 15000));
-      for (let i = 0; i < count; i++) {
-        particles.push({
-          x: Math.random() * canvas.offsetWidth,
-          y: Math.random() * canvas.offsetHeight,
-          vx: (Math.random() - 0.5) * 0.3,
-          vy: (Math.random() - 0.5) * 0.3,
-          radius: Math.random() * 1.5 + 0.5,
-          opacity: Math.random() * 0.4 + 0.1,
-        });
-      }
-    }
-
-    function drawParticles() {
-      ctx.clearRect(0, 0, canvas.offsetWidth, canvas.offsetHeight);
-      const w = canvas.offsetWidth;
-      const h = canvas.offsetHeight;
-
-      particles.forEach((p, i) => {
-        p.x += p.vx;
-        p.y += p.vy;
-        if (p.x < 0) p.x = w;
-        if (p.x > w) p.x = 0;
-        if (p.y < 0) p.y = h;
-        if (p.y > h) p.y = 0;
-
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(255, 183, 125, ${p.opacity})`;
-        ctx.fill();
-
-        // Draw connecting lines
-        for (let j = i + 1; j < particles.length; j++) {
-          const p2 = particles[j];
-          const dx = p.x - p2.x;
-          const dy = p.y - p2.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 120) {
-            ctx.beginPath();
-            ctx.moveTo(p.x, p.y);
-            ctx.lineTo(p2.x, p2.y);
-            ctx.strokeStyle = `rgba(255, 140, 0, ${0.06 * (1 - dist / 120)})`;
-            ctx.lineWidth = 0.5;
-            ctx.stroke();
-          }
-        }
-      });
-
-      animFrame = requestAnimationFrame(drawParticles);
-    }
-
-    resizeCanvas();
-    createParticles();
-    drawParticles();
-
-    window.addEventListener('resize', () => {
-      resizeCanvas();
-      createParticles();
-    });
+  // ─── Theme Toggle ───
+  const themeToggle = document.getElementById('themeToggle');
+  const savedTheme = localStorage.getItem('lp-theme');
+  if (savedTheme === 'light') {
+    document.documentElement.classList.add('light');
   }
+  themeToggle.addEventListener('click', () => {
+    const isLight = document.documentElement.classList.toggle('light');
+    localStorage.setItem('lp-theme', isLight ? 'light' : 'dark');
+  });
 
   // ─── Scroll Reveal ───
   const revealElements = document.querySelectorAll('.reveal');

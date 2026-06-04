@@ -160,22 +160,31 @@ document.addEventListener('DOMContentLoaded', () => {
   const cursorDot = document.getElementById('cursorDot');
   const cursorRing = document.getElementById('cursorRing');
   if (cursorDot && cursorRing && window.matchMedia('(hover: hover)').matches) {
-    let ringX = 0, ringY = 0, dotX = 0, dotY = 0;
+    const DOT_R  = 3;   // half of 6px dot
+    const RING_R = 16;  // half of 32px ring
 
+    let mouseX = 0, mouseY = 0;
+    let ringX  = 0, ringY  = 0;
+    let lastT  = performance.now();
+
+    // Dot: instant via transform — zero layout cost
     window.addEventListener('mousemove', (e) => {
-      dotX = e.clientX;
-      dotY = e.clientY;
-      cursorDot.style.left = dotX + 'px';
-      cursorDot.style.top = dotY + 'px';
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      cursorDot.style.transform = `translate(${mouseX - DOT_R}px, ${mouseY - DOT_R}px)`;
     }, { passive: true });
 
-    (function animateRing() {
-      ringX += (dotX - ringX) * 0.1;
-      ringY += (dotY - ringY) * 0.1;
-      cursorRing.style.left = ringX + 'px';
-      cursorRing.style.top = ringY + 'px';
+    // Ring: frame-rate-independent lerp (smooth at any hz)
+    (function animateRing(time) {
+      const dt     = Math.min(time - lastT, 50);
+      lastT        = time;
+      // alpha=0.18 @ 60fps — stays consistent at 30/60/120/144hz
+      const factor = 1 - Math.pow(0.82, dt / 16.67);
+      ringX += (mouseX - ringX) * factor;
+      ringY += (mouseY - ringY) * factor;
+      cursorRing.style.transform = `translate(${ringX - RING_R}px, ${ringY - RING_R}px)`;
       requestAnimationFrame(animateRing);
-    })();
+    })(performance.now());
 
     const hoverSel = 'a, button, .project-card, .stack-pill, .cert-card, .leadership-card, input, textarea, [role="button"]';
     document.addEventListener('mouseover', (e) => {
@@ -185,7 +194,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (e.target.closest(hoverSel)) document.body.classList.remove('cursor-hover');
     });
     document.addEventListener('mousedown', () => document.body.classList.add('cursor-clicking'));
-    document.addEventListener('mouseup', () => document.body.classList.remove('cursor-clicking'));
+    document.addEventListener('mouseup',   () => document.body.classList.remove('cursor-clicking'));
     document.addEventListener('mouseleave', () => {
       cursorDot.style.opacity = '0';
       cursorRing.style.opacity = '0';

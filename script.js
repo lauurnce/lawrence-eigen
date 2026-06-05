@@ -517,6 +517,7 @@ document.addEventListener('DOMContentLoaded', () => {
         'assets/competitions/habi40/2.jpg',
         'assets/competitions/habi40/3.jpg',
         'assets/competitions/habi40/4.jpg',
+        'assets/competitions/habi40/5.jpg',
       ],
       story: `Built Kalinga, a React Native mental wellness app targeting graveyard-shift BPO agents in the Philippines — one of the country's largest workforce segments facing burnout, isolation, and circadian disruption.\n\nOur team designed the app around night-shift cycles: mood check-ins timed to shift start/end, AI-guided breathing exercises at 3AM, and an anonymous peer support community for workers who can't talk to anyone at that hour.\n\nWe were awarded 2nd Place among competing teams at the Presidential Annual Innovation Hackathon (HABI 4.0), a nationwide competition held at the Malacañang grounds.`,
       projectLink: '#projects', projectLinkText: 'View Project: Kalinga',
@@ -595,9 +596,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function setHeroImage(src) {
     galleryHeroImg.classList.add('fading');
+    const heroBg = document.getElementById('galleryHeroBg');
     setTimeout(() => {
       galleryHeroImg.src = src;
-      galleryHero.classList.remove('no-img');
+      galleryHero.classList.remove('no-img', 'portrait-active');
+      if (heroBg) heroBg.style.backgroundImage = `url('${src}')`;
+      galleryHeroImg.onload = () => {
+        if (galleryHeroImg.naturalHeight > galleryHeroImg.naturalWidth) {
+          galleryHero.classList.add('portrait-active');
+        }
+      };
       galleryHeroImg.onerror = () => galleryHero.classList.add('no-img');
       galleryHeroImg.classList.remove('fading');
     }, 200);

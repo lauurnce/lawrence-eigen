@@ -519,7 +519,7 @@ document.addEventListener('DOMContentLoaded', () => {
         'assets/competitions/habi40/4.jpg',
         'assets/competitions/habi40/5.jpg',
       ],
-      story: `Built Kalinga, a React Native mental wellness app targeting graveyard-shift BPO agents in the Philippines — one of the country's largest workforce segments facing burnout, isolation, and circadian disruption.\n\nOur team designed the app around night-shift cycles: mood check-ins timed to shift start/end, AI-guided breathing exercises at 3AM, and an anonymous peer support community for workers who can't talk to anyone at that hour.\n\nWe were awarded 2nd Place among competing teams at the Presidential Annual Innovation Hackathon (HABI 4.0), a nationwide competition held at the Malacañang grounds.`,
+      story: `The core problem we solved: BPO agents wait days — sometimes weeks — just to get a Letter of Authority (LOA) from their HMO before they can see a doctor. When the issue is mental health, that wait is dangerous.\n\nKalinga cuts that entire pipeline. The app has a built-in triage system that initially assesses the agent's condition — severity, urgency, type of concern. Once the app determines the LOA is warranted, it facilitates approval and directly connects the agent to their HMO provider. No paperwork lag. No waiting on HR to process a referral at 3AM.\n\nWe designed everything around the night-shift reality: triage prompts timed to shift start and end, AI-guided check-ins at peak burnout hours, and an anonymous peer support layer for agents who can't reach anyone mid-shift.\n\nAwarded 2nd Place at the Presidential Annual Innovation Hackathon (HABI 4.0), a nationwide competition held at the Malacañang grounds.`,
       projectLink: '#projects', projectLinkText: 'View Project: Kalinga',
     },
     zerovector: {
@@ -531,19 +531,15 @@ document.addEventListener('DOMContentLoaded', () => {
         'assets/competitions/zerovector/2.jpg',
         'assets/competitions/zerovector/3.jpg',
       ],
-      story: `Competed as a duo in the first venture capital hackathon held in the Philippines — Zero Vector Ventures Hackathon — securing 3rd Place among competing teams.\n\nThe challenge: build a VC-ready startup pitch backed by a working prototype within the hackathon timeframe. Building as a two-person team against larger groups made the podium finish especially meaningful.\n\nThe experience sharpened how I think about product-market fit, investor storytelling, and shipping under pressure.`,
+      story: `Competed as a duo at Zero Vector Ventures — the first venture capital hackathon in the Philippines — and placed 3rd.\n\nOur task wasn't just to build a product. It was to prove a problem is venture backable: real, large, and significant enough that investors should care.\n\nWe made the case around BPO companies and the financial hemorrhage caused by mental health issues in the workforce. The data is stark — Philippine BPOs lose significant revenue annually to absenteeism, turnover, and productivity loss directly tied to unaddressed mental health. The root cause: triage systems are broken. Agents wait weeks for LOA approvals just to access their HMO benefits, by which point the damage is already done.\n\nWe proved the problem size, quantified the loss, and showed that the status quo is too costly to ignore — the exact framing that makes a problem fundable.`,
       projectLink: '', projectLinkText: '',
     },
     stellar: {
       title: 'Stellar PH Online Bootcamp',
       date: 'Mar 2026',
       badge: 'gold', badgeText: 'Winner',
-      images: [
-        'assets/competitions/stellar/1.jpg',
-        'assets/competitions/stellar/2.jpg',
-        'assets/competitions/stellar/3.jpg',
-      ],
-      story: `Won the Stellar Philippines Web3/Blockchain online bootcamp by shipping GreenProof — a Recycle-to-Earn smart contract system built on Stellar Soroban using Rust.\n\nGreenProof addresses Quezon City's 2,500 metric-ton daily waste problem by incentivizing recycling at the barangay level. Residents earn Stellar XLM for verified plastic deposits: 1kg = 1 Impact Point = 1 XLM on the Stellar testnet.\n\nThe smart contract is fully deployed, auditable on-chain, and the first Rust/Soroban project I shipped end-to-end.`,
+      images: [],
+      story: `Won the Stellar Philippines Web3/Blockchain online bootcamp by shipping GreenProof — a Recycle-to-Earn smart contract built on Stellar Soroban using Rust.\n\nQuezon City generates over 2,500 metric tons of solid waste daily, collected only twice a week, with almost no incentive for residents to segregate properly. GreenProof flips that dynamic: residents bring recyclables to verified collection points, local partners weigh and record the deposit on-chain as Impact Points (1kg = 1 point), and XLM rewards are deposited directly to the resident's Stellar wallet.\n\nEvery transaction is auditable on the Stellar testnet — no trust required from the barangay or the LGU. The smart contract (CCX4HEFCB4SJFG463AN2AC6C66MPKXRESVAI6YPHFNH4S63QRW476BLG) handles reward logic end-to-end in Rust, deployed via Soroban. First time I shipped a production smart contract from scratch.`,
       projectLink: '#projects', projectLinkText: 'View Project: GreenProof',
     },
   };
@@ -652,7 +648,13 @@ document.addEventListener('DOMContentLoaded', () => {
       galleryProjectLink.style.display = 'none';
     }
 
-    renderGallery();
+    const hasImages = galleryImages.length > 0;
+    galleryHero.style.display    = hasImages ? '' : 'none';
+    galleryThumbs.style.display  = hasImages ? '' : 'none';
+    document.getElementById('galleryPrev').style.display    = hasImages ? '' : 'none';
+    document.getElementById('galleryNext').style.display    = hasImages ? '' : 'none';
+    document.getElementById('galleryCounter').style.display = hasImages ? '' : 'none';
+    if (hasImages) renderGallery();
     galleryOverlay.classList.add('open');
     document.body.style.overflow = 'hidden';
   }

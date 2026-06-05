@@ -2190,6 +2190,27 @@ html.light .competition-item__dot {
   color: var(--outline);
 }
 
+.competition-item__story-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 0.5625rem;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--on-surface-variant);
+  border: 1px solid var(--outline-variant);
+  padding: 4px 12px;
+  border-radius: 999px;
+  margin-top: var(--space-md);
+  transition: color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.competition-item[data-competition]:hover .competition-item__story-hint {
+  color: var(--primary);
+  border-color: var(--outline);
+}
+
 .competition-item__photo-hint {
   position: absolute;
   bottom: var(--space-sm);

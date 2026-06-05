@@ -2240,10 +2240,14 @@ html.light .competition-item__dot {
 /* ============================================================
    LEADERSHIP CARD — SPEAKING IMAGE
    ============================================================ */
+.leadership-card.has-photo,
 .leadership-card.has-gallery {
-  cursor: pointer;
   padding: 0;
   overflow: hidden;
+}
+
+.leadership-card.has-gallery {
+  cursor: pointer;
 }
 
 .leadership-card__img-wrap {
@@ -2285,6 +2289,7 @@ html.light .competition-item__dot {
   pointer-events: none;
 }
 
+.leadership-card.has-photo .leadership-card__inner,
 .leadership-card.has-gallery .leadership-card__inner {
   padding: var(--space-xl);
 }

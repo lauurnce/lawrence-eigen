@@ -1829,8 +1829,9 @@ body.cursor-clicking .cursor-dot {
 }
 
 @media (max-width: 480px) {
-  .text-display-lg {
-    font-size: clamp(3rem, 16vw, 5rem);
+  /* "Law" on mobile — full name on desktop */
+  .name-suffix {
+    display: none;
   }
 
   .hero__actions {

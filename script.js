@@ -551,9 +551,7 @@ document.addEventListener('DOMContentLoaded', () => {
       date: 'Speaker',
       badge: null,
       images: [
-        'assets/speaking/acm/1.jpg',
-        'assets/speaking/acm/2.jpg',
-        'assets/speaking/acm/3.jpg',
+        'assets/leadership/feu tech/download.jpg',
       ],
       story: `Invited as resource speaker at the ACM Core VerteX event held at FEU Institute of Technology. Delivered a tech talk to 40+ students covering practical AI concepts and modern development workflows.\n\nFacilitated a hands-on build-along session using AWS PartyRock, guiding participants through building their first AI-powered application without writing code.\n\nThe session was designed to lower the barrier to AI experimentation for students at any skill level — showing that you don't need to be a machine learning expert to ship something real with AI.`,
       projectLink: '', projectLinkText: '',
@@ -563,8 +561,7 @@ document.addEventListener('DOMContentLoaded', () => {
       date: 'Speaker',
       badge: null,
       images: [
-        'assets/speaking/aimaxxin/1.jpg',
-        'assets/speaking/aimaxxin/2.jpg',
+        'assets/leadership/ai maxxin/1.jpg',
       ],
       story: `Featured as technical speaker at the AI Maxxin on-site workshop, instructing over 60 participants on advanced Prompt Engineering techniques and practical applications of Langflow.\n\nCovered prompt chaining, context management, and building agentic workflows — translating complex AI concepts into immediately actionable skills.\n\nLangflow demonstrations showed how to build multi-step AI pipelines visually, empowering non-developers to create production-ready AI applications without writing backend code.`,
       projectLink: '', projectLinkText: '',

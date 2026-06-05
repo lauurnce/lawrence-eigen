@@ -503,6 +503,203 @@ document.addEventListener('DOMContentLoaded', () => {
     },
   };
 
+
+
+  
+  // ─── Competition Gallery Data ───
+  const competitionGalleryData = {
+    habi40: {
+      title: 'Presidential Annual Innovation Hackathon (HABI 4.0)',
+      date: 'Apr 2026',
+      badge: 'silver', badgeText: '2nd Place',
+      images: [
+        'assets/competitions/habi40/1.jpg',
+        'assets/competitions/habi40/2.jpg',
+        'assets/competitions/habi40/3.jpg',
+        'assets/competitions/habi40/4.jpg',
+      ],
+      story: `Built Kalinga, a React Native mental wellness app targeting graveyard-shift BPO agents in the Philippines — one of the country's largest workforce segments facing burnout, isolation, and circadian disruption.\n\nOur team designed the app around night-shift cycles: mood check-ins timed to shift start/end, AI-guided breathing exercises at 3AM, and an anonymous peer support community for workers who can't talk to anyone at that hour.\n\nWe were awarded 2nd Place among competing teams at the Presidential Annual Innovation Hackathon (HABI 4.0), a nationwide competition held at the Malacañang grounds.`,
+      projectLink: '#projects', projectLinkText: 'View Project: Kalinga',
+    },
+    zerovector: {
+      title: 'Zero Vector Ventures Hackathon',
+      date: 'Mar 2026',
+      badge: 'bronze', badgeText: '3rd Place',
+      images: [
+        'assets/competitions/zerovector/1.jpg',
+        'assets/competitions/zerovector/2.jpg',
+        'assets/competitions/zerovector/3.jpg',
+      ],
+      story: `Competed as a duo in the first venture capital hackathon held in the Philippines — Zero Vector Ventures Hackathon — securing 3rd Place among competing teams.\n\nThe challenge: build a VC-ready startup pitch backed by a working prototype within the hackathon timeframe. Building as a two-person team against larger groups made the podium finish especially meaningful.\n\nThe experience sharpened how I think about product-market fit, investor storytelling, and shipping under pressure.`,
+      projectLink: '', projectLinkText: '',
+    },
+    stellar: {
+      title: 'Stellar PH Online Bootcamp',
+      date: 'Mar 2026',
+      badge: 'gold', badgeText: 'Winner',
+      images: [
+        'assets/competitions/stellar/1.jpg',
+        'assets/competitions/stellar/2.jpg',
+        'assets/competitions/stellar/3.jpg',
+      ],
+      story: `Won the Stellar Philippines Web3/Blockchain online bootcamp by shipping GreenProof — a Recycle-to-Earn smart contract system built on Stellar Soroban using Rust.\n\nGreenProof addresses Quezon City's 2,500 metric-ton daily waste problem by incentivizing recycling at the barangay level. Residents earn Stellar XLM for verified plastic deposits: 1kg = 1 Impact Point = 1 XLM on the Stellar testnet.\n\nThe smart contract is fully deployed, auditable on-chain, and the first Rust/Soroban project I shipped end-to-end.`,
+      projectLink: '#projects', projectLinkText: 'View Project: GreenProof',
+    },
+  };
+
+  // ─── Speaking Gallery Data ───
+  const speakingGalleryData = {
+    acm: {
+      title: 'Resource Speaker — ACM Core VerteX @ FEU Institute of Technology',
+      date: 'Speaker',
+      badge: null,
+      images: [
+        'assets/speaking/acm/1.jpg',
+        'assets/speaking/acm/2.jpg',
+        'assets/speaking/acm/3.jpg',
+      ],
+      story: `Invited as resource speaker at the ACM Core VerteX event held at FEU Institute of Technology. Delivered a tech talk to 40+ students covering practical AI concepts and modern development workflows.\n\nFacilitated a hands-on build-along session using AWS PartyRock, guiding participants through building their first AI-powered application without writing code.\n\nThe session was designed to lower the barrier to AI experimentation for students at any skill level — showing that you don't need to be a machine learning expert to ship something real with AI.`,
+      projectLink: '', projectLinkText: '',
+    },
+    aimaxxin: {
+      title: 'Technical Speaker — AI Maxxin On-Site Workshop',
+      date: 'Speaker',
+      badge: null,
+      images: [
+        'assets/speaking/aimaxxin/1.jpg',
+        'assets/speaking/aimaxxin/2.jpg',
+      ],
+      story: `Featured as technical speaker at the AI Maxxin on-site workshop, instructing over 60 participants on advanced Prompt Engineering techniques and practical applications of Langflow.\n\nCovered prompt chaining, context management, and building agentic workflows — translating complex AI concepts into immediately actionable skills.\n\nLangflow demonstrations showed how to build multi-step AI pipelines visually, empowering non-developers to create production-ready AI applications without writing backend code.`,
+      projectLink: '', projectLinkText: '',
+    },
+  };
+
+  // ─── Gallery Modal Logic ───
+  const galleryOverlay    = document.getElementById('galleryOverlay');
+  const galleryHero       = document.getElementById('galleryHero');
+  const galleryHeroImg    = document.getElementById('galleryHeroImg');
+  const galleryThumbs     = document.getElementById('galleryThumbs');
+  const galleryCounter    = document.getElementById('galleryCounter');
+  const galleryTitle      = document.getElementById('galleryTitle');
+  const galleryStory      = document.getElementById('galleryStory');
+  const galleryDate       = document.getElementById('galleryDate');
+  const galleryBadge      = document.getElementById('galleryBadge');
+  const galleryProjectLink     = document.getElementById('galleryProjectLink');
+  const galleryProjectLinkText = document.getElementById('galleryProjectLinkText');
+  const galleryPrev       = document.getElementById('galleryPrev');
+  const galleryNext       = document.getElementById('galleryNext');
+  const galleryClose      = document.getElementById('galleryClose');
+
+  let galleryImages = [];
+  let galleryIdx    = 0;
+
+  function setHeroImage(src) {
+    galleryHeroImg.classList.add('fading');
+    setTimeout(() => {
+      galleryHeroImg.src = src;
+      galleryHero.classList.remove('no-img');
+      galleryHeroImg.onerror = () => galleryHero.classList.add('no-img');
+      galleryHeroImg.classList.remove('fading');
+    }, 200);
+  }
+
+  function renderGallery() {
+    setHeroImage(galleryImages[galleryIdx] || '');
+    galleryCounter.textContent = `${galleryIdx + 1} / ${galleryImages.length}`;
+    galleryPrev.disabled = galleryIdx === 0;
+    galleryNext.disabled = galleryIdx === galleryImages.length - 1;
+
+    galleryThumbs.textContent = '';
+    galleryImages.forEach((src, i) => {
+      const thumb = document.createElement('img');
+      thumb.src      = src;
+      thumb.alt      = `Photo ${i + 1}`;
+      thumb.loading  = 'lazy';
+      thumb.className = 'gallery-thumb' + (i === galleryIdx ? ' active' : '');
+      thumb.addEventListener('click', () => { galleryIdx = i; renderGallery(); });
+      galleryThumbs.appendChild(thumb);
+    });
+  }
+
+  function openGallery(data) {
+    galleryImages = data.images || [];
+    galleryIdx    = 0;
+    galleryTitle.textContent = data.title;
+    galleryStory.textContent = data.story || '';
+    galleryDate.textContent  = data.date  || '';
+
+    if (data.badgeText) {
+      galleryBadge.textContent  = data.badgeText;
+      galleryBadge.className    = `status-badge status-badge--${data.badge}`;
+      galleryBadge.style.display = '';
+    } else {
+      galleryBadge.style.display = 'none';
+    }
+
+    if (data.projectLink) {
+      galleryProjectLink.href             = data.projectLink;
+      galleryProjectLinkText.textContent  = data.projectLinkText;
+      galleryProjectLink.style.display    = '';
+    } else {
+      galleryProjectLink.style.display = 'none';
+    }
+
+    renderGallery();
+    galleryOverlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeGallery() {
+    galleryOverlay.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  galleryPrev.addEventListener('click', () => { if (galleryIdx > 0) { galleryIdx--; renderGallery(); } });
+  galleryNext.addEventListener('click', () => { if (galleryIdx < galleryImages.length - 1) { galleryIdx++; renderGallery(); } });
+  galleryClose.addEventListener('click', closeGallery);
+  galleryOverlay.addEventListener('click', (e) => { if (e.target === galleryOverlay) closeGallery(); });
+
+  // Keyboard nav
+  document.addEventListener('keydown', (e) => {
+    if (!galleryOverlay.classList.contains('open')) return;
+    if (e.key === 'Escape')      closeGallery();
+    if (e.key === 'ArrowLeft'  && galleryIdx > 0)                       { galleryIdx--; renderGallery(); }
+    if (e.key === 'ArrowRight' && galleryIdx < galleryImages.length - 1) { galleryIdx++; renderGallery(); }
+  });
+
+  // Touch swipe (mobile)
+  let touchStartX = 0;
+  galleryOverlay.addEventListener('touchstart', (e) => { touchStartX = e.touches[0].clientX; }, { passive: true });
+  galleryOverlay.addEventListener('touchend', (e) => {
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    if (Math.abs(dx) < 40) return;
+    if (dx < 0 && galleryIdx < galleryImages.length - 1) { galleryIdx++; renderGallery(); }
+    if (dx > 0 && galleryIdx > 0)                        { galleryIdx--; renderGallery(); }
+  }, { passive: true });
+
+  // Competition items → gallery
+  document.querySelectorAll('.competition-item[data-competition]').forEach(item => {
+    item.addEventListener('click', (e) => {
+      if (e.target.closest('.competition-item__project-link')) return;
+      const data = competitionGalleryData[item.dataset.competition];
+      if (data) openGallery(data);
+    });
+    item.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); item.click(); }
+    });
+  });
+
+  // Speaking cards → gallery
+  document.querySelectorAll('.leadership-card[data-speaking]').forEach(card => {
+    card.addEventListener('click', () => {
+      const data = speakingGalleryData[card.dataset.speaking];
+      if (data) openGallery(data);
+    });
+    card.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); card.click(); }
+    });
+  });
+
   const modalOverlay = document.getElementById('modalOverlay');
   const modal = document.getElementById('modal');
   const modalClose = document.getElementById('modalClose');

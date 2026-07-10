@@ -13,15 +13,21 @@
     return;
   }
   sessionStorage.setItem('lp-visited', '1');
+  let hidden = false;
   function hideLoader() {
+    if (hidden) return;
+    hidden = true;
     loader.classList.add('hidden');
     setTimeout(() => { if (loader.parentNode) loader.remove(); }, 550);
   }
-  if (document.readyState === 'complete') {
-    setTimeout(hideLoader, 1400);
+  // Short brand beat only — never wait on images/fonts (window.load).
+  if (document.readyState !== 'loading') {
+    setTimeout(hideLoader, 750);
   } else {
-    window.addEventListener('load', () => setTimeout(hideLoader, 1000));
+    document.addEventListener('DOMContentLoaded', () => setTimeout(hideLoader, 750));
   }
+  // Failsafe: the page is never stuck behind the loader.
+  setTimeout(hideLoader, 2500);
 })();
 
 // EmailJS is initialized in HTML via ES module import

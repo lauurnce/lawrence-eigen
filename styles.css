@@ -174,7 +174,7 @@ ul, ol {
   display: block;
   opacity: 0;
   transform: translateY(16px);
-  animation: loader-rise 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.15s forwards;
+  animation: loader-rise 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.1s forwards;
 }
 
 .loader__bar {
@@ -182,7 +182,7 @@ ul, ol {
   background: var(--primary);
   width: 0%;
   margin-top: 20px;
-  animation: loader-fill 0.9s cubic-bezier(0.4, 0, 0.2, 1) 0.35s forwards;
+  animation: loader-fill 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.2s forwards;
 }
 
 @keyframes loader-rise {

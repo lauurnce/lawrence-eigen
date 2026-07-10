@@ -212,11 +212,8 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ─── Theme Toggle ───
+  // (initial theme class is applied by the inline script in <head>)
   const themeToggle = document.getElementById('themeToggle');
-  const savedTheme = localStorage.getItem('lp-theme');
-  if (savedTheme === 'light') {
-    document.documentElement.classList.add('light');
-  }
   themeToggle.addEventListener('click', () => {
     const isLight = document.documentElement.classList.toggle('light');
     localStorage.setItem('lp-theme', isLight ? 'light' : 'dark');
@@ -264,7 +261,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // ─── Render Certification Badges ───
   const certificationsList = document.getElementById('certificationsList');
   if (certificationsList) {
-    certificationsList.textContent = 'Loading certifications...';
     certificationsList.innerHTML = certifications.map((cert, index) => {
       const hasLink = !!cert.verifyLink;
       const Tag = hasLink ? 'a' : 'div';
@@ -291,8 +287,6 @@ document.addEventListener('DOMContentLoaded', () => {
         </${Tag}>
       `;
     }).join('');
-
-    console.log(`✅ Certifications rendered: ${certifications.length}`);
   }
 
   // ─── Back to Top ───
@@ -371,8 +365,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         try {
-          console.log('Sending email with data:', { from_name: nameVal, from_email: emailVal, subject: subjectVal });
-
           // Send email using EmailJS
           window.emailjs.send('service_oxo99ul', 'template_381oosj', {
             from_name: nameVal,
@@ -380,8 +372,7 @@ document.addEventListener('DOMContentLoaded', () => {
             subject: subjectVal,
             message: messageVal,
             to_email: 'paneslawrence8@gmail.com',
-          }).then((response) => {
-            console.log('✅ Email sent successfully:', response);
+          }).then(() => {
             contactForm.style.display = 'none';
             formSuccess.classList.add('show');
             showToast('✅ Message sent successfully!');
@@ -585,21 +576,33 @@ document.addEventListener('DOMContentLoaded', () => {
     galleryHeroImg.classList.add('fading');
     const heroBg = document.getElementById('galleryHeroBg');
     setTimeout(() => {
-      galleryHeroImg.src = src;
       galleryHero.classList.remove('no-img', 'portrait-active');
-      if (heroBg) heroBg.style.backgroundImage = `url('${src}')`;
       galleryHeroImg.onload = () => {
         if (galleryHeroImg.naturalHeight > galleryHeroImg.naturalWidth) {
           galleryHero.classList.add('portrait-active');
         }
       };
       galleryHeroImg.onerror = () => galleryHero.classList.add('no-img');
+      galleryHeroImg.src = src;
+      if (heroBg) heroBg.style.backgroundImage = `url('${src}')`;
       galleryHeroImg.classList.remove('fading');
     }, 200);
   }
 
+  // Warm the browser cache for the photos next to the current one so
+  // arrow navigation swaps instantly.
+  function preloadAdjacent() {
+    [galleryIdx - 1, galleryIdx + 1].forEach(i => {
+      if (galleryImages[i]) {
+        const img = new Image();
+        img.src = galleryImages[i];
+      }
+    });
+  }
+
   function renderGallery() {
     setHeroImage(galleryImages[galleryIdx] || '');
+    preloadAdjacent();
     galleryCounter.textContent = `${galleryIdx + 1} / ${galleryImages.length}`;
     galleryPrev.disabled = galleryIdx === 0;
     galleryNext.disabled = galleryIdx === galleryImages.length - 1;
@@ -755,7 +758,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (e.target === modalOverlay) closeModal();
   });
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') closeModal();
+    if (e.key === 'Escape' && modalOverlay.classList.contains('open')) closeModal();
   });
 
   // ─── Toast ───

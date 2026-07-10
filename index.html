@@ -766,15 +766,7 @@
   <!-- ========== TOAST ========== -->
   <div class="toast" id="toast"></div>
 
-  <!-- EmailJS v4 (Latest) -->
-  <script type="module" async>
-    import emailjs from 'https://cdn.jsdelivr.net/npm/@emailjs/browser@4/+esm';
-    
-    // Initialize EmailJS with public key
-    emailjs.init('oq3QckoJwy4K07siy');
-    console.log('✅ EmailJS v4 initialized successfully');
-    window.emailjs = emailjs;
-  </script>
+  <!-- EmailJS is lazy-loaded by script.js when the contact form is used -->
   <script src="script.js" defer></script>
 </body>
 </html>

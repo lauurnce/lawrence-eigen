@@ -30,42 +30,28 @@
   setTimeout(hideLoader, 2500);
 })();
 
-// EmailJS is initialized in HTML via ES module import
-let emailjsReady = false;
-
-// Function to ensure EmailJS is ready
+// EmailJS is loaded on demand the first time the contact form is touched —
+// it is not part of the initial page load.
+let emailjsPromise = null;
 function ensureEmailJSReady() {
-  return new Promise((resolve) => {
-    // Check if EmailJS is available from the module import
-    if (typeof window.emailjs !== 'undefined' && window.emailjs.send) {
-      emailjsReady = true;
-      console.log('✅ EmailJS v4 is ready');
-      resolve(true);
-    } else {
-      // Wait for EmailJS to load
-      let attempts = 0;
-      const maxAttempts = 10;
-      const checkInterval = setInterval(() => {
-        if (typeof window.emailjs !== 'undefined' && window.emailjs.send) {
-          emailjsReady = true;
-          console.log('✅ EmailJS v4 loaded and ready');
-          clearInterval(checkInterval);
-          resolve(true);
-        } else if (attempts >= maxAttempts) {
-          console.error('❌ EmailJS failed to load after multiple attempts');
-          clearInterval(checkInterval);
-          resolve(false);
-        }
-        attempts++;
-      }, 100);
-    }
-  });
+  if (!emailjsPromise) {
+    emailjsPromise = import('https://cdn.jsdelivr.net/npm/@emailjs/browser@4/+esm')
+      .then((mod) => {
+        const emailjs = mod.default;
+        emailjs.init('oq3QckoJwy4K07siy');
+        window.emailjs = emailjs;
+        return true;
+      })
+      .catch((err) => {
+        console.error('EmailJS failed to load:', err);
+        emailjsPromise = null; // allow a retry on the next attempt
+        return false;
+      });
+  }
+  return emailjsPromise;
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  // Ensure EmailJS is ready
-  ensureEmailJSReady();
-
   // ─── Certifications Data ───
   const certifications = [
     {
@@ -318,6 +304,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const contactForm = document.getElementById('contactForm');
   const formSuccess = document.getElementById('formSuccess');
 
+  // Warm up EmailJS as soon as the visitor starts filling the form,
+  // so the library is ready by the time they hit send.
+  contactForm.addEventListener('focusin', () => { ensureEmailJSReady(); }, { once: true });
+
   contactForm.addEventListener('submit', (e) => {
     e.preventDefault();
     let valid = true;
@@ -384,7 +374,7 @@ document.addEventListener('DOMContentLoaded', () => {
           console.log('Sending email with data:', { from_name: nameVal, from_email: emailVal, subject: subjectVal });
 
           // Send email using EmailJS
-          emailjs.send('service_oxo99ul', 'template_381oosj', {
+          window.emailjs.send('service_oxo99ul', 'template_381oosj', {
             from_name: nameVal,
             from_email: emailVal,
             subject: subjectVal,

@@ -459,7 +459,7 @@ document.addEventListener('DOMContentLoaded', () => {
     kalinga: {
       title: 'Kalinga',
       desc: 'Kalinga (Filipino for "care") is a React Native app addressing unique mental health challenges faced by BPO agents working overnight shifts. Combines mood tracking, guided breathing exercises, sleep logging, and AI-driven peer support to help users build resilience against burnout, isolation, and circadian disruption.',
-      image: 'assets/project-hyperledger.png',
+      image: 'assets/project-hyperledger.jpg',
       tags: ['React Native', 'Expo', 'TypeScript', 'NativeWind', 'Supabase'],
       features: [
         'Mood + sleep tracking with night-shift-aware analytics',
@@ -474,7 +474,7 @@ document.addEventListener('DOMContentLoaded', () => {
     '02a-manila': {
       title: 'Zero to Agent Manila — Official Website',
       desc: 'Built and shipped the official Next.js site for Zero to Agent Manila 2026, an AI/agent developer event in the Philippines. Designed for fast load, mobile-first browsing, and conversion-driven CTAs covering schedule, speakers, venue, and registration.',
-      image: 'assets/project-nebula.png',
+      image: 'assets/project-nebula.jpg',
       tags: ['Next.js', 'TypeScript', 'Tailwind CSS', 'Vercel'],
       features: [
         'Responsive event landing with hero + agenda',
@@ -489,7 +489,7 @@ document.addEventListener('DOMContentLoaded', () => {
     greenproof: {
       title: 'GreenProof',
       desc: 'GreenProof tackles Quezon City\'s 2,500-metric-ton daily waste problem by incentivizing recycling at the barangay level. Residents earn Stellar XLM for verified plastic deposits (1kg = 1 Impact Point), with all transactions recorded on a transparent on-chain ledger. Barangays and LGUs manage collection points and verification, turning waste segregation into a community-owned economic system.',
-      image: 'assets/project-amberflow.png',
+      image: 'assets/project-amberflow.jpg',
       tags: ['Rust', 'Stellar', 'Soroban', 'Web3', 'TypeScript'],
       features: [
         'On-chain Impact Points ledger (Stellar Testnet)',

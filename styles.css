@@ -356,6 +356,17 @@ body.cursor-clicking .cursor-dot {
   position: relative;
 }
 
+/* Skip layout/paint for sections far below the fold until scrolled near */
+#projects,
+#competitions,
+#stack,
+#experience,
+#certifications,
+#contact {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 900px;
+}
+
 .section--alt {
   background-color: var(--surface-container-low);
 }
@@ -543,27 +554,28 @@ body.cursor-clicking .cursor-dot {
   pointer-events: none;
 }
 
+/* Soft glow orbs — radial-gradient instead of filter: blur(100px),
+   which forced an expensive blur rasterization on every repaint. */
 .hero__gradient {
   position: absolute;
-  width: 500px;
-  height: 500px;
+  width: 700px;
+  height: 700px;
   border-radius: 50%;
-  filter: blur(100px);
   pointer-events: none;
 }
 
 .hero__gradient--1 {
-  top: -150px;
-  right: -50px;
-  background: var(--primary-container);
-  opacity: 0.06;
+  top: -250px;
+  right: -150px;
+  background: radial-gradient(circle, var(--primary-container) 0%, transparent 65%);
+  opacity: 0.07;
 }
 
 .hero__gradient--2 {
-  bottom: -150px;
-  left: -50px;
-  background: var(--tertiary-container);
-  opacity: 0.04;
+  bottom: -250px;
+  left: -150px;
+  background: radial-gradient(circle, var(--tertiary-container) 0%, transparent 65%);
+  opacity: 0.05;
 }
 
 .hero__content {
@@ -2009,6 +2021,9 @@ body.cursor-clicking .cursor-dot {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
   .reveal,
   .project-card,
   .stack-pill,

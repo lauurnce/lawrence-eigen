@@ -39,3 +39,6 @@ yarn-error.log*
 # Local development
 .cache/
 *.pem
+
+# is-a.dev register repo clone (not part of this project)
+register/

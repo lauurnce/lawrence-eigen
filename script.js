@@ -128,33 +128,47 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // ─── Sticky Nav ───
+  // ─── Unified Scroll Handler (nav, progress bar, back-to-top) ───
+  // One rAF-throttled listener instead of four; writes only, no layout reads.
   const nav = document.getElementById('nav');
-  const handleNavScroll = () => {
-    nav.classList.toggle('scrolled', window.scrollY > 60);
+  const scrollProgress = document.getElementById('scrollProgress');
+  const backToTop = document.getElementById('backToTop');
+  let scrollTicking = false;
+
+  const onScroll = () => {
+    const scrollTop = window.scrollY;
+    nav.classList.toggle('scrolled', scrollTop > 60);
+    backToTop.classList.toggle('visible', scrollTop > 600);
+    if (scrollProgress) {
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const pct = docHeight > 0 ? scrollTop / docHeight : 0;
+      scrollProgress.style.transform = `scaleX(${pct})`;
+    }
+    scrollTicking = false;
   };
-  window.addEventListener('scroll', handleNavScroll, { passive: true });
-  handleNavScroll();
+
+  window.addEventListener('scroll', () => {
+    if (!scrollTicking) {
+      scrollTicking = true;
+      requestAnimationFrame(onScroll);
+    }
+  }, { passive: true });
+  onScroll();
 
   // ─── Active Nav Link (Scroll Spy) ───
-  const sections = document.querySelectorAll('section[id]');
+  // IntersectionObserver — no per-scroll offsetTop/offsetHeight reads.
   const navLinkEls = document.querySelectorAll('.nav__link');
-
-  const updateActiveNav = () => {
-    const scrollY = window.scrollY + 200;
-    sections.forEach(section => {
-      const top = section.offsetTop;
-      const height = section.offsetHeight;
-      const id = section.getAttribute('id');
-      if (scrollY >= top && scrollY < top + height) {
-        navLinkEls.forEach(link => {
-          link.classList.toggle('active', link.getAttribute('data-nav') === id);
-        });
-      }
+  const setActiveNav = (id) => {
+    navLinkEls.forEach(link => {
+      link.classList.toggle('active', link.getAttribute('data-nav') === id);
     });
   };
-  window.addEventListener('scroll', updateActiveNav, { passive: true });
-  updateActiveNav();
+  const spyObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) setActiveNav(entry.target.id);
+    });
+  }, { rootMargin: '-25% 0px -65% 0px' });
+  document.querySelectorAll('section[id]').forEach(s => spyObserver.observe(s));
 
   // ─── Custom Cursor ───
   const cursorDot = document.getElementById('cursorDot');
@@ -203,17 +217,6 @@ document.addEventListener('DOMContentLoaded', () => {
       cursorDot.style.opacity = '1';
       cursorRing.style.opacity = '1';
     });
-  }
-
-  // ─── Scroll Progress Bar ───
-  const scrollProgress = document.getElementById('scrollProgress');
-  if (scrollProgress) {
-    window.addEventListener('scroll', () => {
-      const scrollTop = window.scrollY;
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-      const pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
-      scrollProgress.style.width = pct + '%';
-    }, { passive: true });
   }
 
   // ─── Theme Toggle ───
@@ -301,11 +304,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ─── Back to Top ───
-  const backToTop = document.getElementById('backToTop');
-  window.addEventListener('scroll', () => {
-    backToTop.classList.toggle('visible', window.scrollY > 600);
-  }, { passive: true });
-
   backToTop.addEventListener('click', () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });

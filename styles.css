@@ -264,10 +264,11 @@ body.cursor-clicking .cursor-dot {
   top: 0;
   left: 0;
   height: 2px;
-  width: 0%;
+  width: 100%;
   background: var(--primary);
   z-index: calc(var(--z-nav) + 20);
-  transition: width 60ms linear;
+  transform: scaleX(0);
+  transform-origin: left;
   pointer-events: none;
 }
 

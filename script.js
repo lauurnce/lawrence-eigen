@@ -1,5 +1,5 @@
 /* ============================================================
-   LAWRENCE PORTFOLIO — Script
+   LAWRENCE PORTFOLIO - Script
    All interactive features: nav, scroll, particles,
    contact form, project modal, typing animation, etc.
    ============================================================ */
@@ -20,7 +20,7 @@
     loader.classList.add('hidden');
     setTimeout(() => { if (loader.parentNode) loader.remove(); }, 550);
   }
-  // Short brand beat only — never wait on images/fonts (window.load).
+  // Short brand beat only - never wait on images/fonts (window.load).
   if (document.readyState !== 'loading') {
     setTimeout(hideLoader, 750);
   } else {
@@ -30,7 +30,7 @@
   setTimeout(hideLoader, 2500);
 })();
 
-// EmailJS is loaded on demand the first time the contact form is touched —
+// EmailJS is loaded on demand the first time the contact form is touched -
 // it is not part of the initial page load.
 let emailjsPromise = null;
 function ensureEmailJSReady() {
@@ -148,7 +148,7 @@ document.addEventListener('DOMContentLoaded', () => {
   onScroll();
 
   // ─── Active Nav Link (Scroll Spy) ───
-  // IntersectionObserver — no per-scroll offsetTop/offsetHeight reads.
+  // IntersectionObserver - no per-scroll offsetTop/offsetHeight reads.
   const navLinkEls = document.querySelectorAll('.nav__link');
   const setActiveNav = (id) => {
     navLinkEls.forEach(link => {
@@ -173,7 +173,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let ringX  = 0, ringY  = 0;
     let lastT  = performance.now();
 
-    // Dot: instant via transform — zero layout cost
+    // Dot: instant via transform - zero layout cost
     window.addEventListener('mousemove', (e) => {
       mouseX = e.clientX;
       mouseY = e.clientY;
@@ -184,7 +184,7 @@ document.addEventListener('DOMContentLoaded', () => {
     (function animateRing(time) {
       const dt     = Math.min(time - lastT, 50);
       lastT        = time;
-      // alpha=0.18 @ 60fps — stays consistent at 30/60/120/144hz
+      // alpha=0.18 @ 60fps - stays consistent at 30/60/120/144hz
       const factor = 1 - Math.pow(0.82, dt / 16.67);
       ringX += (mouseX - ringX) * factor;
       ringY += (mouseY - ringY) * factor;
@@ -486,7 +486,7 @@ document.addEventListener('DOMContentLoaded', () => {
       sourceUrl: 'https://github.com/lauurnce/habi-4.0-ws-2026',
     },
     '02a-manila': {
-      title: 'Zero to Agent Manila — Official Website',
+      title: 'Zero to Agent Manila Official Website',
       desc: 'Built and shipped the official Next.js site for Zero to Agent Manila 2026, an AI/agent developer event in the Philippines. Designed for fast load, mobile-first browsing, and conversion-driven CTAs covering schedule, speakers, venue, and registration.',
       image: 'assets/project-nebula.jpg',
       tags: ['Next.js', 'TypeScript', 'Tailwind CSS', 'Vercel'],
@@ -533,7 +533,7 @@ document.addEventListener('DOMContentLoaded', () => {
         'assets/competitions/habi40/4.jpg',
         'assets/competitions/habi40/5.jpg',
       ],
-      story: `The core problem we solved: BPO agents wait days — sometimes weeks — just to get a Letter of Authority (LOA) from their HMO before they can see a doctor. When the issue is mental health, that wait is dangerous.\n\nKalinga cuts that entire pipeline. The app has a built-in triage system that initially assesses the agent's condition — severity, urgency, type of concern. Once the app determines the LOA is warranted, it facilitates approval and directly connects the agent to their HMO provider. No paperwork lag. No waiting on HR to process a referral at 3AM.\n\nWe designed everything around the night-shift reality: triage prompts timed to shift start and end, AI-guided check-ins at peak burnout hours, and an anonymous peer support layer for agents who can't reach anyone mid-shift.\n\nAwarded 2nd Place at the Presidential Annual Innovation Hackathon (HABI 4.0), a nationwide competition held at the Malacañang grounds.`,
+      story: `The core problem we solved: BPO agents wait days, sometimes weeks, just to get a Letter of Authority (LOA) from their HMO before they can see a doctor. When the issue is mental health, that wait is dangerous.\n\nKalinga cuts that entire pipeline. The app has a built-in triage system that assesses the agent's condition first: severity, urgency, and type of concern. Once the app determines the LOA is warranted, it facilitates approval and directly connects the agent to their HMO provider. No paperwork lag. No waiting on HR to process a referral at 3AM.\n\nWe designed everything around the night-shift reality: triage prompts timed to shift start and end, AI-guided check-ins at peak burnout hours, and an anonymous peer support layer for agents who can't reach anyone mid-shift.\n\nAwarded 2nd Place at the Presidential Annual Innovation Hackathon (HABI 4.0), a nationwide competition held at the Malacañang grounds.`,
       projectLink: '#projects', projectLinkText: 'View Project: Kalinga',
     },
     zerovector: {
@@ -545,7 +545,7 @@ document.addEventListener('DOMContentLoaded', () => {
         'assets/competitions/zerovector/2.jpg',
         'assets/competitions/zerovector/3.jpg',
       ],
-      story: `Competed as a duo at Zero Vector Ventures — the first venture capital hackathon in the Philippines — and placed 3rd.\n\nOur task wasn't just to build a product. It was to prove a problem is venture backable: real, large, and significant enough that investors should care.\n\nWe made the case around BPO companies and the financial hemorrhage caused by mental health issues in the workforce. The data is stark — Philippine BPOs lose significant revenue annually to absenteeism, turnover, and productivity loss directly tied to unaddressed mental health. The root cause: triage systems are broken. Agents wait weeks for LOA approvals just to access their HMO benefits, by which point the damage is already done.\n\nWe proved the problem size, quantified the loss, and showed that the status quo is too costly to ignore — the exact framing that makes a problem fundable.`,
+      story: `Competed as a duo at Zero Vector Ventures, the first venture capital hackathon in the Philippines, and placed 3rd.\n\nOur task wasn't just to build a product. It was to prove a problem is venture backable: real, large, and significant enough that investors should care.\n\nWe made the case around BPO companies and the financial hemorrhage caused by mental health issues in the workforce. The data is stark. Philippine BPOs lose significant revenue every year to absenteeism, turnover, and productivity loss directly tied to unaddressed mental health. The root cause: triage systems are broken. Agents wait weeks for LOA approvals just to access their HMO benefits, by which point the damage is already done.\n\nWe proved the problem size, quantified the loss, and showed that the status quo is too costly to ignore. That's exactly the framing that makes a problem fundable.`,
       projectLink: '', projectLinkText: '',
     },
     stellar: {
@@ -553,7 +553,7 @@ document.addEventListener('DOMContentLoaded', () => {
       date: 'Mar 2026',
       badge: 'gold', badgeText: 'Winner',
       images: [],
-      story: `Won the Stellar Philippines Web3/Blockchain online bootcamp by shipping GreenProof — a Recycle-to-Earn smart contract built on Stellar Soroban using Rust.\n\nQuezon City generates over 2,500 metric tons of solid waste daily, collected only twice a week, with almost no incentive for residents to segregate properly. GreenProof flips that dynamic: residents bring recyclables to verified collection points, local partners weigh and record the deposit on-chain as Impact Points (1kg = 1 point), and XLM rewards are deposited directly to the resident's Stellar wallet.\n\nEvery transaction is auditable on the Stellar testnet — no trust required from the barangay or the LGU. The smart contract (CCX4HEFCB4SJFG463AN2AC6C66MPKXRESVAI6YPHFNH4S63QRW476BLG) handles reward logic end-to-end in Rust, deployed via Soroban. First time I shipped a production smart contract from scratch.`,
+      story: `Won the Stellar Philippines Web3/Blockchain online bootcamp by shipping GreenProof, a Recycle-to-Earn smart contract built on Stellar Soroban using Rust.\n\nQuezon City generates over 2,500 metric tons of solid waste daily, collected only twice a week, with almost no incentive for residents to segregate properly. GreenProof flips that dynamic: residents bring recyclables to verified collection points, local partners weigh and record the deposit on-chain as Impact Points (1kg = 1 point), and XLM rewards are deposited directly to the resident's Stellar wallet.\n\nEvery transaction is auditable on the Stellar testnet, so the barangay and the LGU never have to take anyone's word for it. The smart contract (CCX4HEFCB4SJFG463AN2AC6C66MPKXRESVAI6YPHFNH4S63QRW476BLG) handles reward logic end-to-end in Rust, deployed via Soroban. First time I shipped a production smart contract from scratch.`,
       projectLink: '#projects', projectLinkText: 'View Project: GreenProof',
     },
   };
@@ -561,23 +561,23 @@ document.addEventListener('DOMContentLoaded', () => {
   // ─── Speaking Gallery Data ───
   const speakingGalleryData = {
     acm: {
-      title: 'Resource Speaker — ACM Core VerteX @ FEU Institute of Technology',
+      title: 'Resource Speaker · ACM Core VerteX @ FEU Institute of Technology',
       date: 'Speaker',
       badge: null,
       images: [
         'assets/leadership/feu tech/download.jpg',
       ],
-      story: `Invited as resource speaker at the ACM Core VerteX event held at FEU Institute of Technology. Delivered a tech talk to 40+ students covering practical AI concepts and modern development workflows.\n\nFacilitated a hands-on build-along session using AWS PartyRock, guiding participants through building their first AI-powered application without writing code.\n\nThe session was designed to lower the barrier to AI experimentation for students at any skill level — showing that you don't need to be a machine learning expert to ship something real with AI.`,
+      story: `Invited as resource speaker at the ACM Core VerteX event held at FEU Institute of Technology. Delivered a tech talk to 40+ students covering practical AI concepts and modern development workflows.\n\nFacilitated a hands-on build-along session using AWS PartyRock, guiding participants through building their first AI-powered application without writing code.\n\nThe goal was to lower the barrier to AI experimentation for students at any skill level. You don't need to be a machine learning expert to ship something real with AI.`,
       projectLink: '', projectLinkText: '',
     },
     aimaxxin: {
-      title: 'Technical Speaker — AI Maxxin On-Site Workshop',
+      title: 'Technical Speaker · AI Maxxin On-Site Workshop',
       date: 'Speaker',
       badge: null,
       images: [
         'assets/leadership/ai maxxin/1.jpg',
       ],
-      story: `Featured as technical speaker at the AI Maxxin on-site workshop, instructing over 60 participants on advanced Prompt Engineering techniques and practical applications of Langflow.\n\nCovered prompt chaining, context management, and building agentic workflows — translating complex AI concepts into immediately actionable skills.\n\nLangflow demonstrations showed how to build multi-step AI pipelines visually, empowering non-developers to create production-ready AI applications without writing backend code.`,
+      story: `Featured as technical speaker at the AI Maxxin on-site workshop, teaching over 60 participants advanced prompt engineering techniques and practical applications of Langflow.\n\nCovered prompt chaining, context management, and building agentic workflows, turning complex AI concepts into skills people could use the same day.\n\nThe Langflow demos showed how to build multi-step AI pipelines visually, so even non-developers could create production-ready AI applications without writing backend code.`,
       projectLink: '', projectLinkText: '',
     },
   };

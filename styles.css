@@ -1,5 +1,5 @@
 /* ============================================================
-   LAWRENCE PORTFOLIO — Redesigned Design System
+   LAWRENCE PORTFOLIO - Redesigned Design System
    Fonts: Syne + Bricolage Grotesque + JetBrains Mono
    Palette: Deep blue-black + Golden Amber
    ============================================================ */
@@ -8,7 +8,7 @@
    instead of @import, which would block on this stylesheet first. */
 
 :root {
-  /* Surface Hierarchy — deep blue-black */
+  /* Surface Hierarchy - deep blue-black */
   --surface: #0B0B10;
   --surface-dim: #0B0B10;
   --surface-bright: #34333F;
@@ -20,7 +20,7 @@
   --surface-variant: #282730;
   --surface-tint: #E9C86A;
 
-  /* Primary — Golden Amber */
+  /* Primary - Golden Amber */
   --primary: #E9C86A;
   --primary-container: #C4A030;
   --primary-fixed: #F5E3AC;
@@ -41,7 +41,7 @@
   --on-secondary-fixed: #120900;
   --on-secondary-fixed-variant: #3D2E08;
 
-  /* Tertiary — soft violet */
+  /* Tertiary - soft violet */
   --tertiary: #C0B8E8;
   --tertiary-container: #8A80C8;
   --tertiary-fixed: #DDD8FF;
@@ -217,7 +217,7 @@ ul, ol {
   pointer-events: none;
   z-index: 10000;
   border-radius: 50%;
-  /* GPU layer — no layout cost on move */
+  /* GPU layer - no layout cost on move */
   will-change: transform;
 }
 
@@ -272,7 +272,7 @@ body.cursor-clicking .cursor-dot {
   pointer-events: none;
 }
 
-/* Subtle grain overlay — makes the page feel printed, not generated */
+/* Subtle grain overlay - makes the page feel printed, not generated */
 .grain {
   position: fixed;
   inset: 0;
@@ -534,7 +534,7 @@ body.cursor-clicking .cursor-dot {
   padding-top: 80px;
 }
 
-/* CSS-only dot grid — top-right corner fades in */
+/* CSS-only dot grid - top-right corner fades in */
 .hero::before {
   content: '';
   position: absolute;
@@ -554,7 +554,7 @@ body.cursor-clicking .cursor-dot {
   pointer-events: none;
 }
 
-/* Soft glow orbs — radial-gradient instead of filter: blur(100px),
+/* Soft glow orbs - radial-gradient instead of filter: blur(100px),
    which forced an expensive blur rasterization on every repaint. */
 .hero__gradient {
   position: absolute;
@@ -584,7 +584,7 @@ body.cursor-clicking .cursor-dot {
   max-width: 860px;
 }
 
-/* Static status badge — replaces typing animation */
+/* Static status badge - replaces typing animation */
 .hero__status {
   display: inline-flex;
   align-items: center;
@@ -610,7 +610,7 @@ body.cursor-clicking .cursor-dot {
   flex-shrink: 0;
 }
 
-/* Old typing element — hidden */
+/* Old typing element - hidden */
 .hero__tag {
   display: none;
 }
@@ -1772,7 +1772,7 @@ body.cursor-clicking .cursor-dot {
 }
 
 .modal__features li::before {
-  content: '—';
+  content: '>';
   color: var(--primary);
   font-family: var(--font-mono);
   font-size: 0.75rem;
@@ -1912,7 +1912,7 @@ body.cursor-clicking .cursor-dot {
 }
 
 @media (max-width: 480px) {
-  /* "Law" on mobile — full name on desktop */
+  /* "Law" on mobile - full name on desktop */
   .name-suffix {
     display: none;
   }
@@ -2324,7 +2324,7 @@ html.light .competition-item__dot {
 }
 
 /* ============================================================
-   LEADERSHIP CARD — SPEAKING IMAGE
+   LEADERSHIP CARD - SPEAKING IMAGE
    ============================================================ */
 .leadership-card.has-photo,
 .leadership-card.has-gallery {
@@ -2455,7 +2455,7 @@ html.light .competition-item__dot {
   border-radius: var(--radius-md) var(--radius-md) 0 0;
 }
 
-/* Blurred backdrop — visible when portrait image is active */
+/* Blurred backdrop - visible when portrait image is active */
 .gallery-hero__blur-bg {
   position: absolute;
   inset: -10%;
@@ -2480,7 +2480,7 @@ html.light .competition-item__dot {
   transition: opacity 0.22s ease;
 }
 
-/* Portrait image — show full image centered, no crop */
+/* Portrait image - show full image centered, no crop */
 .gallery-hero.portrait-active .gallery-hero-img {
   object-fit: contain;
 }
@@ -2496,7 +2496,7 @@ html.light .competition-item__dot {
 }
 
 .gallery-hero.no-img::after {
-  content: 'No photos yet — add images to activate';
+  content: 'No photos yet. Add images to activate';
   font-family: var(--font-mono);
   font-size: 0.6875rem;
   color: var(--outline);

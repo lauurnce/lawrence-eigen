@@ -243,6 +243,35 @@ document.addEventListener('DOMContentLoaded', () => {
     statNumbers.forEach(el => countUpObserver.observe(el));
   }
 
+  // ─── Stats Breakdown Popovers ───
+  const statTriggers = document.querySelectorAll('.stat-item__trigger');
+  const closeBreakdowns = () => {
+    statTriggers.forEach(trigger => {
+      trigger.setAttribute('aria-expanded', 'false');
+      document.getElementById(trigger.getAttribute('aria-controls')).hidden = true;
+    });
+  };
+  statTriggers.forEach(trigger => {
+    trigger.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const panel = document.getElementById(trigger.getAttribute('aria-controls'));
+      const willOpen = panel.hidden;
+      closeBreakdowns();
+      if (willOpen) {
+        trigger.setAttribute('aria-expanded', 'true');
+        panel.hidden = false;
+      }
+    });
+  });
+  if (statTriggers.length) {
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.stat-item--expandable')) closeBreakdowns();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeBreakdowns();
+    });
+  }
+
   // ─── Scroll Reveal ───
   const revealElements = document.querySelectorAll('.reveal');
   const revealObserver = new IntersectionObserver(

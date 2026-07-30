@@ -1,0 +1,86 @@
+ive attached the files for speakership and event organized, in Quick Quest Workshop, Ive talked to week 1 and week 6 so put that in speakership while the rest is in organizing team, I am tech and curiculum handler there and spearheading of speakers for description of each each i will paste the curicculum ive prepare so that you know what are the topics of each week and for you to prepare the desciption of it  
+
+3
+Automate Repetitive Tasks with Quick Flows
+Teams form
+A working v1 automated flow + saved problem statement
+Form teams; each writes its one-line problem statement. Assign the 4 roles. Sprint: generate a flow from a plain-language prompt → open editor → rename steps → wire one @reference → run in guided then chat mode. 
+
+Checkpoint: every team must have a flow that runs end-to-end, even if rough. Scribe saves the problem statement, this is the spine.
+Quick Flows: NLP flow creation, blank flow, core steps (Ask-user, Web search, General knowledge, Reasoning group), @references, guided vs chat run modes, pre-built flow library
+4
+Spaces & Memory: Build Your Team Knowledge Base
+
+
+Group build
+Project knowledge base + flow upgraded to use it
+Each team creates a shared Space and loads 2–3 real documents tied to their problem. They then rewire their Week-3 flow to pull from that Space (via a Quick data step) so it answers from their own files, not just the web. Explore Memory so Quick retains project context across sessions. 
+
+Checkpoint: flow returns an answer sourced from a team-uploaded file.
+Spaces, knowledge bases, file connectors, Quick data step in Flows, Memory / proactive context
+
+
+5
+July 17, 2026
+Research-in-Flows: Insight as a Workflow Step
+Group build 
+Flow now generates an evidence-backed report as part of the automation
+Teams add a Research step inside their flow (or a companion research flow) that produces a cited brief feeding their output. They tune the research objective using @references to their own inputs and set preferred sources (gov/academic/industry). 
+
+Checkpoint: flow outputs an evidence-backed, cited section.
+Quick Research (standalone) + Research step inside Flows, @references, preferred-source steering
+6
+July 24, 2026
+Data & Insights without Enterprise
+
+Group build + demo
+A data-insight step/flow added to the project
+Each team brings or makes a small CSV related to their problem. They build a flow that uploads and summarizes it, extracts 3–5 key insights, and generates a simple chart/visual. Quick Sight is shown by the speaker as "what enterprise adds" demo-only, no one is blocked. 
+
+Checkpoint: team produces one insight + one visual from their own data.
+Flows file-upload step, Quick data, Data-summarizer pattern, Create image step; Quick Sight (demo-only)
+
+then here's my linkedin post for week 1 speakership i did: Last June 19, 2026, I had the honor of speaking during the kickoff of Build Nights: Quick Quest, our workshop series under the Amazon Web Services (AWS) KiroXQuick program, and I left the room genuinely amazed.
+
+What struck me most was the energy. High school students, undergrads, early career professionals, and even PhD holders, all sitting in the same room, all eager to learn. There is something special about watching people from completely different stages of life lean in together to explore a new AI service from Amazon, one with features that only a few have had the chance to work with so far.
+
+That is exactly the kind of environment we set out to build.
+
+𝐁𝐮𝐢𝐥𝐝 𝐍𝐢𝐠𝐡𝐭𝐬: 𝐐𝐮𝐢𝐜𝐤 𝐐𝐮𝐞𝐬𝐭 is a 10 part series we are running every Friday night, 6 to 9 PM. Each session is a chance to learn something new, but also to network with builders, educators, and professionals who are just as curious as you are. Whether you are here for the academe, for business, or for a field entirely your own, you will walk away with knowledge you can actually use.
+
+None of this would be possible without my core team, Dave Aillerr Rivas, Fahad Hadji Esmael, and Mary Jean Navarro. Thank you for the late nights, the planning, and the shared belief that this was worth building. I am grateful to be doing this work alongside you.
+
+I also want to thank our incredible volunteers who keep everything running smoothly behind the scenes, Denisse, VJ, Loraine, Alexandre, Farhana, Helena, Antonette and kuya Marvin Barrios. This series moves because of your dedication, and we could not do it without you.
+
+A special thank you to our speaker, Katherine Bulac, whose insights gave everyone in the room something to walk away with.
+
+I also want to extend a special thank you to Isaeus Guiang and Joben Rara 📐✏️ for their guidance and support in making this series come to life. We deeply appreciate you.
+
+So I want to personally invite you to join us. Come sit in, ask questions, and build alongside a community that genuinely wants to see you grow. We would love to have you in the room with us.
+
+We will be posting the registration links on the AWS User Group Philippines Facebook page, so keep an eye out and reserve your spot.
+
+See you on a Friday night soon.
+#BuildNights #AWS #AmazonQuick 
+
+disregard the names ive mentioned in making the desctiption 
+
+also in AWS polar speakership here's my linkedin caption too: 
+We built a working app and put it on the internet in eighty minutes. That happened on June 30, 2026 at Santa Rosa, Laguna, during the AWS Learning Club Polar workshop series.
+
+I  taught Full Stack Development, where we built and launched a real serverless notes app on AWS from the ground up. We walked through DynamoDB for the database, AWS Lambda for the backend logic, IAM for permissions and security, API Gateway to connect the two, and Amazon S3 for hosting the frontend live on the internet. Everything was done on the AWS Free Tier, so that everyone who attended can rebuild it on their own at zero cost.
+
+To make the concepts stick, we used a simple restaurant analogy. The dining hall is the frontend, the waiter is the API, the kitchen is the backend, and the fridge is the database. Watching the room connect those dots was easily my favorite part of the day.
+
+Thank you to Patrick Dohn Joseph Lontok for the invitation and for trusting us with your community. To Dave Aillerr and Fahad Hadji, thanks for sharing the same drive of giving back and helping upskill like minded people. It's rare to find people who show up for this kind of work simply because they believe in it.
+
+Thank you also to the LGU of Santa Rosa, Laguna, for supporting an initiative led by your own bright minded students. That kind of backing is what turns a good idea into something that actually reaches people.
+
+It was an honor to teach a room that ranged from students to working professionals, all carrying the same eagerness to learn Amazon Web Services. Seeing that mix of backgrounds in one hall, all asking questions and taking notes, was a reminder of how much talent we have here.
+
+It is always day one. 
+
+give emphasis to what we did especially to the amazon services tech stack ive used during the build. 
+
+ive rename all the cover photo to put in the cover photo so i want you to put that as the cover photos and i want you to make it complementary that it would be center and not look like it doesnt fit to it placeholder. 
+in description: dont use em dashes, use comma instead. make it sound professional and educative, use technical terms but not the cringe ones, give emphasis to the tech sides and tech stack we used in speakership and even in the organizing parts since ive studied them too as i made the curicculum . 

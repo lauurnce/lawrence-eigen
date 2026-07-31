@@ -260,6 +260,19 @@ body.cursor-clicking .cursor-dot {
   height: 4px;
 }
 
+/* Grab feedback for the stack rows. The site hides the native cursor, so
+   `cursor: grab` would never be seen; the custom ring carries the affordance. */
+body.cursor-grabbing .cursor-ring {
+  width: 36px;
+  height: 36px;
+  border-color: var(--primary);
+}
+
+body.cursor-grabbing .cursor-dot {
+  width: 4px;
+  height: 4px;
+}
+
 /* Scroll progress bar */
 .scroll-progress {
   position: fixed;

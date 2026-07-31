@@ -219,6 +219,147 @@ document.addEventListener('DOMContentLoaded', () => {
     localStorage.setItem('lp-theme', isLight ? 'light' : 'dark');
   });
 
+  // ─── Tech Stack Marquee ───
+  // A single lane whose moving units are whole category blocks. It drifts
+  // continuously, pauses when you point at it, and can be dragged to scrub.
+  // The loop only runs while the section is on screen, so the page is not
+  // animating for viewers who never scroll this far.
+  (function initStackMarquee() {
+    const lane = document.getElementById('stackLane');
+    const track = document.getElementById('stackTrack');
+    if (!lane || !track) return;
+
+    // Reduced motion: leave the lane as a plain scrollable strip (see styles.css).
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    const BASE_SPEED = 34;   // px per second at rest
+    const EASE = 0.1;        // how quickly speed settles toward its target
+
+    const originals = [...track.children];
+    if (!originals.length) return;
+
+    const measure = () => {
+      const gap = parseFloat(getComputedStyle(track).gap) || 0;
+      return track.scrollWidth + gap;
+    };
+
+    // Clone whole category blocks until the track is at least twice the lane, so
+    // there is always content to wrap into. Clones are decorative: a screen
+    // reader should hear the stack once, not repeated.
+    const copyWidth = measure();
+    if (!copyWidth) return;
+    const needed = Math.ceil((lane.clientWidth * 2 + copyWidth) / copyWidth);
+    const copies = Math.min(Math.max(needed, 2), 12);
+    for (let c = 1; c < copies; c++) {
+      originals.forEach(group => {
+        const clone = group.cloneNode(true);
+        clone.setAttribute('aria-hidden', 'true');
+        track.appendChild(clone);
+      });
+    }
+
+    let offset = 0;
+    let speed = BASE_SPEED;
+    let target = BASE_SPEED;
+    let dragging = false;
+    let pointerId = null;
+    let lastX = 0;
+    let velocity = 0;
+
+    const draw = () => {
+      // Keep the offset inside one copy so the transform never grows unbounded.
+      offset = ((offset % copyWidth) + copyWidth) % copyWidth;
+      track.style.transform = `translate3d(${-offset}px, 0, 0)`;
+    };
+
+    lane.addEventListener('pointerenter', () => { if (!dragging) target = 0; });
+    lane.addEventListener('pointerleave', () => { if (!dragging) target = BASE_SPEED; });
+
+    lane.addEventListener('pointerdown', e => {
+      dragging = true;
+      pointerId = e.pointerId;
+      lastX = e.clientX;
+      velocity = 0;
+      speed = 0;
+      target = 0;
+      lane.setPointerCapture(e.pointerId);
+      lane.classList.add('is-dragging');
+      document.body.classList.add('cursor-grabbing');
+    });
+
+    lane.addEventListener('pointermove', e => {
+      if (!dragging) return;
+      const dx = e.clientX - lastX;
+      lastX = e.clientX;
+      offset -= dx;          // 1:1 with the pointer
+      velocity = dx;         // used as release momentum
+      draw();
+    });
+
+    const endDrag = () => {
+      if (!dragging) return;
+      dragging = false;
+      if (pointerId !== null && lane.hasPointerCapture(pointerId)) {
+        lane.releasePointerCapture(pointerId);
+      }
+      pointerId = null;
+      lane.classList.remove('is-dragging');
+      document.body.classList.remove('cursor-grabbing');
+      // Carry the fling into the loop, then let it decay back to the drift.
+      speed = -velocity * 12;
+      target = lane.matches(':hover') ? 0 : BASE_SPEED;
+    };
+
+    lane.addEventListener('pointerup', endDrag);
+    lane.addEventListener('pointercancel', endDrag);
+
+    let rafId = null;
+    let last = 0;
+
+    const tick = now => {
+      const dt = Math.min((now - last) / 1000, 0.05);  // clamp so tab switches do not jump
+      last = now;
+      if (!dragging) {
+        speed += (target - speed) * EASE;
+        offset += speed * dt;
+        draw();
+      }
+      rafId = requestAnimationFrame(tick);
+    };
+
+    const start = () => {
+      if (rafId !== null) return;
+      last = performance.now();
+      rafId = requestAnimationFrame(tick);
+    };
+    const stop = () => {
+      if (rafId === null) return;
+      cancelAnimationFrame(rafId);
+      rafId = null;
+    };
+
+    draw();
+
+    // Track visibility separately from tab focus: the observer will not re-fire
+    // when you return to the tab, so resuming has to consult the remembered state.
+    let inView = true;
+    const section = document.getElementById('stack');
+    if (section && 'IntersectionObserver' in window) {
+      inView = false;
+      new IntersectionObserver(entries => {
+        inView = entries[0].isIntersecting;
+        if (inView && !document.hidden) start(); else stop();
+      }, { rootMargin: '150px' }).observe(section);
+    } else {
+      start();
+    }
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) stop();
+      else if (inView) start();
+    });
+  })();
+
   // ─── Stats Count-Up ───
   const statNumbers = document.querySelectorAll('.stat-item__number[data-target]');
   if (statNumbers.length) {

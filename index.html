@@ -359,141 +359,83 @@
   <section class="section" id="stack">
     <div class="container">
       <div class="section-header reveal">
-        <p class="section-header__label">Stack</p>
-        <h2 class="section-header__title text-display-md">Tech Arsenal</h2>
+        <p class="section-header__label">Toolkit</p>
+        <h2 class="section-header__title text-display-md">Tech Stack</h2>
         <p class="section-header__desc">Tools and technologies I use daily to architect and ship production systems.</p>
       </div>
-      <div class="stack__categories">
-        <!-- Languages -->
-        <div class="stack-category reveal reveal-delay-1">
-          <h3 class="stack-category__title">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-            Languages
-          </h3>
-          <div class="stack-pills" role="list">
-            <span class="stack-pill" role="listitem">C</span>
-            <span class="stack-pill" role="listitem">Java</span>
-            <span class="stack-pill" role="listitem">Python</span>
-            <span class="stack-pill" role="listitem">C++</span>
-            <span class="stack-pill" role="listitem">SQL</span>
-            <span class="stack-pill" role="listitem">Rust</span>
-            <span class="stack-pill" role="listitem">JavaScript</span>
-            <span class="stack-pill" role="listitem">TypeScript</span>
-            <span class="stack-pill" role="listitem">Dart</span>
+    </div>
+    <!-- One continuous lane. The moving unit is the category block, not the individual
+         tech. JS clones the track to loop it, pauses on hover, and allows drag to scrub. -->
+    <div class="stack-lane" id="stackLane">
+      <div class="stack-lane__track" id="stackTrack" role="list">
+          <div class="stack-group">
+            <span class="stack-group__name">Languages</span>
+            <span class="tech"><img class="tech__logo" src="assets/tech/c.svg" alt="" width="26" height="26" loading="lazy" decoding="async" onerror="this.remove()" /><span class="tech__name">C</span></span>
+            <span class="tech"><img class="tech__logo" src="assets/tech/java.svg" alt="" width="26" height="26" loading="lazy" decoding="async" onerror="this.remove()" /><span class="tech__name">Java</span></span>
+            <span class="tech"><img class="tech__logo" src="assets/tech/python.svg" alt="" width="26" height="26" loading="lazy" decoding="async" onerror="this.remove()" /><span class="tech__name">Python</span></span>
+            <span class="tech"><img class="tech__logo" src="assets/tech/cplusplus.svg" alt="" width="26" height="26" loading="lazy" decoding="async" onerror="this.remove()" /><span class="tech__name">C++</span></span>
+            <span class="tech"><img class="tech__logo" src="assets/tech/sql.svg" alt="" width="26" height="26" loading="lazy" decoding="async" onerror="this.remove()" /><span class="tech__name">SQL</span></span>
+            <span class="tech"><img class="tech__logo" src="assets/tech/rust.svg" alt="" width="26" height="26" loading="lazy" decoding="async" onerror="this.remove()" /><span class="tech__name">Rust</span></span>
+            <span class="tech"><img class="tech__logo" src="assets/tech/javascript.svg" alt="" width="26" height="26" loading="lazy" decoding="async" onerror="this.remove()" /><span class="tech__name">JavaScript</span></span>
+            <span class="tech"><img class="tech__logo" src="assets/tech/typescript.svg" alt="" width="26" height="26" loading="lazy" decoding="async" onerror="this.remove()" /><span class="tech__name">TypeScript</span></span>
+            <span class="tech"><img class="tech__logo" src="assets/tech/dart.svg" alt="" width="26" height="26" loading="lazy" decoding="async" onerror="this.remove()" /><span class="tech__name">Dart</span></span>
           </div>
-        </div>
-
-        <!-- AI/ML -->
-        <div class="stack-category reveal reveal-delay-2">
-          <h3 class="stack-category__title">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
-            AI/ML
-          </h3>
-          <div class="stack-pills" role="list">
-            <span class="stack-pill" role="listitem">LangChain</span>
-            <span class="stack-pill" role="listitem">OpenAI</span>
-            <span class="stack-pill" role="listitem">Anthropic</span>
-            <span class="stack-pill" role="listitem">PyTorch</span>
-            <span class="stack-pill" role="listitem">Scikit-learn</span>
-            <span class="stack-pill" role="listitem">TensorFlow</span>
-            <span class="stack-pill" role="listitem">Ollama</span>
+          <div class="stack-group">
+            <span class="stack-group__name">AI/ML</span>
+            <span class="tech"><img class="tech__logo" src="assets/tech/langchain.svg" alt="" width="26" height="26" loading="lazy" decoding="async" onerror="this.remove()" /><span class="tech__name">LangChain</span></span>
+            <span class="tech"><span class="tech__name">OpenAI</span></span>
+            <span class="tech"><img class="tech__logo" src="assets/tech/anthropic.svg" alt="" width="26" height="26" loading="lazy" decoding="async" onerror="this.remove()" /><span class="tech__name">Anthropic</span></span>
+            <span class="tech"><img class="tech__logo" src="assets/tech/pytorch.svg" alt="" width="26" height="26" loading="lazy" decoding="async" onerror="this.remove()" /><span class="tech__name">PyTorch</span></span>
+            <span class="tech"><img class="tech__logo" src="assets/tech/scikitlearn.svg" alt="" width="26" height="26" loading="lazy" decoding="async" onerror="this.remove()" /><span class="tech__name">Scikit-learn</span></span>
+            <span class="tech"><img class="tech__logo" src="assets/tech/tensorflow.svg" alt="" width="26" height="26" loading="lazy" decoding="async" onerror="this.remove()" /><span class="tech__name">TensorFlow</span></span>
+            <span class="tech"><img class="tech__logo" src="assets/tech/ollama.svg" alt="" width="26" height="26" loading="lazy" decoding="async" onerror="this.remove()" /><span class="tech__name">Ollama</span></span>
           </div>
-        </div>
-
-        <!-- Research & ML Tools -->
-        <div class="stack-category reveal reveal-delay-3">
-          <h3 class="stack-category__title">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
-            Research &amp; ML Tools
-          </h3>
-          <div class="stack-pills" role="list">
-            <span class="stack-pill" role="listitem">Pandas</span>
-            <span class="stack-pill" role="listitem">NumPy</span>
-            <span class="stack-pill" role="listitem">Matplotlib</span>
-            <span class="stack-pill" role="listitem">Plotly</span>
-            <span class="stack-pill" role="listitem">Streamlit</span>
-            <span class="stack-pill" role="listitem">Jupyter</span>
-            <span class="stack-pill" role="listitem">Hugging Face</span>
+          <div class="stack-group">
+            <span class="stack-group__name">Research &amp; ML Tools</span>
+            <span class="tech"><img class="tech__logo" src="assets/tech/pandas.svg" alt="" width="26" height="26" loading="lazy" decoding="async" onerror="this.remove()" /><span class="tech__name">Pandas</span></span>
+            <span class="tech"><img class="tech__logo" src="assets/tech/numpy.svg" alt="" width="26" height="26" loading="lazy" decoding="async" onerror="this.remove()" /><span class="tech__name">NumPy</span></span>
+            <span class="tech"><img class="tech__logo" src="assets/tech/matplotlib.svg" alt="" width="26" height="26" loading="lazy" decoding="async" onerror="this.remove()" /><span class="tech__name">Matplotlib</span></span>
+            <span class="tech"><img class="tech__logo" src="assets/tech/plotly.svg" alt="" width="26" height="26" loading="lazy" decoding="async" onerror="this.remove()" /><span class="tech__name">Plotly</span></span>
+            <span class="tech"><img class="tech__logo" src="assets/tech/streamlit.svg" alt="" width="26" height="26" loading="lazy" decoding="async" onerror="this.remove()" /><span class="tech__name">Streamlit</span></span>
+            <span class="tech"><img class="tech__logo" src="assets/tech/jupyter.svg" alt="" width="26" height="26" loading="lazy" decoding="async" onerror="this.remove()" /><span class="tech__name">Jupyter</span></span>
+            <span class="tech"><img class="tech__logo" src="assets/tech/huggingface.svg" alt="" width="26" height="26" loading="lazy" decoding="async" onerror="this.remove()" /><span class="tech__name">Hugging Face</span></span>
           </div>
-        </div>
-
-        <!-- Cloud & Infrastructure -->
-        <div class="stack-category reveal reveal-delay-4">
-          <h3 class="stack-category__title">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg>
-            Cloud &amp; Infrastructure
-          </h3>
-          <div class="stack-pills" role="list">
-            <span class="stack-pill" role="listitem">AWS</span>
-            <span class="stack-pill" role="listitem">GCP</span>
-            <span class="stack-pill" role="listitem">Azure</span>
-            <span class="stack-pill" role="listitem">Firebase</span>
-            <span class="stack-pill" role="listitem">Docker</span>
+          <div class="stack-group">
+            <span class="stack-group__name">Cloud &amp; Infrastructure</span>
+            <span class="tech"><span class="tech__name">AWS</span></span>
+            <span class="tech"><img class="tech__logo" src="assets/tech/gcp.svg" alt="" width="26" height="26" loading="lazy" decoding="async" onerror="this.remove()" /><span class="tech__name">GCP</span></span>
+            <span class="tech"><img class="tech__logo" src="assets/tech/azure.svg" alt="" width="26" height="26" loading="lazy" decoding="async" onerror="this.remove()" /><span class="tech__name">Azure</span></span>
+            <span class="tech"><img class="tech__logo" src="assets/tech/firebase.svg" alt="" width="26" height="26" loading="lazy" decoding="async" onerror="this.remove()" /><span class="tech__name">Firebase</span></span>
+            <span class="tech"><img class="tech__logo" src="assets/tech/docker.svg" alt="" width="26" height="26" loading="lazy" decoding="async" onerror="this.remove()" /><span class="tech__name">Docker</span></span>
           </div>
-        </div>
-
-        <!-- DevOps & CI/CD -->
-        <div class="stack-category reveal reveal-delay-1">
-          <h3 class="stack-category__title">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg>
-            DevOps &amp; CI/CD
-          </h3>
-          <div class="stack-pills" role="list">
-            <span class="stack-pill" role="listitem">GitHub Actions</span>
-            <span class="stack-pill" role="listitem">Terraform</span>
+          <div class="stack-group">
+            <span class="stack-group__name">DevOps &amp; CI/CD</span>
+            <span class="tech"><img class="tech__logo" src="assets/tech/githubactions.svg" alt="" width="26" height="26" loading="lazy" decoding="async" onerror="this.remove()" /><span class="tech__name">GitHub Actions</span></span>
+            <span class="tech"><img class="tech__logo" src="assets/tech/terraform.svg" alt="" width="26" height="26" loading="lazy" decoding="async" onerror="this.remove()" /><span class="tech__name">Terraform</span></span>
           </div>
-        </div>
-
-        <!-- Data & Databases -->
-        <div class="stack-category reveal reveal-delay-2">
-          <h3 class="stack-category__title">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
-            Data &amp; Databases
-          </h3>
-          <div class="stack-pills" role="list">
-            <span class="stack-pill" role="listitem">MySQL</span>
-            <span class="stack-pill" role="listitem">PostgreSQL</span>
-            <span class="stack-pill" role="listitem">MongoDB</span>
+          <div class="stack-group">
+            <span class="stack-group__name">Data &amp; Databases</span>
+            <span class="tech"><img class="tech__logo" src="assets/tech/mysql.svg" alt="" width="26" height="26" loading="lazy" decoding="async" onerror="this.remove()" /><span class="tech__name">MySQL</span></span>
+            <span class="tech"><img class="tech__logo" src="assets/tech/postgresql.svg" alt="" width="26" height="26" loading="lazy" decoding="async" onerror="this.remove()" /><span class="tech__name">PostgreSQL</span></span>
+            <span class="tech"><img class="tech__logo" src="assets/tech/mongodb.svg" alt="" width="26" height="26" loading="lazy" decoding="async" onerror="this.remove()" /><span class="tech__name">MongoDB</span></span>
           </div>
-        </div>
-
-        <!-- FrontEnd -->
-        <div class="stack-category reveal reveal-delay-3">
-          <h3 class="stack-category__title">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-            FrontEnd
-          </h3>
-          <div class="stack-pills" role="list">
-            <span class="stack-pill" role="listitem">React</span>
-            <span class="stack-pill" role="listitem">Next.js</span>
-            <span class="stack-pill" role="listitem">Flutter</span>
+          <div class="stack-group">
+            <span class="stack-group__name">FrontEnd</span>
+            <span class="tech"><img class="tech__logo" src="assets/tech/react.svg" alt="" width="26" height="26" loading="lazy" decoding="async" onerror="this.remove()" /><span class="tech__name">React</span></span>
+            <span class="tech"><img class="tech__logo" src="assets/tech/nextjs.svg" alt="" width="26" height="26" loading="lazy" decoding="async" onerror="this.remove()" /><span class="tech__name">Next.js</span></span>
+            <span class="tech"><img class="tech__logo" src="assets/tech/flutter.svg" alt="" width="26" height="26" loading="lazy" decoding="async" onerror="this.remove()" /><span class="tech__name">Flutter</span></span>
           </div>
-        </div>
-
-        <!-- Backend -->
-        <div class="stack-category reveal reveal-delay-4">
-          <h3 class="stack-category__title">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
-            Backend
-          </h3>
-          <div class="stack-pills" role="list">
-            <span class="stack-pill" role="listitem">Node.js</span>
-            <span class="stack-pill" role="listitem">Express</span>
-            <span class="stack-pill" role="listitem">Python</span>
-            <span class="stack-pill" role="listitem">FastAPI</span>
+          <div class="stack-group">
+            <span class="stack-group__name">Backend</span>
+            <span class="tech"><img class="tech__logo" src="assets/tech/nodejs.svg" alt="" width="26" height="26" loading="lazy" decoding="async" onerror="this.remove()" /><span class="tech__name">Node.js</span></span>
+            <span class="tech"><img class="tech__logo" src="assets/tech/express.svg" alt="" width="26" height="26" loading="lazy" decoding="async" onerror="this.remove()" /><span class="tech__name">Express</span></span>
+            <span class="tech"><img class="tech__logo" src="assets/tech/python.svg" alt="" width="26" height="26" loading="lazy" decoding="async" onerror="this.remove()" /><span class="tech__name">Python</span></span>
+            <span class="tech"><img class="tech__logo" src="assets/tech/fastapi.svg" alt="" width="26" height="26" loading="lazy" decoding="async" onerror="this.remove()" /><span class="tech__name">FastAPI</span></span>
           </div>
-        </div>
-
-        <!-- Web3 -->
-        <div class="stack-category reveal reveal-delay-1">
-          <h3 class="stack-category__title">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 14 20 9 15 4"/><path d="M4 20v-7a4 4 0 0 1 4-4h12"/></svg>
-            Web3
-          </h3>
-          <div class="stack-pills" role="list">
-            <span class="stack-pill" role="listitem">Stellar</span>
+          <div class="stack-group">
+            <span class="stack-group__name">Web3</span>
+            <span class="tech"><img class="tech__logo" src="assets/tech/stellar.svg" alt="" width="26" height="26" loading="lazy" decoding="async" onerror="this.remove()" /><span class="tech__name">Stellar</span></span>
           </div>
-        </div>
       </div>
     </div>
   </section>

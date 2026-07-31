@@ -1019,21 +1019,6 @@ document.addEventListener('DOMContentLoaded', () => {
       liveUrl: '',
       sourceUrl: 'https://github.com/lauurnce/habi-4.0-ws-2026',
     },
-    '02a-manila': {
-      title: 'Zero to Agent Manila Official Website',
-      desc: 'Built and shipped the official Next.js site for Zero to Agent Manila 2026, an AI/agent developer event in the Philippines. Designed for fast load, mobile-first browsing, and conversion-driven CTAs covering schedule, speakers, venue, and registration.',
-      image: 'assets/project-nebula.jpg',
-      tags: ['Next.js', 'TypeScript', 'Tailwind CSS', 'Vercel'],
-      features: [
-        'Responsive event landing with hero + agenda',
-        'Speaker and sponsor showcase',
-        'Registration CTA flow',
-        'Optimized SEO + OpenGraph cards',
-        'Deployed on Vercel edge',
-      ],
-      liveUrl: 'https://02a-manila-2026.vercel.app',
-      sourceUrl: 'https://github.com/lauurnce/02a-manila-2026',
-    },
     greenproof: {
       title: 'GreenProof',
       desc: 'GreenProof tackles Quezon City\'s 2,500-metric-ton daily waste problem by incentivizing recycling at the barangay level. Residents earn Stellar XLM for verified plastic deposits (1kg = 1 Impact Point), with all transactions recorded on a transparent on-chain ledger. Barangays and LGUs manage collection points and verification, turning waste segregation into a community-owned economic system.',
@@ -1048,6 +1033,21 @@ document.addEventListener('DOMContentLoaded', () => {
       ],
       liveUrl: 'https://stellar.expert/explorer/testnet/contract/CCX4HEFCB4SJFG463AN2AC6C66MPKXRESVAI6YPHFNH4S63QRW476BLG',
       sourceUrl: 'https://github.com/lauurnce/greenproof-ph',
+    },
+    '02a-manila': {
+      title: 'Zero to Agent Manila Official Website',
+      desc: 'Built and shipped the official Next.js site for Zero to Agent Manila 2026, an AI/agent developer event in the Philippines. Designed for fast load, mobile-first browsing, and conversion-driven CTAs covering schedule, speakers, venue, and registration.',
+      image: 'assets/project-nebula.jpg',
+      tags: ['Next.js', 'TypeScript', 'Tailwind CSS', 'Vercel'],
+      features: [
+        'Responsive event landing with hero + agenda',
+        'Speaker and sponsor showcase',
+        'Registration CTA flow',
+        'Optimized SEO + OpenGraph cards',
+        'Deployed on Vercel edge',
+      ],
+      liveUrl: 'https://02a-manila-2026.vercel.app',
+      sourceUrl: 'https://github.com/lauurnce/02a-manila-2026',
     },
   };
 

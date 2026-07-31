@@ -1092,30 +1092,6 @@ document.addEventListener('DOMContentLoaded', () => {
     },
   };
 
-  // ─── Speaking Gallery Data ───
-  const speakingGalleryData = {
-    acm: {
-      title: 'Resource Speaker · ACM Core VerteX @ FEU Institute of Technology',
-      date: 'Speaker',
-      badge: null,
-      images: [
-        'assets/leadership/feu tech/download.jpg',
-      ],
-      story: `Invited as resource speaker at the ACM Core VerteX event held at FEU Institute of Technology. Delivered a tech talk to 40+ students covering practical AI concepts and modern development workflows.\n\nFacilitated a hands-on build-along session using AWS PartyRock, guiding participants through building their first AI-powered application without writing code.\n\nThe goal was to lower the barrier to AI experimentation for students at any skill level. You don't need to be a machine learning expert to ship something real with AI.`,
-      projectLink: '', projectLinkText: '',
-    },
-    aimaxxin: {
-      title: 'Technical Speaker · AI Maxxin On-Site Workshop',
-      date: 'Speaker',
-      badge: null,
-      images: [
-        'assets/leadership/ai maxxin/1.jpg',
-      ],
-      story: `Featured as technical speaker at the AI Maxxin on-site workshop, teaching over 60 participants advanced prompt engineering techniques and practical applications of Langflow.\n\nCovered prompt chaining, context management, and building agentic workflows, turning complex AI concepts into skills people could use the same day.\n\nThe Langflow demos showed how to build multi-step AI pipelines visually, so even non-developers could create production-ready AI applications without writing backend code.`,
-      projectLink: '', projectLinkText: '',
-    },
-  };
-
   // ─── Gallery Modal Logic ───
   const galleryOverlay    = document.getElementById('galleryOverlay');
   const galleryHero       = document.getElementById('galleryHero');
@@ -1256,14 +1232,14 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Speaking cards → gallery
-  document.querySelectorAll('.leadership-card[data-speaking]').forEach(card => {
-    card.addEventListener('click', () => {
-      const data = speakingGalleryData[card.dataset.speaking];
+  // Community cards and rows → gallery (all three tiers)
+  document.querySelectorAll('[data-community]').forEach(el => {
+    el.addEventListener('click', () => {
+      const data = communityGalleryData[el.dataset.community];
       if (data) openGallery(data);
     });
-    card.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); card.click(); }
+    el.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); el.click(); }
     });
   });
 

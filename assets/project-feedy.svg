@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 632" width="1200" height="632" role="img" aria-label="feedy: a Python CLI that summarizes developer blog feeds daily">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#17161F"/>
+      <stop offset="1" stop-color="#0B0A11"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.22" cy="0.18" r="0.8">
+      <stop offset="0" stop-color="#E9C86A" stop-opacity="0.14"/>
+      <stop offset="1" stop-color="#E9C86A" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1200" height="632" fill="url(#bg)"/>
+  <rect width="1200" height="632" fill="url(#glow)"/>
+
+  <!-- All type stays inside x 90-1110 / y 76-556 so object-fit:cover never clips it,
+       and the headline sits in the top half, above the card's bottom fade. -->
+  <g font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', monospace">
+    <text x="120" y="152" font-size="24" letter-spacing="5" fill="#E9C86A">PYTHON CLI</text>
+
+    <text x="120" y="258" font-size="72" font-weight="700">
+      <tspan fill="#E9C86A">$ </tspan><tspan fill="#F2F1F7">feedy digest</tspan>
+    </text>
+
+    <text x="120" y="318" font-size="30" fill="#8B8999"># developer blog feeds, summarized daily</text>
+
+    <rect x="120" y="366" width="132" height="4" fill="#E9C86A" opacity="0.85"/>
+
+    <text x="120" y="446" font-size="30" fill="#A9A7B7">anthropic · openai · meta · tiktok</text>
+    <text x="120" y="498" font-size="30" fill="#A9A7B7">telegram · x · hacker news</text>
+  </g>
+</svg>

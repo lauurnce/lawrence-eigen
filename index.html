@@ -208,11 +208,63 @@
       <div class="section-header reveal">
         <p class="section-header__label">Projects</p>
         <h2 class="section-header__title text-display-md">Featured Work</h2>
-        <p class="section-header__desc">Work I've shipped across mobile apps, event platforms, and smart contracts.</p>
+        <p class="section-header__desc">Work I've shipped across web and mobile apps, developer tooling, event platforms, and smart contracts.</p>
       </div>
-      <div class="projects__grid">
+      <div class="projects__carousel reveal">
+        <div class="projects__track" id="projectsTrack">
         <!-- Project 1 -->
-        <div class="project-card reveal reveal-delay-1" data-project="kalinga" id="project-kalinga">
+        <div class="project-card" data-project="survival-kit" id="project-survival-kit">
+          <div class="project-card__image-wrap">
+            <img src="assets/project-survival-kit.jpg" alt="BSIT Survival Kit study companion" class="project-card__image" loading="lazy" decoding="async" width="1200" height="632" />
+          </div>
+          <div class="project-card__body">
+            <div class="project-card__tags">
+              <span class="project-card__tag">Next.js</span>
+              <span class="project-card__tag">TypeScript</span>
+              <span class="project-card__tag">Tailwind CSS</span>
+              <span class="project-card__tag">Supabase</span>
+              <span class="project-card__tag">PayMongo</span>
+            </div>
+            <h3 class="project-card__title">BSIT Survival Kit</h3>
+            <p class="project-card__desc">Study companion for Philippine BSIT students. Lessons are free to read, and a one-time unlock adds practice drills, quizzes, in-app code labs, and progress tracking.</p>
+            <div class="project-card__links">
+              <a href="https://github.com/lauurnce/survivalKitApp" target="_blank" rel="noopener noreferrer" class="project-card__link" onclick="event.stopPropagation()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+                Source
+              </a>
+              <a href="https://survival-kit-app.vercel.app" target="_blank" rel="noopener noreferrer" class="project-card__link" onclick="event.stopPropagation()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                Live Demo
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project 2 -->
+        <div class="project-card" data-project="feedy" id="project-feedy">
+          <div class="project-card__image-wrap">
+            <img src="assets/project-feedy.svg" alt="feedy developer blog digest CLI" class="project-card__image" loading="lazy" decoding="async" width="1200" height="632" />
+          </div>
+          <div class="project-card__body">
+            <div class="project-card__tags">
+              <span class="project-card__tag">Python</span>
+              <span class="project-card__tag">SQLite</span>
+              <span class="project-card__tag">Anthropic API</span>
+              <span class="project-card__tag">CLI</span>
+            </div>
+            <h3 class="project-card__title">feedy</h3>
+            <p class="project-card__desc">Python CLI that aggregates developer blogs from seven platforms into SQLite, then writes a daily digest with AI summaries and a "why it matters for devs" line.</p>
+            <div class="project-card__links">
+              <a href="https://github.com/lauurnce/feedy" target="_blank" rel="noopener noreferrer" class="project-card__link" onclick="event.stopPropagation()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+                Source
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project 3 -->
+        <div class="project-card" data-project="kalinga" id="project-kalinga">
           <div class="project-card__image-wrap">
             <img src="assets/project-hyperledger.jpg" alt="Kalinga Mental Wellness App" class="project-card__image" loading="lazy" decoding="async" width="800" height="800" />
           </div>
@@ -235,8 +287,36 @@
           </div>
         </div>
 
-        <!-- Project 2 -->
-        <div class="project-card reveal reveal-delay-2" data-project="02a-manila" id="project-02a-manila">
+        <!-- Project 4 -->
+        <div class="project-card" data-project="greenproof" id="project-greenproof">
+          <div class="project-card__image-wrap">
+            <img src="assets/project-amberflow.jpg" alt="GreenProof Recycle-to-Earn" class="project-card__image" loading="lazy" decoding="async" width="800" height="800" />
+          </div>
+          <div class="project-card__body">
+            <div class="project-card__tags">
+              <span class="project-card__tag">Rust</span>
+              <span class="project-card__tag">Stellar</span>
+              <span class="project-card__tag">Soroban</span>
+              <span class="project-card__tag">Web3</span>
+              <span class="project-card__tag">TypeScript</span>
+            </div>
+            <h3 class="project-card__title">GreenProof</h3>
+            <p class="project-card__desc">Stellar Soroban smart contract powering a Recycle-to-Earn waste management system that rewards Filipino residents with XLM for verified plastic recycling.</p>
+            <div class="project-card__links">
+              <a href="https://github.com/lauurnce/greenproof-ph" target="_blank" rel="noopener noreferrer" class="project-card__link" onclick="event.stopPropagation()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+                Source
+              </a>
+              <a href="https://stellar.expert/explorer/testnet/contract/CCX4HEFCB4SJFG463AN2AC6C66MPKXRESVAI6YPHFNH4S63QRW476BLG" target="_blank" rel="noopener noreferrer" class="project-card__link" onclick="event.stopPropagation()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
+                On-chain Contract
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project 5 -->
+        <div class="project-card" data-project="02a-manila" id="project-02a-manila">
           <div class="project-card__image-wrap">
             <img src="assets/project-nebula.jpg" alt="Zero to Agent Manila Official Website" class="project-card__image" loading="lazy" decoding="async" width="800" height="800" />
           </div>
@@ -261,32 +341,18 @@
             </div>
           </div>
         </div>
+        </div>
 
-        <!-- Project 3 -->
-        <div class="project-card reveal reveal-delay-3" data-project="greenproof" id="project-greenproof">
-          <div class="project-card__image-wrap">
-            <img src="assets/project-amberflow.jpg" alt="GreenProof Recycle-to-Earn" class="project-card__image" loading="lazy" decoding="async" width="800" height="800" />
-          </div>
-          <div class="project-card__body">
-            <div class="project-card__tags">
-              <span class="project-card__tag">Rust</span>
-              <span class="project-card__tag">Stellar</span>
-              <span class="project-card__tag">Soroban</span>
-              <span class="project-card__tag">Web3</span>
-              <span class="project-card__tag">TypeScript</span>
-            </div>
-            <h3 class="project-card__title">GreenProof</h3>
-            <p class="project-card__desc">Stellar Soroban smart contract powering a Recycle-to-Earn waste management system that rewards Filipino residents with XLM for verified plastic recycling.</p>
-            <div class="project-card__links">
-              <a href="https://github.com/lauurnce/greenproof-ph" target="_blank" rel="noopener noreferrer" class="project-card__link" onclick="event.stopPropagation()">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
-                Source
-              </a>
-              <a href="https://stellar.expert/explorer/testnet/contract/CCX4HEFCB4SJFG463AN2AC6C66MPKXRESVAI6YPHFNH4S63QRW476BLG" target="_blank" rel="noopener noreferrer" class="project-card__link" onclick="event.stopPropagation()">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
-                On-chain Contract
-              </a>
-            </div>
+        <div class="projects__controls">
+          <div class="projects__progress" aria-hidden="true"><span class="projects__progress-thumb"></span></div>
+          <p class="projects__count" aria-hidden="true"><span id="projectsCount">1&ndash;3</span> of 5</p>
+          <div class="projects__arrows">
+            <button type="button" class="projects__arrow" id="projectsPrev" aria-controls="projectsTrack" aria-label="Show previous projects">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+            </button>
+            <button type="button" class="projects__arrow" id="projectsNext" aria-controls="projectsTrack" aria-label="Show next projects">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </button>
           </div>
         </div>
       </div>

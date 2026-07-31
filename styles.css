@@ -299,16 +299,16 @@ body.cursor-clicking .cursor-dot {
   font-family: var(--font-display);
   font-size: clamp(2rem, 4vw, 3.5rem);
   font-weight: 800;
-  line-height: 1.05;
-  letter-spacing: -0.025em;
+  line-height: 1.1;
+  letter-spacing: -0.008em;
 }
 
 .text-headline {
   font-family: var(--font-display);
   font-size: clamp(1.25rem, 2.5vw, 1.75rem);
   font-weight: 700;
-  line-height: 1.2;
-  letter-spacing: -0.01em;
+  line-height: 1.25;
+  letter-spacing: -0.005em;
 }
 
 .text-title {
@@ -891,7 +891,7 @@ body.cursor-clicking .cursor-dot {
   font-size: clamp(2.25rem, 4vw, 3.5rem);
   font-weight: 800;
   color: var(--primary);
-  letter-spacing: -0.04em;
+  letter-spacing: -0.015em;
   display: inline-block;
   font-variant-numeric: tabular-nums;
 }
@@ -901,7 +901,7 @@ body.cursor-clicking .cursor-dot {
   font-size: clamp(1.25rem, 2.5vw, 2rem);
   font-weight: 700;
   color: var(--primary);
-  letter-spacing: -0.02em;
+  letter-spacing: -0.008em;
 }
 
 .stat-item__label {
@@ -1103,7 +1103,7 @@ body.cursor-clicking .cursor-dot {
   font-weight: 800;
   color: var(--on-surface);
   margin-bottom: var(--space-sm);
-  letter-spacing: -0.015em;
+  letter-spacing: -0.005em;
 }
 
 .project-card__desc {
@@ -1450,7 +1450,7 @@ body.cursor-clicking .cursor-dot {
   font-weight: 800;
   color: var(--on-surface);
   margin-bottom: var(--space-md);
-  letter-spacing: -0.02em;
+  letter-spacing: -0.008em;
 }
 
 .contact__info p {
@@ -1748,7 +1748,7 @@ body.cursor-clicking .cursor-dot {
   font-weight: 800;
   color: var(--on-surface);
   margin-bottom: var(--space-md);
-  letter-spacing: -0.025em;
+  letter-spacing: -0.01em;
 }
 
 .modal__desc {
@@ -2012,7 +2012,7 @@ body.cursor-clicking .cursor-dot {
   font-weight: 800;
   color: var(--on-surface);
   margin: 0;
-  letter-spacing: -0.015em;
+  letter-spacing: -0.005em;
 }
 
 .competition-item__role {
@@ -2606,8 +2606,8 @@ html.light .competition-item__dot {
   font-size: clamp(1.25rem, 3vw, 1.75rem);
   font-weight: 800;
   color: var(--on-surface);
-  letter-spacing: -0.025em;
-  line-height: 1.15;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
   margin-bottom: var(--space-lg);
 }
 

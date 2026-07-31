@@ -994,6 +994,14 @@ document.addEventListener('DOMContentLoaded', () => {
       const top = header.getBoundingClientRect().top + window.pageYOffset - navHeight - 16;
       window.scrollTo({ top, behavior: 'smooth' });
       window.setTimeout(() => {
+        // The linked card may be parked off to the side of the carousel.
+        const track = card.closest('.projects__track');
+        if (track) {
+          const left = card.getBoundingClientRect().left
+            - track.getBoundingClientRect().left
+            + track.scrollLeft;
+          track.scrollTo({ left, behavior: 'smooth' });
+        }
         card.classList.add('project-card--highlight');
         window.setTimeout(() => {
           card.classList.remove('project-card--highlight');
@@ -1002,8 +1010,117 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  // ─── Projects carousel ───
+  // The track scrolls natively, so this only drives the arrows, the progress
+  // rail, and the range readout off whatever position the browser reports.
+  const projectsTrack = document.getElementById('projectsTrack');
+  if (projectsTrack) {
+    const projectsPrev  = document.getElementById('projectsPrev');
+    const projectsNext  = document.getElementById('projectsNext');
+    const projectsCount = document.getElementById('projectsCount');
+    const projectsThumb = document.querySelector('.projects__progress-thumb');
+    const projectCards  = projectsTrack.querySelectorAll('.project-card');
+
+    const cardStep = () => {
+      const first = projectCards[0];
+      if (!first) return projectsTrack.clientWidth;
+      const gap = parseFloat(getComputedStyle(projectsTrack).columnGap) || 0;
+      return first.getBoundingClientRect().width + gap;
+    };
+
+    const pad = (n) => String(n).padStart(2, '0');
+
+    const syncCarousel = () => {
+      const maxScroll = projectsTrack.scrollWidth - projectsTrack.clientWidth;
+      const progress  = maxScroll > 0 ? projectsTrack.scrollLeft / maxScroll : 0;
+
+      projectsPrev.disabled = projectsTrack.scrollLeft <= 1;
+      projectsNext.disabled = projectsTrack.scrollLeft >= maxScroll - 1;
+
+      const visible = Math.min(1, projectsTrack.clientWidth / projectsTrack.scrollWidth);
+      projectsThumb.style.width = `${visible * 100}%`;
+      projectsThumb.style.left  = `${progress * (100 - visible * 100)}%`;
+
+      const perView = Math.max(1, Math.round(projectsTrack.clientWidth / cardStep()));
+      const first   = Math.min(
+        projectCards.length - perView + 1,
+        Math.round(projectsTrack.scrollLeft / cardStep()) + 1
+      );
+      const last = Math.min(projectCards.length, first + perView - 1);
+      projectsCount.textContent = perView > 1
+        ? `${pad(first)}–${pad(last)}`
+        : pad(first);
+    };
+
+    // Successive clicks queue off the pending target, not the live scrollLeft,
+    // so tapping the arrow three times fast advances three cards instead of
+    // being swallowed by the smooth scroll already in flight.
+    let carouselTarget = null;
+
+    const stepBy = (direction) => {
+      const maxScroll = projectsTrack.scrollWidth - projectsTrack.clientWidth;
+      const from = carouselTarget === null ? projectsTrack.scrollLeft : carouselTarget;
+      carouselTarget = Math.max(0, Math.min(maxScroll, from + direction * cardStep()));
+      projectsTrack.scrollTo({ left: carouselTarget, behavior: 'smooth' });
+    };
+
+    projectsPrev.addEventListener('click', () => stepBy(-1));
+    projectsNext.addEventListener('click', () => stepBy(1));
+
+    // Hand control back the moment the reader scrolls the track themselves.
+    const releaseTarget = () => { carouselTarget = null; };
+    projectsTrack.addEventListener('wheel', releaseTarget, { passive: true });
+    projectsTrack.addEventListener('touchstart', releaseTarget, { passive: true });
+    projectsTrack.addEventListener('scrollend', releaseTarget);
+
+    let carouselFrame = null;
+    projectsTrack.addEventListener('scroll', () => {
+      if (carouselFrame) return;
+      carouselFrame = requestAnimationFrame(() => {
+        carouselFrame = null;
+        if (carouselTarget !== null && Math.abs(projectsTrack.scrollLeft - carouselTarget) < 2) {
+          carouselTarget = null;
+        }
+        syncCarousel();
+      });
+    }, { passive: true });
+
+    window.addEventListener('resize', syncCarousel);
+    syncCarousel();
+  }
+
   // ─── Project Modal ───
   const projectData = {
+    'survival-kit': {
+      title: 'BSIT Survival Kit',
+      desc: 'A study companion for Philippine BSIT students. Lessons are free to read; a one-time payment unlocks practice drills, quizzes, in-app code labs, exam solutions, and progress tracking. Built on Next.js and Supabase, with PayMongo handling GCash-friendly one-time payments so students without cards can still pay.',
+      image: 'assets/project-survival-kit.jpg',
+      tags: ['Next.js', 'TypeScript', 'Tailwind CSS', 'Supabase', 'PayMongo'],
+      features: [
+        'Free module notes, programming guides, and computation walkthroughs',
+        'One-time unlock for drills, quizzes, and exam solutions',
+        'In-app code labs via Pyodide, CodeMirror, and Vercel Sandbox',
+        'Supabase Postgres + auth with row-level security',
+        'GCash-friendly one-time payments through PayMongo',
+      ],
+      liveUrl: 'https://survival-kit-app.vercel.app',
+      sourceUrl: 'https://github.com/lauurnce/survivalKitApp',
+    },
+    feedy: {
+      title: 'feedy',
+      desc: 'A Python CLI that scrapes developer blogs from the platforms you actually care about, stores new posts in a local SQLite database deduplicated by URL, and turns them into a concise daily digest. Each item gets a two-sentence summary plus a "why it matters for devs" line, written by the Anthropic API.',
+      image: 'assets/project-feedy.svg',
+      tags: ['Python', 'SQLite', 'Anthropic API', 'CLI'],
+      features: [
+        'Seven sources: Anthropic, OpenAI, Meta, TikTok, Telegram, X, Hacker News',
+        'Local SQLite store with URL-based deduplication',
+        'AI digests with a two-sentence summary + "why it matters" line',
+        'Filter by source or date, export digests to Markdown',
+        'Deliver to Slack or email, or serve the digest as JSON',
+      ],
+      liveUrl: '',
+      sourceUrl: 'https://github.com/lauurnce/feedy',
+    },
     kalinga: {
       title: 'Kalinga',
       desc: 'Kalinga (Filipino for "care") is a React Native app addressing unique mental health challenges faced by BPO agents working overnight shifts. Combines mood tracking, guided breathing exercises, sleep logging, and AI-driven peer support to help users build resilience against burnout, isolation, and circadian disruption.',

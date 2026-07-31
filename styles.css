@@ -2324,6 +2324,9 @@ html.light .tech__logo {
   .certifications__list {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+  .projects__carousel {
+    --projects-per-view: 2;
+  }
 }
 
 @media (max-width: 768px) {
@@ -2363,8 +2366,12 @@ html.light .tech__logo {
     margin-top: var(--space-md);
   }
 
-  .projects__grid {
-    grid-template-columns: 1fr;
+  .projects__carousel {
+    --projects-per-view: 1;
+  }
+
+  .projects__count {
+    display: none;
   }
 
   .section {

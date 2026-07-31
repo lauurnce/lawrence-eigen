@@ -192,7 +192,7 @@ document.addEventListener('DOMContentLoaded', () => {
       requestAnimationFrame(animateRing);
     })(performance.now());
 
-    const hoverSel = 'a, button, .project-card, .stack-pill, .cert-card, .leadership-card, input, textarea, [role="button"]';
+    const hoverSel = 'a, button, .project-card, .stack-lane, .cert-card, .leadership-card, input, textarea, [role="button"]';
     document.addEventListener('mouseover', (e) => {
       if (e.target.closest(hoverSel)) document.body.classList.add('cursor-hover');
     });

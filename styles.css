@@ -1268,118 +1268,132 @@ body.cursor-grabbing .cursor-dot {
 /* ============================================================
    TECH STACK
    ============================================================ */
-.stack__categories {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: var(--space-md);
+/* One full-bleed lane. The moving unit is the whole category block, so the
+   grouping stays legible while it drifts. Compact by design: this sits in the
+   page like the stats strip, not as a tall grid. */
+/* The header is display-scale type, so the lane is sized to sit against it rather
+   than read as a footnote. */
+#stack {
+  padding-top: var(--space-4xl);
 }
 
-.stack-category {
-  background: var(--surface-container);
-  border-radius: var(--radius-sm);
-  padding: var(--space-xl);
-  border: 1px solid var(--outline-variant);
-  transition: border-color var(--transition-base);
+.stack-lane {
+  position: relative;
+  overflow: hidden;
+  margin-top: var(--space-2xl);
+  padding: var(--space-2xl) 0;
+  border-top: 1px solid var(--outline-variant);
+  border-bottom: 1px solid var(--outline-variant);
+  touch-action: pan-y;
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 4%, #000 96%, transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0, #000 4%, #000 96%, transparent 100%);
 }
 
-.stack-category:hover {
-  border-color: var(--outline);
-}
-
-.stack-category__title {
-  font-family: var(--font-display);
-  font-size: 0.875rem;
-  font-weight: 700;
-  color: var(--on-surface);
-  margin-bottom: var(--space-md);
+.stack-lane__track {
   display: flex;
   align-items: center;
-  gap: var(--space-sm);
-  letter-spacing: -0.005em;
+  gap: var(--space-3xl);
+  width: max-content;
+  will-change: transform;
 }
 
-.stack-category__title svg {
-  width: 15px;
-  height: 15px;
+/* Each category travels as one unit, with a hairline divider between blocks
+   echoing the stats strip. */
+.stack-group {
+  display: flex;
+  align-items: center;
+  gap: var(--space-lg);
+  position: relative;
+  padding-right: var(--space-3xl);
+}
+
+.stack-group::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 44px;
+  width: 1px;
+  background: var(--outline-variant);
+}
+
+.stack-group__name {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
   color: var(--primary);
+  white-space: nowrap;
   flex-shrink: 0;
 }
 
-.stack-pills {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-sm);
-}
-
-.stack-pill {
+.tech {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  padding: 3px 10px;
-  border-radius: var(--radius-sm);
+  gap: 10px;
   font-family: var(--font-mono);
-  font-size: 0.6875rem;
+  font-size: 0.9375rem;
   color: var(--on-surface-variant);
-  background: var(--surface-container-high);
-  border: 1px solid var(--outline-variant);
-  transition: color var(--transition-fast), border-color var(--transition-fast);
-  user-select: none;
-  cursor: default;
+  white-space: nowrap;
   letter-spacing: 0.02em;
+  user-select: none;
+  transition: color var(--transition-fast);
 }
 
-.stack-pill:hover {
+/* Logos ship in brand colour but sit desaturated so 41 of them do not shout.
+   Colour returns on hover, which also survives the light theme. */
+.tech__logo {
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+  object-fit: contain;
+  filter: grayscale(1) brightness(1.9) opacity(0.65);
+  transition: filter var(--transition-fast);
+}
+
+html.light .tech__logo {
+  filter: grayscale(1) brightness(0.4) opacity(0.75);
+}
+
+.stack-lane:not(.is-dragging) .tech:hover {
   color: var(--primary);
-  border-color: rgba(233, 200, 106, 0.35);
 }
 
-.stack-pill:focus-visible {
-  outline: none;
-  border-color: rgba(233, 200, 106, 0.5);
+.stack-lane:not(.is-dragging) .tech:hover .tech__logo {
+  filter: none;
 }
+
+
+
 
 /* ============================================================
    EXPERIENCE
    ============================================================ */
 .experience__timeline {
   position: relative;
-  padding-left: var(--space-2xl);
-}
-
-.experience__timeline::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 11px;
-  bottom: 0;
-  width: 1px;
-  background: linear-gradient(to bottom, var(--primary), var(--outline-variant), transparent);
+  padding-left: 0;
 }
 
 .experience-item {
   position: relative;
-  padding-bottom: var(--space-3xl);
+  padding: var(--space-xl) 0;
+}
+
+.experience-item:first-child {
+  padding-top: 0;
 }
 
 .experience-item:last-child {
   padding-bottom: 0;
 }
 
-.experience-item__dot {
-  position: absolute;
-  left: calc(-1 * var(--space-2xl) + 5px);
-  top: 6px;
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: var(--surface);
-  border: 1.5px solid var(--primary);
-  box-shadow: 0 0 0 3px var(--surface);
-  transition: background var(--transition-base);
+.experience-item + .experience-item {
+  border-top: 1px solid var(--outline-variant);
 }
 
-.experience-item:hover .experience-item__dot {
-  background: var(--primary);
+.experience-item__dot {
+  display: none;
 }
 
 .experience-item__period {
@@ -1397,7 +1411,7 @@ body.cursor-grabbing .cursor-dot {
   font-weight: 800;
   color: var(--on-surface);
   margin-bottom: var(--space-xs);
-  letter-spacing: -0.015em;
+  letter-spacing: -0.005em;
 }
 
 .experience-item__company {
@@ -1416,12 +1430,334 @@ body.cursor-grabbing .cursor-dot {
 }
 
 /* ============================================================
-   LEADERSHIP & VOLUNTEERING
+   COMMUNITY & IMPACT
+   Three tiers, descending emphasis:
+   1. Speaking & Roles  - .leadership-card, 3-col, photo on top
+   2. Organizing Team   - .organizing-card, 2-col, photo left
+   3. Events Attended   - .attended-row,    1-col, thumbnail left
    ============================================================ */
+.tier-block + .tier-block {
+  margin-top: var(--space-4xl);
+}
+
+.tier-header {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-md);
+  margin-bottom: var(--space-xl);
+}
+
+.tier-header__label {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--primary);
+  flex-shrink: 0;
+}
+
+.tier-header__title {
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--on-surface);
+  letter-spacing: -0.01em;
+  flex-shrink: 0;
+}
+
+.tier-header__rule {
+  flex: 1;
+  height: 1px;
+  background: var(--outline-variant);
+}
+
+.tier-header__count {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  color: var(--on-surface-variant);
+  flex-shrink: 0;
+}
+
+.tier-block__desc {
+  color: var(--on-surface-variant);
+  font-size: 0.875rem;
+  line-height: 1.7;
+  max-width: 560px;
+  margin: calc(-1 * var(--space-md)) 0 var(--space-xl);
+}
+
+/* ---------- Tier 1: Speaking & Roles ---------- */
 .leadership__grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: var(--space-md);
+  /* Size cards to their content so photoless cards don't stretch
+     to the row height and leave a gap under their text. */
+  align-items: start;
+}
+
+/* ---------- Tier 2: Organizing Team ---------- */
+.organizing__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: var(--space-md);
+  align-items: start;
+}
+
+.organizing-card {
+  display: flex;
+  gap: var(--space-lg);
+  background: var(--surface-container);
+  padding: var(--space-lg);
+  border-radius: var(--radius-sm);
+  border-left: 2px solid transparent;
+  transition: background var(--transition-fast), border-left-color var(--transition-base);
+}
+
+.organizing-card:hover {
+  background: var(--surface-container-high);
+  border-left-color: var(--primary);
+}
+
+.organizing-card.has-gallery {
+  cursor: pointer;
+}
+
+.organizing-card__img-wrap {
+  position: relative;
+  width: 148px;
+  aspect-ratio: 4 / 3;
+  flex-shrink: 0;
+  /* Without this the flex parent stretches the wrap to full card height and
+     the aspect-ratio is ignored, giving every card a different thumb size. */
+  align-self: flex-start;
+  overflow: hidden;
+  border-radius: var(--radius-sm);
+}
+
+.organizing-card__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  opacity: 0.88;
+  transition: transform var(--transition-slow), opacity var(--transition-base);
+}
+
+.organizing-card.has-gallery:hover .organizing-card__img {
+  transform: scale(1.05);
+  opacity: 1;
+}
+
+.organizing-card__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.organizing-card__kind {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.5625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--primary);
+  margin-bottom: 6px;
+}
+
+.organizing-card__title {
+  font-family: var(--font-display);
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--on-surface);
+  letter-spacing: -0.01em;
+  margin-bottom: 4px;
+}
+
+.organizing-card__meta {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--on-surface-variant);
+  margin-bottom: var(--space-sm);
+}
+
+.organizing-card__desc {
+  color: var(--on-surface-variant);
+  font-size: 0.8125rem;
+  line-height: 1.65;
+}
+
+/* ---------- Tier 3: Events Attended ---------- */
+.attended__list {
+  border-top: 1px solid var(--outline-variant);
+}
+
+.attended-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-md) var(--space-sm);
+  border-bottom: 1px solid var(--outline-variant);
+  transition: background var(--transition-fast);
+}
+
+.attended-row:hover {
+  background: var(--surface-container);
+}
+
+.attended-row.has-gallery {
+  cursor: pointer;
+}
+
+.attended-row__thumb-wrap {
+  position: relative;
+  width: 64px;
+  height: 64px;
+  flex-shrink: 0;
+  overflow: hidden;
+  border-radius: var(--radius-sm);
+}
+
+.attended-row__thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.85;
+  transition: opacity var(--transition-base);
+}
+
+.attended-row:hover .attended-row__thumb {
+  opacity: 1;
+}
+
+.attended-row__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.attended-row__title {
+  font-family: var(--font-display);
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--on-surface);
+  margin-bottom: 2px;
+}
+
+.attended-row__meta {
+  font-family: var(--font-mono);
+  font-size: 0.5625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--on-surface-variant);
+  margin-bottom: 5px;
+}
+
+.attended-row__learned {
+  color: var(--on-surface-variant);
+  font-size: 0.8125rem;
+  line-height: 1.6;
+}
+
+.attended-row__learned b {
+  color: var(--on-surface);
+  font-weight: 600;
+  font-size: 0.75rem;
+}
+
+.attended-row__year {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  color: var(--primary);
+  flex-shrink: 0;
+  align-self: flex-start;
+  padding-top: 2px;
+}
+
+/* Rows past the first three stay collapsed until the toggle is pressed. */
+.attended-row--extra {
+  display: none;
+}
+
+.attended__list.is-expanded .attended-row--extra {
+  display: flex;
+}
+
+.attended__toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: var(--space-sm);
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--outline-variant);
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--on-surface-variant);
+  cursor: pointer;
+  transition: color var(--transition-fast), background var(--transition-fast);
+}
+
+/* display:flex above would otherwise beat the UA rule for [hidden]. */
+.attended__toggle[hidden] {
+  display: none;
+}
+
+.attended__toggle:hover {
+  color: var(--primary);
+  background: var(--surface-container);
+}
+
+.attended__toggle-chevron {
+  width: 12px;
+  height: 12px;
+  transition: transform var(--transition-base);
+}
+
+.attended__toggle[aria-expanded="true"] .attended__toggle-chevron {
+  transform: rotate(180deg);
+}
+
+/* ---------- Empty slots awaiting content ---------- */
+.is-template {
+  background: transparent;
+  border: 1px dashed var(--outline);
+}
+
+.is-template:hover {
+  background: transparent;
+  border-color: var(--primary);
+  border-left-color: var(--primary);
+}
+
+.attended-row.is-template {
+  border-width: 0 0 1px 0;
+  border-style: dashed;
+}
+
+.slot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface-container-low);
+  border: 1px dashed var(--outline);
+  border-radius: var(--radius-sm);
+  color: var(--outline);
+}
+
+.slot svg {
+  width: 18px;
+  height: 18px;
+}
+
+.is-template .organizing-card__title,
+.is-template .attended-row__title {
+  color: var(--on-surface-variant);
+  font-style: italic;
 }
 
 .leadership-card {

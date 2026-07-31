@@ -2330,6 +2330,80 @@ html.light .tech__logo {
 }
 
 @media (max-width: 768px) {
+  .organizing__grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Scale the lane back down on narrow screens, where the header is smaller too. */
+  #stack {
+    padding-top: var(--space-3xl);
+  }
+
+  .stack-lane {
+    padding: var(--space-lg) 0;
+  }
+
+  .stack-lane__track {
+    gap: var(--space-2xl);
+  }
+
+  .stack-group {
+    gap: var(--space-md);
+    padding-right: var(--space-2xl);
+  }
+
+  .stack-group__name {
+    font-size: 0.6875rem;
+  }
+
+  .tech {
+    font-size: 0.8125rem;
+    gap: 8px;
+  }
+
+  .tech__logo {
+    width: 20px;
+    height: 20px;
+  }
+
+  .stack-group::after {
+    height: 32px;
+  }
+
+  /* Stack the photo above the text so it isn't squeezed on narrow screens */
+  .organizing-card {
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+
+  .organizing-card__img-wrap {
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    align-self: stretch;
+  }
+
+  .attended-row {
+    align-items: flex-start;
+  }
+
+  .attended-row__thumb-wrap {
+    width: 52px;
+    height: 52px;
+  }
+
+  .attended-row__year {
+    display: none;
+  }
+
+  .tier-header {
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+  }
+
+  .tier-header__rule {
+    display: none;
+  }
+
   .nav__links {
     position: fixed;
     top: 0;

@@ -1036,13 +1036,117 @@ body.cursor-grabbing .cursor-dot {
 /* ============================================================
    PROJECTS
    ============================================================ */
-.projects__grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+/* One horizontal run of cards rather than a grid that leaves a ragged last row.
+   Three fit the viewport at a time; the rest are reachable by the arrows, a
+   swipe, or a trackpad. Native overflow scrolling does the work, so touch and
+   keyboard behave without any script. */
+.projects__carousel {
+  --projects-per-view: 3;
+}
+
+.projects__track {
+  display: flex;
+  align-items: stretch;
   gap: var(--space-xl);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  /* overflow-x also clips the y axis, so the hover lift and its shadow need
+     room carved out here and pulled back with the negative margins. */
+  padding: 6px 0 48px;
+  margin: -6px 0 -32px;
+}
+
+.projects__track::-webkit-scrollbar {
+  display: none;
+}
+
+.projects__track > .project-card {
+  flex: 0 0 calc(
+    (100% - (var(--projects-per-view) - 1) * var(--space-xl)) / var(--projects-per-view)
+  );
+  scroll-snap-align: start;
+}
+
+.projects__controls {
+  display: flex;
+  align-items: center;
+  gap: var(--space-lg);
+  margin-top: var(--space-lg);
+}
+
+.projects__progress {
+  flex: 1;
+  height: 1px;
+  background: var(--outline-variant);
+  position: relative;
+}
+
+.projects__progress-thumb {
+  position: absolute;
+  top: -1px;
+  height: 3px;
+  background: var(--primary);
+  transition: left var(--transition-base), width var(--transition-base);
+}
+
+.projects__count {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  color: var(--on-surface-variant);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.projects__arrows {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.projects__arrow {
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  background: rgba(233, 200, 106, 0.05);
+  color: var(--on-surface-variant);
+  border: 1px solid var(--outline-variant);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: color var(--transition-fast),
+              border-color var(--transition-fast),
+              background var(--transition-fast),
+              opacity var(--transition-fast);
+}
+
+.projects__arrow svg {
+  width: 16px;
+  height: 16px;
+}
+
+.projects__arrow:hover:not(:disabled) {
+  color: var(--primary);
+  border-color: rgba(233, 200, 106, 0.4);
+  background: rgba(233, 200, 106, 0.12);
+}
+
+.projects__arrow:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.projects__arrow:disabled {
+  opacity: 0.3;
+  cursor: default;
 }
 
 .project-card {
+  display: flex;
+  flex-direction: column;
   background: var(--surface-container);
   border-radius: var(--radius-sm);
   overflow: hidden;
@@ -1089,6 +1193,11 @@ body.cursor-grabbing .cursor-dot {
 
 .project-card__body {
   padding: var(--space-lg);
+  /* Cards sit side by side now, so the source links line up across the row
+     instead of floating wherever the description happens to end. */
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .project-card__tags {
@@ -1128,7 +1237,9 @@ body.cursor-grabbing .cursor-dot {
 
 .project-card__links {
   display: flex;
+  flex-wrap: wrap;
   gap: var(--space-md);
+  margin-top: auto;
   padding-top: var(--space-md);
   border-top: 1px solid var(--outline-variant);
 }

@@ -1,6 +1,6 @@
 /* ============================================================
    LAWRENCE PORTFOLIO - Redesigned Design System
-   Fonts: Syne + Bricolage Grotesque + JetBrains Mono
+   Fonts: Space Grotesk (wordmark) + Source Serif 4 (editorial) + JetBrains Mono (labels)
    Palette: Deep blue-black + Golden Amber
    ============================================================ */
 
@@ -67,8 +67,9 @@
   --inverse-on-surface: #18172A;
 
   /* Fonts */
-  --font-display: 'Syne', sans-serif;
-  --font-body: 'Bricolage Grotesque', sans-serif;
+  --font-wordmark: 'Space Grotesk', sans-serif;
+  --font-display: 'Source Serif 4', serif;
+  --font-body: 'Source Serif 4', serif;
   --font-mono: 'JetBrains Mono', monospace;
 
   /* Spacing */
@@ -166,11 +167,12 @@ ul, ol {
 }
 
 .loader__name {
-  font-family: var(--font-display);
+  font-family: var(--font-wordmark);
   font-size: clamp(2.5rem, 8vw, 4.5rem);
-  font-weight: 800;
+  font-weight: 700;
   color: var(--on-surface);
-  letter-spacing: -0.035em;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
   display: block;
   opacity: 0;
   transform: translateY(16px);
@@ -419,14 +421,15 @@ body.cursor-clicking .cursor-dot {
 }
 
 .nav__logo {
-  font-family: var(--font-display);
+  font-family: var(--font-wordmark);
   font-size: 1.0625rem;
-  font-weight: 800;
+  font-weight: 700;
   color: var(--on-surface);
   display: flex;
   align-items: center;
   gap: var(--space-sm);
   letter-spacing: -0.02em;
+  text-transform: uppercase;
 }
 
 .nav__logo-dot {
@@ -616,6 +619,9 @@ body.cursor-clicking .cursor-dot {
 }
 
 .hero__name {
+  font-family: var(--font-wordmark);
+  font-weight: 700;
+  text-transform: uppercase;
   color: var(--on-surface);
   margin-bottom: var(--space-lg);
 }
@@ -747,11 +753,11 @@ body.cursor-clicking .cursor-dot {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: var(--font-display);
+  font-family: var(--font-wordmark);
   font-size: 6rem;
-  font-weight: 800;
+  font-weight: 700;
   color: var(--primary);
-  letter-spacing: -0.04em;
+  letter-spacing: -0.02em;
   opacity: 0.25;
 }
 

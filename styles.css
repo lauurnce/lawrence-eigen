@@ -2342,10 +2342,40 @@ html.light .competition-item__dot {
    ============================================================ */
 .competition-item[data-competition] {
   cursor: pointer;
+  margin-inline: calc(-1 * var(--space-lg));
+  padding-inline: var(--space-lg);
+  border-radius: var(--radius-sm);
+  transition: background var(--transition-fast);
+}
+
+.competition-item[data-competition]:hover {
+  background: var(--surface-container-low);
 }
 
 .competition-item[data-competition]:hover .competition-item__name {
   color: var(--primary);
+}
+
+.competition-item[data-competition]::after {
+  content: '\2192';
+  position: absolute;
+  top: var(--space-xl);
+  right: var(--space-lg);
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  color: var(--on-surface-variant);
+  transition: transform var(--transition-fast), color var(--transition-fast);
+}
+
+.competition-item[data-competition]:hover::after {
+  color: var(--primary);
+  transform: translateX(4px);
+}
+
+@media (max-width: 640px) {
+  .competition-item[data-competition]::after {
+    display: none;
+  }
 }
 
 .competition-item__thumbnail {

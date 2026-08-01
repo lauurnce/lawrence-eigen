@@ -2492,6 +2492,37 @@ html.light .tech__logo {
 }
 
 @media (max-width: 768px) {
+  /* Stacked layout: the portrait sits above the copy rather than beside it,
+     and the hero grows to hold both. */
+  .hero {
+    min-height: auto;
+    padding-top: 96px;
+    padding-bottom: var(--space-4xl);
+    /* The hero is a flex row on desktop; stacking the portrait above the copy
+       means the scene rejoins the flow, so the axis has to turn. */
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+  }
+
+  .hero__scene {
+    position: relative;
+    left: auto;
+    transform: none;
+    max-width: none;
+    height: 420px;
+    padding: 0 var(--space-lg);
+    margin-bottom: var(--space-lg);
+  }
+
+  .hero__node-card {
+    max-width: 160px;
+  }
+
+  .hero__node-detail {
+    font-size: 0.6875rem;
+  }
+
   .organizing__grid {
     grid-template-columns: 1fr;
   }

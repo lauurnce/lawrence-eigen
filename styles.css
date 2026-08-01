@@ -366,15 +366,31 @@ body.cursor-grabbing .cursor-dot {
   padding: 0 var(--space-lg);
 }
 
+/* Available to assistive tech, absent from the visual layout. */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
 .section {
   padding: var(--space-5xl) 0;
   position: relative;
 }
 
-/* Skip layout/paint for sections far below the fold until scrolled near */
+/* Skip layout/paint for sections far below the fold until scrolled near.
+   #stack is deliberately excluded: it is short and cheap to render, the 900px
+   estimate over-reserved space and left a visible gap above the header, and
+   skipped layout made the marquee measure a zero-width track and bail out. */
 #projects,
 #competitions,
-#stack,
 #experience,
 #certifications,
 #contact {

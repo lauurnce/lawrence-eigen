@@ -2816,17 +2816,36 @@ html.light .tech__logo {
   html {
     scroll-behavior: auto;
   }
+  .projects__track {
+    scroll-behavior: auto;
+  }
   .reveal,
   .project-card,
-  .stack-pill,
+  .projects__progress-thumb,
   .btn,
   .nav__link,
   .leadership-card,
   .contact__social-link {
     transition: none;
   }
+  .hero__scene,
+  .hero__node-card,
+  .nav__avatar {
+    transition: none;
+  }
   .hero__scroll-hint svg {
     animation: none;
+  }
+  /* No auto-scroll. The script also skips starting its loop, so the lane becomes
+     an ordinary horizontally scrollable strip and every entry stays reachable. */
+  .stack-lane {
+    overflow-x: auto;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+  .stack-lane__track {
+    transform: none !important;
+    will-change: auto;
   }
 }
 

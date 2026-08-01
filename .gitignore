@@ -42,3 +42,12 @@ yarn-error.log*
 
 # is-a.dev register repo clone (not part of this project)
 register/
+
+# Photo staging + raw source material. Nothing in the site references these;
+# they exist so assets can be reprocessed from originals.
+_incoming/
+assets/events ive attended/
+
+# Vision cutout, 1.6MB. Only needed to regenerate the inlined dotmap in
+# hero-scene.js — see tools-build-dotmap.py.
+assets/lawrence-cutout.png

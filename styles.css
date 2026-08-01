@@ -452,6 +452,38 @@ body.cursor-grabbing .cursor-dot {
   border-radius: 50%;
   background: var(--primary);
   flex-shrink: 0;
+  transition: opacity var(--transition-base), width var(--transition-base);
+}
+
+/* The logo's dot resolves into his face once you scroll off the hero, so the
+   portrait stays with you down the page. On touch, where there is no hover to
+   spend on the big one, this is what keeps him present. */
+/* The canvas keeps a stable box at all times — a zero-width element has no
+   layout for the renderer to measure — so the reveal is done with transform
+   and a negative margin rather than by animating its width. */
+.nav__avatar {
+  display: block;
+  width: 24px;
+  height: 27px;
+  flex-shrink: 0;
+  margin-right: -24px;
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(0.5);
+  transform-origin: left center;
+  transition: margin-right var(--transition-base), opacity var(--transition-base),
+              transform var(--transition-base);
+}
+
+.nav.scrolled .nav__logo--avatar .nav__avatar {
+  margin-right: 0;
+  opacity: 1;
+  transform: scale(1);
+}
+
+.nav.scrolled .nav__logo--avatar .nav__logo-dot {
+  width: 0;
+  opacity: 0;
 }
 
 .nav__links {

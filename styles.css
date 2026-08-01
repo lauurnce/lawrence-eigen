@@ -597,8 +597,114 @@ body.cursor-grabbing .cursor-dot {
 
 .hero__content {
   position: relative;
-  z-index: 1;
+  z-index: 2;
   max-width: 860px;
+  /* This box is 860px wide but its text lines are far narrower, and it sits
+     over the scene canvas. Left solid it swallows every pointer event in the
+     empty space beside the copy, which is most of the portrait and graph.
+     The real content boxes below take their events back. */
+  pointer-events: none;
+}
+
+/* Each of these takes its events back, but only over its own text. Left as
+   full-width blocks in an 860px column they would still cover the portrait —
+   fit-content shrinks the box to the words actually in it. */
+.hero__status,
+.hero__name,
+.hero__subtitle,
+.hero__desc,
+.hero__actions {
+  pointer-events: auto;
+  width: fit-content;
+  max-width: 100%;
+}
+
+/* Decorative, and it sits right where the graph wants to be. */
+.hero__scroll-hint {
+  pointer-events: none;
+}
+
+/* ---------- Hero scene: dot portrait + node graph ----------
+   A canvas laid over the hero, under the copy. The portrait is a halftone
+   plate that the cursor pushes apart; around it sits a small graph whose
+   edges run from drifting nodes back to the outline of his silhouette.
+   It matches the container's width so he lines up with the content's right
+   edge rather than the viewport's. */
+.hero__scene {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 1200px;
+  height: 100%;
+  padding: 80px var(--space-lg) 0;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 700ms ease;
+}
+
+.hero__scene.is-ready {
+  opacity: 1;
+}
+
+.hero__scene canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  /* Vertical drags still scroll the page; only lateral movement works the
+     field. Without this the portrait would trap a thumb on mobile. */
+  touch-action: pan-y;
+}
+
+/* The node readout. Deliberately chrome-less: a hairline and two lines of
+   very small type, so opening one barely disturbs the page. */
+.hero__node-card {
+  position: absolute;
+  max-width: 210px;
+  padding: 4px 8px 5px 10px;
+  border-left: 1px solid var(--primary);
+  /* The readout can land over the halftone. Just enough scrim to keep the
+     type legible without turning it into a tooltip. */
+  background: color-mix(in srgb, var(--surface) 82%, transparent);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 220ms ease, visibility 220ms;
+  pointer-events: none;
+}
+
+.hero__node-card.is-open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.hero__node-card.is-flipped {
+  border-left: none;
+  border-right: 1px solid var(--primary);
+  padding: 4px 10px 5px 8px;
+  text-align: right;
+}
+
+.hero__node-label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.5625rem;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--primary);
+  margin-bottom: 3px;
+}
+
+.hero__node-detail {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--on-surface-variant);
 }
 
 /* Static status badge - replaces typing animation */

@@ -1646,9 +1646,9 @@ html.light .tech__logo {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: var(--space-md);
-  /* Size cards to their content so photoless cards don't stretch
-     to the row height and leave a gap under their text. */
-  align-items: start;
+  /* Cards stretch to the tallest in their row so the photos line up at the
+     top and the card edges line up at the bottom, whatever the copy length. */
+  align-items: stretch;
 }
 
 /* ---------- Tier 2: Organizing Team ---------- */
@@ -1656,7 +1656,9 @@ html.light .tech__logo {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
   gap: var(--space-md);
-  align-items: start;
+  /* Match the row height so card edges line up. The thumbnail is held to its
+     own box by align-self on .organizing-card__img-wrap, so it stays 4:3. */
+  align-items: stretch;
 }
 
 .organizing-card {
@@ -1921,11 +1923,19 @@ html.light .tech__logo {
   border-radius: var(--radius-sm);
   transition: background var(--transition-fast), border-left-color var(--transition-base);
   border-left: 2px solid transparent;
+  /* Column so the photo keeps its aspect ratio and the text block absorbs
+     the leftover height a stretched card picks up from its row. */
+  display: flex;
+  flex-direction: column;
 }
 
 .leadership-card:hover {
   background: var(--surface-container-high);
   border-left-color: var(--primary);
+}
+
+.leadership-card__inner {
+  flex: 1;
 }
 
 .leadership-card__icon {

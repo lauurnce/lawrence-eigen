@@ -474,8 +474,8 @@ body.cursor-grabbing .cursor-dot {
 /* The logo's dot resolves into his face once you scroll off the hero, so the
    portrait stays with you down the page. On touch, where there is no hover to
    spend on the big one, this is what keeps him present. */
-/* The canvas keeps a stable box at all times — a zero-width element has no
-   layout for the renderer to measure — so the reveal is done with transform
+/* The canvas keeps a stable box at all times. A zero-width element has no
+   layout for the renderer to measure, so the reveal is done with transform
    and a negative margin rather than by animating its width. */
 .nav__avatar {
   display: block;
@@ -655,7 +655,7 @@ body.cursor-grabbing .cursor-dot {
 }
 
 /* Each of these takes its events back, but only over its own text. Left as
-   full-width blocks in an 860px column they would still cover the portrait —
+   full-width blocks in an 860px column they would still cover the portrait, so
    fit-content shrinks the box to the words actually in it. */
 .hero__status,
 .hero__name,

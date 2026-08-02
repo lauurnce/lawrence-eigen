@@ -1,5 +1,5 @@
 /* ============================================================
-   HERO SCENE — dot portrait + linked node graph
+   HERO SCENE: dot portrait + linked node graph
    ------------------------------------------------------------
    The portrait is a halftone print plate: an even grid of circles
    whose size and colour carry the photograph's tone. The cursor
@@ -43,13 +43,13 @@
   var TAU = Math.PI * 2;
   var LEVELS = 16;
 
-  /* Portrait ramp. It has to carry as much tone as dot size does — a narrow
+  /* Portrait ramp. It has to carry as much tone as dot size does, because a narrow
      ramp flattens the face into one mass however the sizes are tuned. Bright
      areas of the photograph stay most present in both themes, so the portrait
      never reads as a negative. */
   var RAMPS = {
     dark:  [[92, 30, 5], [230, 88, 10], [255, 192, 132]],
-    /* Gold on cream, in the headline's own family — pale where he is dark,
+    /* Gold on cream, in the headline's own family. Pale where he is dark,
        deepest where the light hits, so it still reads as a positive. */
     light: [[202, 184, 138], [156, 116, 24], [66, 44, 2]]
   };
@@ -216,7 +216,7 @@
     this.compact = w < 900;
     /* Grid pitch drives how much face survives. The crop carries full shoulders
        now, so the head is a smaller share of the frame than it was on the tight
-       crop — the pitch has to come down to put the detail back. The nav mark
+       crop, so the pitch has to come down to put the detail back. The nav mark
        sets its own. */
     if (!this.fill) this.spacing = this.compact ? 2.0 : 2.5;
 
@@ -299,7 +299,7 @@
         /* Exponent > 1 keeps midtones visibly smaller than highlights, and
            dotScale < 0.5 leaves a gap even at full size, so the face never
            fills in solid. The floor keeps the near-black hair and quarter-zip
-           present — without it the portrait is a face floating in nothing. */
+           present. Without it the portrait is a face floating in nothing. */
         var size = this.floor + (1 - this.floor) * Math.pow(lum, 1.25);
         var rr = maxR * size * (0.5 + edge * 0.5);
         if (rr < 0.26) continue;
@@ -328,7 +328,7 @@
     return b.width ? b : el.getBoundingClientRect();
   }
 
-  /* The copy block's real extent — top of the status badge to the bottom of
+  /* The copy block's real extent: top of the status badge to the bottom of
      the buttons, and the widest line in between. */
   HeroScene.prototype.copyBox = function () {
     var base = this.canvas.getBoundingClientRect();
@@ -374,14 +374,14 @@
 
     /* The copy keep-out is never negotiable. A node under the paragraph looks
        placed but cannot be clicked, and an unreachable node is worse than a
-       crowded one — only the spacing between nodes is allowed to give. */
+       crowded one, so only the spacing between nodes is allowed to give. */
     function free(x, y, gap) {
       if (x < 14 || x > self.w - 14 || y < 12 || y > self.h - 12) return false;
       for (var q = 0; q < keepOut.length; q++) {
         var r = keepOut[q];
         if (x > r.x0 && x < r.x1 && y > r.y0 && y < r.y1) return false;
       }
-      /* Never on top of him — he is the index note, not a canvas. */
+      /* Never on top of him. He is the index note, not a canvas. */
       if (x > p.x && x < p.x + p.w && y > p.y && y < p.y + p.h) {
         var u = (x - p.x) / p.w, v = (y - p.y) / p.h;
         if (self.sample(u, v)[1] > 0.22) return false;
@@ -582,7 +582,7 @@
   };
 
   HeroScene.prototype.pickHover = function () {
-    /* Every node is a target — none are faded out of reach. The hit radius is
+    /* Every node is a target; none are faded out of reach. The hit radius is
        well beyond the drawn dot so a 3px circle is still comfortable to catch. */
     var best = null, bestD = Infinity;
     for (var i = 0; i < this.nodes.length; i++) {
@@ -603,7 +603,7 @@
     this.selected = n;
     if (!this.card) return;
     if (!n) { this.card.classList.remove('is-open'); return; }
-    /* Eyebrow names the cluster, body carries the entry — so a leaf reads
+    /* Eyebrow names the cluster, body carries the entry, so a leaf reads
        "FILM / Oppenheimer" and its hub reads the whole set. */
     this.card.querySelector('.hero__node-label').textContent = n.category;
     this.card.querySelector('.hero__node-detail').textContent = n.detail;
@@ -739,7 +739,7 @@
 
   /* Walk a line from its outer end toward the centre and report where it first
      meets the silhouette. Spokes aim at a point behind the portrait, so without
-     this they draw straight across his face — the dot field is full of gaps and
+     this they draw straight across his face, because the dot field is full of gaps and
      a line behind it still shows through every one of them. */
   HeroScene.prototype.silhouetteHit = function (ax, ay, bx, by) {
     var p = this.portrait;
@@ -918,7 +918,7 @@
     scene.init().then(function () {
       if (wrap) wrap.classList.add('is-ready');
     }).catch(function () {
-      /* Nothing to draw without the map — drop the layer so the hero falls
+      /* Nothing to draw without the map, so drop the layer and the hero falls
          back to its text-only layout instead of leaving a hole. */
       if (wrap) wrap.remove();
     });

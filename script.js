@@ -374,9 +374,9 @@ document.addEventListener('DOMContentLoaded', () => {
           const elapsed = now - start;
           const t = Math.min(elapsed / duration, 1);
           const eased = 1 - Math.pow(1 - t, 3);
-          el.textContent = Math.round(eased * target);
+          el.textContent = Math.round(eased * target).toLocaleString('en-US');
           if (t < 1) requestAnimationFrame(tick);
-          else el.textContent = target;
+          else el.textContent = target.toLocaleString('en-US');
         })(performance.now());
         countUpObserver.unobserve(el);
       });
@@ -384,37 +384,30 @@ document.addEventListener('DOMContentLoaded', () => {
     statNumbers.forEach(el => countUpObserver.observe(el));
   }
 
-  // ─── Stats Breakdown Popovers ───
-  const statTriggers = document.querySelectorAll('.stat-item__trigger');
-  const closeBreakdowns = () => {
-    statTriggers.forEach(trigger => {
-      trigger.setAttribute('aria-expanded', 'false');
-      document.getElementById(trigger.getAttribute('aria-controls')).hidden = true;
-    });
-  };
-  statTriggers.forEach(trigger => {
-    trigger.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const panel = document.getElementById(trigger.getAttribute('aria-controls'));
-      const willOpen = panel.hidden;
-      closeBreakdowns();
-      if (willOpen) {
-        trigger.setAttribute('aria-expanded', 'true');
-        panel.hidden = false;
-      }
-    });
-  });
-  if (statTriggers.length) {
-    document.addEventListener('click', (e) => {
-      if (!e.target.closest('.stat-item--expandable')) closeBreakdowns();
-    });
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') closeBreakdowns();
+  // ─── Experience Durations ───
+  // "N yrs N mos" the way LinkedIn counts it: both end months inclusive, so
+  // Oct 2024 to Apr 2025 reads 7 mos. Computed on load so "Present" never
+  // goes stale; the period text already reads fine without it.
+  {
+    const today = new Date();
+    document.querySelectorAll('.experience-item__duration[data-start]').forEach(el => {
+      const [sy, sm] = el.dataset.start.split('-').map(Number);
+      const [ey, em] = el.dataset.end === 'present'
+        ? [today.getFullYear(), today.getMonth() + 1]
+        : el.dataset.end.split('-').map(Number);
+      const months = (ey - sy) * 12 + (em - sm) + 1;
+      if (!(months > 0)) return;
+      const yrs = Math.floor(months / 12);
+      const mos = months % 12;
+      const parts = [];
+      if (yrs) parts.push(`${yrs} ${yrs === 1 ? 'yr' : 'yrs'}`);
+      if (mos) parts.push(`${mos} ${mos === 1 ? 'mo' : 'mos'}`);
+      el.textContent = ` · ${parts.join(' ')}`;
     });
   }
 
   // ─── Community & Impact Data ───
-  // Three tiers, descending emphasis. Adding an entry is one object appended to
+  // Two tiers, descending emphasis. Adding an entry is one object appended to
   // the right array. Anything with a non-empty `images` becomes clickable and
   // opens the gallery; entries marked `template: true` render as empty slots.
   //
@@ -433,8 +426,7 @@ document.addEventListener('DOMContentLoaded', () => {
     chart: '<line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>',
   };
 
-  // Tier 1 - talks delivered and positions held
-  // Tier 1 - talks delivered and positions held
+  // Tier 1 - talks delivered and the technical lead role held
   const communitySpeaking = [
     {
       id: 'awspolar', icon: 'layers',
@@ -484,8 +476,8 @@ document.addEventListener('DOMContentLoaded', () => {
       org: 'FEU Institute of Technology',
       date: 'Speaker',
       images: ['assets/leadership/feu tech/download.jpg'],
-      desc: 'Invited speaker at ACM Core VerteX at FEU Institute of Technology. Gave a tech talk to 40+ students and led a hands-on build-along session using AWS PartyRock.',
-      story: `Invited as resource speaker at the ACM Core VerteX event held at FEU Institute of Technology. Delivered a tech talk to 40+ students covering practical AI concepts and modern development workflows.\n\nFacilitated a hands-on build-along session using AWS PartyRock, guiding participants through building their first AI-powered application without writing code.\n\nThe goal was to lower the barrier to AI experimentation for students at any skill level. You don't need to be a machine learning expert to ship something real with AI.`,
+      desc: 'Invited speaker at ACM Core VerteX at FEU Institute of Technology. Gave a tech talk to 50+ students and led a hands-on build-along session using AWS PartyRock.',
+      story: `Invited as resource speaker at the ACM Core VerteX event held at FEU Institute of Technology. Delivered a tech talk to 50+ students covering practical AI concepts and modern development workflows.\n\nFacilitated a hands-on build-along session using AWS PartyRock, guiding participants through building their first AI-powered application without writing code.\n\nThe goal was to lower the barrier to AI experimentation for students at any skill level. You don't need to be a machine learning expert to ship something real with AI.`,
     },
     {
       id: 'aimaxxin', icon: 'book',
@@ -495,33 +487,6 @@ document.addEventListener('DOMContentLoaded', () => {
       images: ['assets/leadership/ai maxxin/1.jpg'],
       desc: 'Featured speaker at the "AI Maxxin" on-site workshop. Taught over 60 participants advanced prompt engineering and how to put Langflow to work.',
       story: `Featured as technical speaker at the AI Maxxin on-site workshop, teaching over 60 participants advanced prompt engineering techniques and practical applications of Langflow.\n\nCovered prompt chaining, context management, and building agentic workflows, turning complex AI concepts into skills people could use the same day.\n\nThe Langflow demos showed how to build multi-step AI pipelines visually, so even non-developers could create production-ready AI applications without writing backend code.`,
-    },
-    {
-      id: 'ailead', icon: 'chip',
-      title: 'Department of Artificial Intelligence Lead',
-      org: 'AWS Cloud Club PUP',
-      date: 'Oct 2025 - Present',
-      images: ['assets/speakership/dai/1.jpg'],
-      desc: "Onboarded 90+ junior associates and ran online and on-site workshops over 10 months, building the department's learning roadmap along the way.",
-      story: '',
-    },
-    {
-      id: 'startupdev', icon: 'users',
-      title: 'Associate Start Up Dev Director',
-      org: 'AWS User Group Philippines · e:Novators',
-      date: 'Role',
-      images: ['assets/leadership/startup-dev/1.jpg'],
-      desc: 'Built development roadmaps for startups at AWS User Group Philippines e:Novators and designed sandbox environments where teams could experiment freely.',
-      story: '',
-    },
-    {
-      id: 'research', icon: 'star',
-      title: 'Deputy Head for Research and Extension',
-      org: 'IT Students Research Colloquium',
-      date: 'Role',
-      images: ['assets/leadership/research/1.jpg'],
-      desc: 'Ran on-site review sessions, managed documentation, and coordinated over 12 student groups for the IT Students Research Colloquium.',
-      story: '',
     },
     {
       id: 'z2a', icon: 'bolt',
@@ -539,146 +504,43 @@ document.addEventListener('DOMContentLoaded', () => {
   ];
 
   // Tier 2 - events helped run without speaking.
-  // Quick Quest weeks 2 to 5: technical and curriculum handler, speaker lead.
+  // Quick Quest weeks 2 to 5 as one card: technical and curriculum handler, speaker lead.
   const communityOrganizing = [
     {
-      id: 'qq-w2',
-      title: 'Quick Quest Week 2',
-      org: 'Build Nights: Quick Quest · AWS User Group Philippines',
-      date: 'Week 2 of 6',
+      id: 'qq-build-nights',
+      title: 'Build Nights: Quick Quest',
+      org: 'AWS User Group Philippines',
+      date: 'Weeks 2 to 5 of 6',
       images: [
         'assets/speakership/quick-quest-w2/1.jpg',
         'assets/speakership/quick-quest-w2/2.jpg',
         'assets/speakership/quick-quest-w2/3.jpg',
         'assets/speakership/quick-quest-w2/4.jpg',
-      ],
-      contributed: 'Handled the technical setup and curriculum design for the session and led the speaker lineup. 69 participants attended.',
-    },
-    {
-      id: 'qq-w3',
-      title: 'Quick Quest Week 3 · Automate Repetitive Tasks with Quick Flows',
-      org: 'Build Nights: Quick Quest · AWS User Group Philippines',
-      date: 'Week 3 of 6',
-      images: [
         'assets/speakership/quick-quest-w3/1.jpg',
         'assets/speakership/quick-quest-w3/2.jpg',
         'assets/speakership/quick-quest-w3/3.jpg',
         'assets/speakership/quick-quest-w3/4.jpg',
-      ],
-      contributed: 'Wrote the curriculum and ran the technical setup for a session on building NLP flows end to end. 65 participants attended.',
-      story: 'Wrote the curriculum and ran the technical setup for Week 3 of Build Nights: Quick Quest. The session covered NLP flow creation and the core step types, including Ask user, Web search, General knowledge, and Reasoning groups, along with @references and the difference between guided and chat run modes. Teams formed on the night, wrote a one line problem statement, and left with a v1 flow running end to end. 65 participants attended.',
-    },
-    {
-      id: 'qq-w4',
-      title: 'Quick Quest Week 4 · Spaces and Memory',
-      org: 'Build Nights: Quick Quest · AWS User Group Philippines',
-      date: 'Week 4 of 6',
-      images: [
         'assets/speakership/quick-quest-w4/1.jpg',
         'assets/speakership/quick-quest-w4/2.jpg',
-      ],
-      contributed: 'Designed the curriculum around Spaces, knowledge bases, file connectors, the Quick data step, and Memory for proactive context. Each team built a shared Space, loaded real documents, then rewired their Week 3 flow to answer from their own files rather than the open web. 54 participants.',
-    },
-    {
-      id: 'qq-w5',
-      title: 'Quick Quest Week 5 · Research-in-Flows',
-      org: 'Build Nights: Quick Quest · AWS User Group Philippines',
-      date: 'Jul 17, 2026',
-      images: [
         'assets/speakership/quick-quest-w5/1.jpg',
         'assets/speakership/quick-quest-w5/2.jpg',
         'assets/speakership/quick-quest-w5/3.jpg',
       ],
-      contributed: 'Built the curriculum for treating research as a workflow step. Teams added a Research step inside their flow to produce a cited brief feeding their output, tuned the research objective with @references to their own inputs, and steered preferred sources across government, academic, and industry material.',
-    },
-  ];
-
-  // Tier 3 - events attended
-  const communityAttended = [
-    {
-      id: 'sonai26',
-      title: 'State of the Nation in AI 2026',
-      org: 'Global AI Council Philippines · GSIS Theater',
-      date: 'Jan 2026',
-      images: ['assets/events/sonai-2026/1.jpg', 'assets/events/sonai-2026/2.jpg'],
-      learned: 'Governance has to move as fast as capability. Strong policy frameworks mean little without execution, so adoption and oversight have to be designed together.',
-      story: 'Attended the State of the Nation in AI at the GSIS Theater, hosted by the Global AI Council Philippines. The programme deliberately moved past the hype and focused on the concrete steps needed for AI to build a better society rather than merely faster systems.\n\nThe government and policy panel made the case that the national frameworks are already sound and that execution is the real constraint, covering the TALA model and a broader push to improve digital safety. The MSME session was the most practical, working through why small businesses need documented standard operating procedures before automating anything, how OCR and accreditation systems have matured since 2005, and a field case of reaching farmers in Mindanao through smartphones alone.\n\nThe IT-BPM panel addressed job evolution directly. Entry level roles are shifting while advanced roles expand, and judgment remains the human contribution that current systems cannot replace. The education and research panel resonated most as a student, introducing projects such as iTANONG and ACABAI-PH for digitalizing Filipino language data, alongside commitments to produce more graduates, startups, and finished research.\n\nThe throughline I took away is that technology without principles creates power without purpose, and that governing AI well is an engineering problem as much as a policy one.',
-    },
-    {
-      id: 'bwai25',
-      title: 'Build with AI: Developing AI Assistants with Gemini 2.0 and Streamlit',
-      org: 'GDG PUP · Polytechnic University of the Philippines',
-      date: 'May 2025',
-      images: ['assets/events/build-with-ai/1.jpg', 'assets/events/build-with-ai/2.jpg', 'assets/events/build-with-ai/3.jpg'],
-      learned: 'A capable model is only half an assistant. Managing conversation state and grounding responses in real context is what separates a demo from something people will actually use.',
-      story: 'A GDG PUP build session on assembling a working AI assistant end to end rather than calling a model once and stopping there. The material paired the Gemini 2.0 API with Streamlit, using Gemini for multimodal reasoning and function calling, and Streamlit for a front end that could be stood up in the same sitting.\n\nThe useful part was the plumbing between the two. Session state has to persist across reruns or the assistant forgets the conversation, prompts need structure so the model returns something parseable, and function calling has to be wired to real handlers before the assistant can do anything beyond talk. Streamlit made the iteration loop short enough to test each of those decisions immediately.\n\nI left with a clearer sense of where the engineering effort in an assistant actually sits, which is less in model selection and more in context management, tool wiring, and handling the cases where the model returns something unexpected.',
-    },
-    {
-      id: 'awsaiml25',
-      title: 'AWS User Group May Meetup: AI/ML Edition',
-      org: 'AWS User Group Philippines · AWS Office, Arthaland',
-      date: 'May 2025',
-      images: ['assets/events/aws-aiml-meetup/1.jpg', 'assets/events/aws-aiml-meetup/2.jpg'],
-      learned: 'Foundation models are most useful treated as managed infrastructure you compose against, not models you train. Bedrock removes the undifferentiated work and leaves the design decisions.',
-      story: 'Attended Day 2 of the AWS User Group May Meetup, AI/ML Edition, at the AWS office in Arthaland, a hands-on workshop on foundation models in Amazon Bedrock led by a Principal Developer Advocate at AWS.\n\nWorking in Bedrock directly reframed how I approach model work. Rather than training from scratch, the exercise was selecting an appropriate foundation model, shaping prompts against it, and tuning inference parameters such as temperature and token limits to get output that was consistent enough to build on. Having several models available behind one API made the tradeoffs between them concrete instead of theoretical.\n\nThe wider takeaway was architectural. Treating the model as a managed service moves the hard problems to where they belong, which is prompt design, evaluation, and how the model is integrated into the rest of the system.',
-    },
-    {
-      id: 'limitless25',
-      title: 'LIMITLESS: National Youth Summit on Statistics',
-      org: 'UP School of Statistics · Diliman',
-      date: 'May 2025',
-      images: ['assets/events/limitless-2025/1.jpg', 'assets/events/limitless-2025/2.jpg', 'assets/events/limitless-2025/3.jpg'],
-      learned: 'Most of the work in data science happens before the analysis. Our team placed 1st in the closing quiz bee, which was a good reminder that fundamentals travel further than tooling.',
-      story: 'A full day at the UP School of Statistics that turned out to be one of the most directly useful events I attended. The data science and statistical modeling talks walked through how practitioners collect, clean, and interpret real world data, and the speakers worked from actual project datasets rather than tidy examples, including how they approached analysis and presented findings to non-technical audiences.\n\nThe actuarial session covered the profession from entry paths through to how insurance pricing works underneath, which made the applied side of statistics far more tangible. The afternoon was a hands-on workshop where our group cleaned, analyzed, and visualized a dataset, then had to defend our interpretation of it.\n\nWe closed with a quiz bee and our team placed 1st, which was a genuinely satisfying result given most of us were not statistics majors. The lasting lesson was that the modeling is rarely the bottleneck. Cleaning, framing the question, and communicating the result carry most of the weight.',
-    },
-    {
-      id: 'phtcf25',
-      title: 'Philippine Tech Career Fest',
-      org: 'NexHire · Metro Manila',
-      date: 'Mar 2025',
-      images: ['assets/events/ph-tech-career-fest/1.jpg', 'assets/events/ph-tech-career-fest/2.jpg', 'assets/events/ph-tech-career-fest/3.jpg'],
-      learned: 'Founders consistently valued demonstrated shipping over credentials, which sharpened how I decided to document and present my own projects.',
-      story: 'NexHire brought together internship programmes, early stage companies, and students from across several universities. I spent the day working through what different internship tracks actually involve, which turned out to vary far more than the job titles suggest.\n\nThe founder sessions were the most valuable part. Hearing people describe building companies from nothing, including the parts that did not work, gave a much more honest picture of early stage engineering than a polished case study would. A recurring theme across conversations was that demonstrated work carries more weight than credentials, which directly changed how I decided to document and present my own projects.\n\nThe networking was worth as much as the talks. Connecting with students from other universities working on similar problems has continued to be useful well past the event itself.',
-    },
-    {
-      id: 'arduino25',
-      title: 'Arduino Day Philippines 2025',
-      org: 'STI College Cubao · Quezon City',
-      date: 'Mar 2025',
-      images: ['assets/events/arduino-day-2025/1.jpg', 'assets/events/arduino-day-2025/2.jpg', 'assets/events/arduino-day-2025/3.jpg'],
-      learned: 'Hardware constraints force a discipline that software rarely demands. Watching teams pitch under real memory and power limits changed how I think about scoping.',
-      story: 'Arduino Day Philippines at STI College Cubao, attended with the Institute of Bachelors in Information Technology Studies. The day combined a hackathon, exhibitor booths, and talks from people working in embedded systems.\n\nWatching the hackathon teams pitch was the most instructive part. Building on microcontrollers imposes limits that are easy to ignore in web work, including finite memory, power budgets, and sensor behaviour that does not cooperate, and the strongest teams were the ones that had scoped tightly around those constraints rather than fighting them. The booths made the breadth of the ecosystem clear, from sensors and prototyping boards through to finished products built on the same foundations.\n\nI came away with more respect for the discipline that hardware enforces, and a habit of asking earlier what a system is actually constrained by before deciding what to build.',
-    },
-    {
-      id: 'nuclear25',
-      title: 'Igniting Discussion on Nuclear Energy: Balancing Power, Profit, and the Planet',
-      org: 'UP Institute of Civil Engineering · Diliman',
-      date: 'Mar 2025',
-      images: ['assets/events/nuclear-energy/1.jpg', 'assets/events/nuclear-energy/2.jpg', 'assets/events/nuclear-energy/3.jpg'],
-      learned: 'Infrastructure decisions are never purely technical. The environmental, economic, and political cases have to hold simultaneously, or the engineering never gets built.',
-      story: 'A panel at the UP Institute of Civil Engineering examining nuclear energy from three directions at once, hosted with PUP The Programmers Guild.\n\nThe format was what made it work. The environmental case was presented from the national nuclear research institute, covering waste handling and safety engineering. The economic case came from an economist working through capital costs, financing structures, and the timescales on which such plants return value. The political case was made by a sitting legislator, addressing why technically sound proposals still stall in practice.\n\nHearing all three in sequence made the interdependence unavoidable. A design that is sound on the engineering merits but unfinanceable, or financeable but politically unviable, does not get built. That framing has stayed with me as a general lesson about large systems, which is that feasibility is rarely a single axis, and the constraint that kills a project is often not the technical one.',
-    },
-    {
-      id: 'blockchain25',
-      title: 'New Year, New Knowledge: Introduction to Blockchain Technology',
-      org: 'The Blocklabs, Inc. · DRRMO Building, Las Pinas',
-      date: 'Jan 2025',
-      images: ['assets/events/intro-to-blockchain/1.jpg', 'assets/events/intro-to-blockchain/2.jpg'],
-      learned: 'Working in Move made the distinction between resource oriented and account oriented models concrete, which is where most of the security reasoning in on-chain code lives.',
-      story: 'A full day workshop run by The Blocklabs at the DRRMO Building in Las Pinas, arranged through PUP The Programmers Guild, structured to move from fundamentals into writing code rather than stopping at theory.\n\nThe sessions covered blockchain fundamentals including consensus, immutability, and how transactions are actually settled, then moved into Core DAO and the Move programming language. Move was the part I found most valuable. Its resource oriented model treats assets as types that cannot be silently copied or discarded, which pushes a whole category of bug out of reach at compile time rather than leaving it to be caught in an audit. Coming from conventional account oriented thinking, that was a genuine shift in perspective.\n\nWe closed with NFT creation, which tied the theory to something deployable and made the token standards concrete. The lasting takeaway was less about any single chain and more about how much the underlying data model shapes what is safe to express in on-chain code.',
+      contributed: 'Co-designed curriculum and ran technical setup for Weeks 2 to 5 of a 6-week Amazon Quick series (54 to 69 participants per session).',
+      story: `Week 2. Handled the technical setup and curriculum design for the session and led the speaker lineup. 69 participants attended.\n\nWeek 3. Wrote the curriculum and ran the technical setup for a session on building NLP flows end to end. The session covered NLP flow creation and the core step types, including Ask user, Web search, General knowledge, and Reasoning groups, along with @references and the difference between guided and chat run modes. Teams formed on the night, wrote a one line problem statement, and left with a v1 flow running end to end. 65 participants attended.\n\nWeek 4. Designed the curriculum around Spaces, knowledge bases, file connectors, the Quick data step, and Memory for proactive context. Each team built a shared Space, loaded real documents, then rewired their Week 3 flow to answer from their own files rather than the open web. 54 participants.\n\nWeek 5. Built the curriculum for treating research as a workflow step. Teams added a Research step inside their flow to produce a cited brief feeding their output, tuned the research objective with @references to their own inputs, and steered preferred sources across government, academic, and industry material.`,
     },
   ];
 
   // Gallery entries are derived from the arrays above so each item is defined once.
   const communityGalleryData = {};
-  [...communitySpeaking, ...communityOrganizing, ...communityAttended].forEach(item => {
+  [...communitySpeaking, ...communityOrganizing].forEach(item => {
     if (item.images && item.images.length) {
       communityGalleryData[item.id] = {
         title: item.org ? `${item.title} · ${item.org}` : item.title,
         date: item.date || '',
         badge: null,
         images: item.images,
-        story: item.story || item.contributed || item.learned || item.desc || '',
+        story: item.story || item.contributed || item.desc || '',
         projectLink: '', projectLinkText: '',
       };
     }
@@ -737,63 +599,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }).join('');
   }
 
-  // Only the three most recent events show by default; the rest sit behind the toggle.
-  const ATTENDED_VISIBLE = 3;
-
-  const attendedList = document.getElementById('attendedList');
-  if (attendedList) {
-    attendedList.innerHTML = communityAttended.map((item, i) => {
-      const hasImg = item.images.length > 0;
-      const classes = ['attended-row', 'reveal'];
-      if (hasImg) classes.push('has-gallery');
-      if (item.template) classes.push('is-template');
-      if (i >= ATTENDED_VISIBLE) classes.push('attended-row--extra');
-      const media = hasImg
-        ? `<div class="attended-row__thumb-wrap"><img src="${escHtml(item.images[0])}" alt="${escHtml(item.title)}" class="attended-row__thumb" loading="lazy" decoding="async" onerror="this.parentElement.style.display='none'" /></div>`
-        : `<div class="attended-row__thumb-wrap slot">${slotIcon}</div>`;
-      return `<div class="${classes.join(' ')}"${galleryAttrs(item)}>
-          ${media}
-          <div class="attended-row__body">
-            <h4 class="attended-row__title">${escHtml(item.title)}</h4>
-            <p class="attended-row__meta">${escHtml(item.org)}</p>
-            <p class="attended-row__learned"><b>Learned:</b> ${escHtml(item.learned)}</p>
-          </div>
-          <span class="attended-row__year">${escHtml(item.date)}</span>
-        </div>`;
-    }).join('');
-  }
-
-  const attendedToggle = document.getElementById('attendedToggle');
-  const attendedToggleText = document.getElementById('attendedToggleText');
-  if (attendedList && attendedToggle && communityAttended.length > ATTENDED_VISIBLE) {
-    const hiddenCount = communityAttended.length - ATTENDED_VISIBLE;
-    const collapsedLabel = `Show ${hiddenCount} more event${hiddenCount === 1 ? '' : 's'}`;
-    attendedToggleText.textContent = collapsedLabel;
-    attendedToggle.hidden = false;
-
-    const tierBlock = attendedList.closest('.tier-block');
-
-    attendedToggle.addEventListener('click', () => {
-      // Measured before the toggle, while the layout and scroll position are
-      // still settled. The tier's own offset does not move when the list
-      // collapses, only its height, so this target stays valid afterwards.
-      let tierTop = 0;
-      for (let el = tierBlock; el; el = el.offsetParent) tierTop += el.offsetTop;
-      tierTop -= (nav ? nav.offsetHeight : 0) + 16;
-      const wasBelowTier = window.scrollY > tierTop;
-
-      const expanded = attendedList.classList.toggle('is-expanded');
-      attendedToggle.setAttribute('aria-expanded', String(expanded));
-      attendedToggleText.textContent = expanded ? 'Show less' : collapsedLabel;
-
-      // Collapsing from far down the list would otherwise leave the viewport
-      // stranded below the section, so pull the tier header back into view.
-      if (!expanded && tierBlock && wasBelowTier) {
-        window.scrollTo({ top: tierTop, behavior: 'smooth' });
-      }
-    });
-  }
-
   // Reads "N items" for real entries, "N slots" while a tier is still all templates.
   const setCount = (id, list) => {
     const el = document.getElementById(id);
@@ -804,7 +609,6 @@ document.addEventListener('DOMContentLoaded', () => {
   };
   setCount('countSpeaking', communitySpeaking);
   setCount('countOrganizing', communityOrganizing);
-  setCount('countAttended', communityAttended);
 
   // ─── Scroll Reveal ───
   const revealElements = document.querySelectorAll('.reveal');
@@ -824,28 +628,26 @@ document.addEventListener('DOMContentLoaded', () => {
   // ─── Render Certification Badges ───
   const certificationsList = document.getElementById('certificationsList');
   if (certificationsList) {
-    certificationsList.innerHTML = certifications.map((cert, index) => {
+    // Compact row per badge: small thumbnail, title, issuer. Linked badges get
+    // the external marker; the unlinked one renders as a plain div.
+    certificationsList.innerHTML = certifications.map(cert => {
       const hasLink = !!cert.verifyLink;
       const Tag = hasLink ? 'a' : 'div';
-      const delayClass = '';
       const linkAttrs = hasLink
-        ? `href="${cert.verifyLink}" target="_blank" rel="noopener noreferrer"`
+        ? ` href="${cert.verifyLink}" target="_blank" rel="noopener noreferrer"`
         : '';
 
-      const externalIcon = hasLink ? '<span class="cert-card__external" aria-hidden="true">↗</span>' : '';
+      // Non-breaking space keeps the marker on the same line as the last word.
+      const externalIcon = hasLink ? '&nbsp;<span class="cert-card__external" aria-hidden="true">↗</span>' : '';
 
       return `
-        <${Tag} class="cert-card ${delayClass}" ${linkAttrs}>
+        <${Tag} class="cert-card"${linkAttrs}>
           <div class="cert-card__badge">
-            <img src="${cert.image}" alt="${cert.title} badge" class="cert-card__badge-img" loading="lazy" />
+            <img src="${cert.image}" alt="${cert.title} badge" class="cert-card__badge-img" loading="lazy" decoding="async" />
           </div>
           <div class="cert-card__body">
-            <h4 class="cert-card__title">
-              ${cert.title}
-              ${externalIcon}
-            </h4>
+            <h4 class="cert-card__title">${cert.title}${externalIcon}</h4>
             <p class="cert-card__issuer">${cert.provider}</p>
-            <p class="cert-card__date">${cert.year}</p>
           </div>
         </${Tag}>
       `;
@@ -1173,6 +975,15 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // ─── Competition Gallery Data ───
   const competitionGalleryData = {
+    ph100: {
+      title: 'PH100',
+      date: '2026',
+      badge: 'gold', badgeText: 'PH100 Honoree',
+      images: ['assets/ph100-v2.jpeg'],
+      fit: 'contain',
+      story: `Named to the PH100, StellarPH's annual list of the brightest minds under 30 in the Philippines, powered by PayMongo.\n\nListed as AI Lead, Zero Vector Philippines.`,
+      projectLink: '', projectLinkText: '',
+    },
     habi40: {
       title: 'Presidential Annual Innovation Hackathon (HABI 4.0)',
       date: 'Apr 2026',
@@ -1184,7 +995,7 @@ document.addEventListener('DOMContentLoaded', () => {
         'assets/competitions/habi40/4.jpg',
         'assets/competitions/habi40/5.jpg',
       ],
-      story: `The core problem we solved: BPO agents wait days, sometimes weeks, just to get a Letter of Authority (LOA) from their HMO before they can see a doctor. When the issue is mental health, that wait is dangerous.\n\nKalinga cuts that entire pipeline. The app has a built-in triage system that assesses the agent's condition first: severity, urgency, and type of concern. Once the app determines the LOA is warranted, it facilitates approval and directly connects the agent to their HMO provider. No paperwork lag. No waiting on HR to process a referral at 3AM.\n\nWe designed everything around the night-shift reality: triage prompts timed to shift start and end, AI-guided check-ins at peak burnout hours, and an anonymous peer support layer for agents who can't reach anyone mid-shift.\n\nAwarded 2nd Place at the Presidential Annual Innovation Hackathon (HABI 4.0), a nationwide competition held at the Malacañang grounds.`,
+      story: `The core problem we solved: BPO agents wait days, sometimes weeks, just to get a Letter of Authority (LOA) from their HMO before they can see a doctor. When the issue is mental health, that wait is dangerous.\n\nKalinga cuts that entire pipeline. The app has a built-in triage system that assesses the agent's condition first: severity, urgency, and type of concern. Once the app determines the LOA is warranted, it facilitates approval and directly connects the agent to their HMO provider. No paperwork lag. No waiting on HR to process a referral at 3AM.\n\nWe designed everything around the night-shift reality: triage prompts timed to shift start and end, AI-guided check-ins at peak burnout hours, and an anonymous peer support layer for agents who can't reach anyone mid-shift.\n\nAwarded 2nd Place in the Health and Well-Being category at the Presidential Annual Innovation Hackathon (HABI 4.0), a nationwide competition held at the Malacañang grounds.`,
       projectLink: '#projects', projectLinkText: 'View Project: Kalinga',
     },
     zerovector: {
@@ -1207,6 +1018,14 @@ document.addEventListener('DOMContentLoaded', () => {
       story: `Won the Stellar Philippines Web3/Blockchain online bootcamp by shipping GreenProof, a Recycle-to-Earn smart contract built on Stellar Soroban using Rust.\n\nQuezon City generates over 2,500 metric tons of solid waste daily, collected only twice a week, with almost no incentive for residents to segregate properly. GreenProof flips that dynamic: residents bring recyclables to verified collection points, local partners weigh and record the deposit on-chain as Impact Points (1kg = 1 point), and XLM rewards are deposited directly to the resident's Stellar wallet.\n\nEvery transaction is auditable on the Stellar testnet, so the barangay and the LGU never have to take anyone's word for it. The smart contract (CCX4HEFCB4SJFG463AN2AC6C66MPKXRESVAI6YPHFNH4S63QRW476BLG) handles reward logic end-to-end in Rust, deployed via Soroban. First time I shipped a production smart contract from scratch.`,
       projectLink: '#projects', projectLinkText: 'View Project: GreenProof',
     },
+    datacamp: {
+      title: 'DataCamp Scholarship',
+      date: 'Aug 2025',
+      badge: 'gold', badgeText: 'Top 1 Scholar',
+      images: [],
+      story: `Finished as the top 1 scholar of the DataCamp Scholarship cohort and was invited to share my learning path with the next batch.`,
+      projectLink: '', projectLinkText: '',
+    },
   };
 
   // ─── Gallery Modal Logic ───
@@ -1227,6 +1046,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let galleryImages = [];
   let galleryIdx    = 0;
+  let galleryFit    = 'cover';
 
   function setHeroImage(src) {
     galleryHeroImg.classList.add('fading');
@@ -1234,7 +1054,10 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => {
       galleryHero.classList.remove('no-img', 'portrait-active');
       galleryHeroImg.onload = () => {
-        if (galleryHeroImg.naturalHeight > galleryHeroImg.naturalWidth) {
+        // portrait-active = show the whole image (object-fit: contain over a
+        // blurred backdrop). Used for portrait photos and for entries that
+        // opt in with fit: 'contain', such as cards whose edges carry text.
+        if (galleryFit === 'contain' || galleryHeroImg.naturalHeight > galleryHeroImg.naturalWidth) {
           galleryHero.classList.add('portrait-active');
         }
       };
@@ -1278,6 +1101,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function openGallery(data) {
     galleryImages = data.images || [];
     galleryIdx    = 0;
+    galleryFit    = data.fit || 'cover';
     galleryTitle.textContent = data.title;
     galleryStory.textContent = data.story || '';
     galleryDate.textContent  = data.date  || '';
@@ -1349,7 +1173,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Community cards and rows → gallery (all three tiers)
+  // Community cards (both tiers) → gallery
   document.querySelectorAll('[data-community]').forEach(el => {
     el.addEventListener('click', () => {
       const data = communityGalleryData[el.dataset.community];

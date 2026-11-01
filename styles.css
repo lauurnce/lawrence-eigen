@@ -667,11 +667,6 @@ body.cursor-grabbing .cursor-dot {
   max-width: 100%;
 }
 
-/* Decorative, and it sits right where the graph wants to be. */
-.hero__scroll-hint {
-  pointer-events: none;
-}
-
 /* ---------- Hero scene: dot portrait + node graph ----------
    A canvas laid over the hero, under the copy. The portrait is a halftone
    plate that the cursor pushes apart; around it sits a small graph whose
@@ -858,34 +853,6 @@ body.cursor-grabbing .cursor-dot {
 .btn--ghost:hover {
   border-color: var(--outline);
   color: var(--primary);
-}
-
-.hero__scroll-hint {
-  position: absolute;
-  bottom: var(--space-2xl);
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--space-sm);
-  color: var(--outline);
-  font-family: var(--font-mono);
-  font-size: 0.625rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-}
-
-.hero__scroll-hint svg {
-  width: 18px;
-  height: 18px;
-  stroke: var(--outline);
-  animation: scroll-bob 2.4s ease-in-out infinite;
-}
-
-@keyframes scroll-bob {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(5px); }
 }
 
 /* ============================================================
@@ -1081,75 +1048,6 @@ body.cursor-grabbing .cursor-dot {
   letter-spacing: 0.1em;
 }
 
-.stat-item--expandable {
-  z-index: 10;
-}
-
-.stat-item__trigger {
-  display: block;
-  width: 100%;
-  background: none;
-  border: none;
-  padding: 0;
-  cursor: pointer;
-  font: inherit;
-  color: inherit;
-  text-align: center;
-}
-
-.stat-item--expandable .stat-item__label {
-  text-decoration: underline dotted var(--on-surface-variant);
-  text-underline-offset: 4px;
-}
-
-.stat-item__trigger:hover .stat-item__label,
-.stat-item__trigger[aria-expanded="true"] .stat-item__label {
-  color: var(--primary);
-  text-decoration-color: var(--primary);
-}
-
-.stat-item__breakdown {
-  position: absolute;
-  top: calc(100% + var(--space-sm));
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 50;
-  min-width: 240px;
-  max-width: min(300px, 90vw);
-  background: var(--surface-container-high);
-  border: 1px solid var(--outline-variant);
-  border-radius: var(--radius-md);
-  padding: var(--space-md);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
-  text-align: left;
-}
-
-.stat-breakdown__list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.stat-breakdown__list li {
-  display: flex;
-  justify-content: space-between;
-  gap: var(--space-md);
-  font-family: var(--font-mono);
-  font-size: 0.6875rem;
-  color: var(--on-surface-variant);
-  padding: 6px 0;
-}
-
-.stat-breakdown__list li + li {
-  border-top: 1px solid var(--outline-variant);
-}
-
-.stat-breakdown__list li span:last-child {
-  color: var(--primary);
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-}
-
 @media (max-width: 640px) {
   .stats__grid {
     grid-template-columns: repeat(2, 1fr);
@@ -1157,6 +1055,125 @@ body.cursor-grabbing .cursor-dot {
   }
   .stat-item:nth-child(3)::before {
     display: none;
+  }
+}
+
+/* ============================================================
+   NOW BUILDING
+   ============================================================ */
+.now-card {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: var(--space-2xl) var(--space-3xl);
+  background: var(--surface-container);
+  border: 1px solid var(--outline-variant);
+  border-top: 2px solid var(--primary);
+  border-radius: var(--radius-sm);
+  padding: var(--space-2xl);
+}
+
+.now-card__eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  color: var(--on-surface-variant);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-bottom: var(--space-md);
+}
+
+.now-card__name {
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.008em;
+  color: var(--on-surface);
+  margin-bottom: var(--space-md);
+}
+
+.now-card__lead {
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--on-surface);
+}
+
+.now-card__body {
+  color: var(--on-surface-variant);
+  font-size: 1rem;
+  line-height: 1.8;
+}
+
+.now-card__meta {
+  list-style: none;
+  display: grid;
+  gap: var(--space-sm);
+  margin-top: var(--space-lg);
+  padding-top: var(--space-lg);
+  border-top: 1px solid var(--outline-variant);
+}
+
+.now-card__meta-row {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-sm);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  line-height: 1.6;
+  color: var(--on-surface-variant);
+}
+
+.now-card__dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--primary);
+  flex-shrink: 0;
+  margin-top: 0.55em;
+}
+
+.now-card__link {
+  margin-top: var(--space-lg);
+}
+
+.now-card__link svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+/* Inline link to the same site inside the hero paragraph. Kept with the
+   Now Building rules so the product's links are styled in one place. */
+.hero__desc-link {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-decoration-color: var(--outline);
+  text-underline-offset: 3px;
+  transition: color var(--transition-fast),
+              text-decoration-color var(--transition-fast);
+}
+
+.hero__desc-link:hover,
+.hero__desc-link:focus-visible {
+  color: var(--primary);
+  text-decoration-color: var(--primary);
+}
+
+@media (max-width: 900px) {
+  .now-card {
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
+  }
+}
+
+@media (max-width: 640px) {
+  .now-card {
+    padding: var(--space-lg);
+  }
+  .now-card__lead {
+    font-size: 1rem;
   }
 }
 
@@ -1577,6 +1594,11 @@ html.light .tech__logo {
   font-weight: 500;
 }
 
+/* Entries without a description end on the company line */
+.experience-item__company:last-child {
+  margin-bottom: 0;
+}
+
 .experience-item__desc {
   color: var(--on-surface-variant);
   font-size: 0.9375rem;
@@ -1584,12 +1606,71 @@ html.light .tech__logo {
   max-width: 600px;
 }
 
+/* Duration appended by script.js ("· 2 yrs 2 mos"); hidden until filled. */
+.experience-item__duration {
+  color: var(--outline);
+}
+
+.experience-item__duration:empty {
+  display: none;
+}
+
+/* One organisation, several roles. The header carries the org and its total
+   span; the roles hang off an inner rail, newest first, the way LinkedIn
+   stacks positions held at the same company. */
+.experience-group {
+  list-style: none;
+  margin: var(--space-sm) 0 0 3px;
+  padding: 0 0 0 var(--space-lg);
+  border-left: 1px solid var(--outline-variant);
+}
+
+.experience-group__role {
+  position: relative;
+  padding-bottom: var(--space-lg);
+}
+
+.experience-group__role:last-child {
+  padding-bottom: 0;
+}
+
+/* Marker centred on the rail. The halo matches the alt-section background so
+   the line reads as broken at each role rather than running through it. */
+.experience-group__role::before {
+  content: '';
+  position: absolute;
+  left: calc(-1 * var(--space-lg) - 4px);
+  top: 4px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--outline);
+  box-shadow: 0 0 0 3px var(--surface-container-low);
+}
+
+/* The current role gets the accent, like the company line above it. */
+.experience-group__role:first-child::before {
+  background: var(--primary);
+}
+
+.experience-group__title {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--on-surface);
+  margin-bottom: var(--space-xs);
+  letter-spacing: -0.005em;
+}
+
+.experience-group__role .experience-item__desc {
+  margin-top: var(--space-sm);
+}
+
 /* ============================================================
    COMMUNITY & IMPACT
-   Three tiers, descending emphasis:
+   Two tiers, descending emphasis:
    1. Speaking & Roles  - .leadership-card, 3-col, photo on top
    2. Organizing Team   - .organizing-card, 2-col, photo left
-   3. Events Attended   - .attended-row,    1-col, thumbnail left
    ============================================================ */
 .tier-block + .tier-block {
   margin-top: var(--space-4xl);
@@ -1654,7 +1735,9 @@ html.light .tech__logo {
 /* ---------- Tier 2: Organizing Team ---------- */
 .organizing__grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  /* auto-fill keeps the empty track, so a lone card stays at column width
+     instead of stretching across the whole row. */
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
   gap: var(--space-md);
   /* Match the row height so card edges line up. The thumbnail is held to its
      own box by align-self on .organizing-card__img-wrap, so it stays 4:3. */
@@ -1745,140 +1828,6 @@ html.light .tech__logo {
   line-height: 1.65;
 }
 
-/* ---------- Tier 3: Events Attended ---------- */
-.attended__list {
-  border-top: 1px solid var(--outline-variant);
-}
-
-.attended-row {
-  display: flex;
-  align-items: center;
-  gap: var(--space-md);
-  padding: var(--space-md) var(--space-sm);
-  border-bottom: 1px solid var(--outline-variant);
-  transition: background var(--transition-fast);
-}
-
-.attended-row:hover {
-  background: var(--surface-container);
-}
-
-.attended-row.has-gallery {
-  cursor: pointer;
-}
-
-.attended-row__thumb-wrap {
-  position: relative;
-  width: 64px;
-  height: 64px;
-  flex-shrink: 0;
-  overflow: hidden;
-  border-radius: var(--radius-sm);
-}
-
-.attended-row__thumb {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  opacity: 0.85;
-  transition: opacity var(--transition-base);
-}
-
-.attended-row:hover .attended-row__thumb {
-  opacity: 1;
-}
-
-.attended-row__body {
-  flex: 1;
-  min-width: 0;
-}
-
-.attended-row__title {
-  font-family: var(--font-display);
-  font-size: 0.875rem;
-  font-weight: 700;
-  color: var(--on-surface);
-  margin-bottom: 2px;
-}
-
-.attended-row__meta {
-  font-family: var(--font-mono);
-  font-size: 0.5625rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--on-surface-variant);
-  margin-bottom: 5px;
-}
-
-.attended-row__learned {
-  color: var(--on-surface-variant);
-  font-size: 0.8125rem;
-  line-height: 1.6;
-}
-
-.attended-row__learned b {
-  color: var(--on-surface);
-  font-weight: 600;
-  font-size: 0.75rem;
-}
-
-.attended-row__year {
-  font-family: var(--font-mono);
-  font-size: 0.6875rem;
-  color: var(--primary);
-  flex-shrink: 0;
-  align-self: flex-start;
-  padding-top: 2px;
-}
-
-/* Rows past the first three stay collapsed until the toggle is pressed. */
-.attended-row--extra {
-  display: none;
-}
-
-.attended__list.is-expanded .attended-row--extra {
-  display: flex;
-}
-
-.attended__toggle {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  width: 100%;
-  padding: var(--space-sm);
-  background: transparent;
-  border: 0;
-  border-bottom: 1px solid var(--outline-variant);
-  font-family: var(--font-mono);
-  font-size: 0.6875rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--on-surface-variant);
-  cursor: pointer;
-  transition: color var(--transition-fast), background var(--transition-fast);
-}
-
-/* display:flex above would otherwise beat the UA rule for [hidden]. */
-.attended__toggle[hidden] {
-  display: none;
-}
-
-.attended__toggle:hover {
-  color: var(--primary);
-  background: var(--surface-container);
-}
-
-.attended__toggle-chevron {
-  width: 12px;
-  height: 12px;
-  transition: transform var(--transition-base);
-}
-
-.attended__toggle[aria-expanded="true"] .attended__toggle-chevron {
-  transform: rotate(180deg);
-}
-
 /* ---------- Empty slots awaiting content ---------- */
 .is-template {
   background: transparent;
@@ -1889,11 +1838,6 @@ html.light .tech__logo {
   background: transparent;
   border-color: var(--primary);
   border-left-color: var(--primary);
-}
-
-.attended-row.is-template {
-  border-width: 0 0 1px 0;
-  border-style: dashed;
 }
 
 .slot {
@@ -1911,8 +1855,7 @@ html.light .tech__logo {
   height: 18px;
 }
 
-.is-template .organizing-card__title,
-.is-template .attended-row__title {
+.is-template .organizing-card__title {
   color: var(--on-surface-variant);
   font-style: italic;
 }
@@ -1970,93 +1913,81 @@ html.light .tech__logo {
 
 /* ============================================================
    CERTIFICATIONS
+   Compact, low-emphasis rows: badge thumbnail, title, issuer.
+   3 columns at desktop, 2 at tablet and phone (see media queries).
    ============================================================ */
 .certifications__list {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: var(--space-md);
+  gap: var(--space-sm);
 }
 
 .cert-card {
-  background: var(--surface-container);
-  padding: var(--space-lg);
-  border-radius: var(--radius-sm);
   display: flex;
-  flex-direction: column;
+  align-items: center;
   gap: var(--space-md);
-  align-items: stretch;
+  padding: var(--space-sm) var(--space-md);
+  background: var(--surface-container);
   border: 1px solid var(--outline-variant);
-  transition:
-    transform var(--transition-base),
-    box-shadow var(--transition-base),
-    border-color var(--transition-base);
+  border-radius: var(--radius-sm);
   text-decoration: none;
-  min-height: 260px;
+  transition: background var(--transition-fast), border-color var(--transition-base);
 }
 
 .cert-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+  background: var(--surface-container-high);
   border-color: var(--outline);
 }
 
 .cert-card__badge {
-  position: relative;
-  height: 148px;
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .cert-card__badge-img {
-  position: relative;
-  max-width: 88%;
-  max-height: 80%;
+  max-width: 100%;
+  max-height: 100%;
   filter: grayscale(0.4) brightness(0.9);
   opacity: 0.85;
-  transition: filter var(--transition-base), opacity var(--transition-base), transform var(--transition-base);
+  transition: filter var(--transition-base), opacity var(--transition-base);
 }
 
 .cert-card:hover .cert-card__badge-img {
   filter: grayscale(0) brightness(1);
   opacity: 1;
-  transform: translateY(-2px) scale(1.02);
 }
 
 .cert-card__body {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
+  min-width: 0;
 }
 
 .cert-card__title {
   font-family: var(--font-display);
-  font-size: 0.9375rem;
-  font-weight: 700;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.35;
   color: var(--on-surface);
   letter-spacing: -0.01em;
 }
 
 .cert-card__external {
   font-family: var(--font-mono);
-  font-size: 0.6875rem;
-  margin-left: 4px;
+  font-size: 0.625rem;
   color: var(--on-surface-variant);
 }
 
 .cert-card__issuer {
   font-family: var(--font-mono);
-  font-size: 0.6875rem;
-  color: var(--primary);
-  margin-top: 2px;
-  letter-spacing: 0.02em;
-}
-
-.cert-card__date {
-  font-family: var(--font-mono);
   font-size: 0.625rem;
-  color: var(--outline);
-  letter-spacing: 0.04em;
+  color: var(--on-surface-variant);
+  letter-spacing: 0.02em;
 }
 
 /* ============================================================
@@ -2585,19 +2516,6 @@ html.light .tech__logo {
     align-self: stretch;
   }
 
-  .attended-row {
-    align-items: flex-start;
-  }
-
-  .attended-row__thumb-wrap {
-    width: 52px;
-    height: 52px;
-  }
-
-  .attended-row__year {
-    display: none;
-  }
-
   .tier-header {
     flex-wrap: wrap;
     gap: var(--space-sm);
@@ -2681,8 +2599,20 @@ html.light .tech__logo {
   }
 
 
+  /* Two across on phones, badge stacked above the text so titles stay short. */
   .certifications__list {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .cert-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-sm);
+  }
+
+  .cert-card__badge {
+    width: 40px;
+    height: 40px;
   }
 }
 
@@ -2842,9 +2772,6 @@ html.light .tech__logo {
   .hero__node-card,
   .nav__avatar {
     transition: none;
-  }
-  .hero__scroll-hint svg {
-    animation: none;
   }
   /* No auto-scroll. The script also skips starting its loop, so the lane becomes
      an ordinary horizontally scrollable strip and every entry stays reachable. */
@@ -3044,6 +2971,34 @@ html.light .competition-item__dot {
   transform: scale(1.04);
 }
 
+/* Contain frame: shows the whole card at the image's own ratio, no crop,
+   no hover zoom. The bottom padding is a caption band that keeps the
+   photo-hint pill off the image itself. */
+.competition-item__thumbnail--contain {
+  height: auto;
+  padding-bottom: calc(var(--space-sm) * 2 + 20px);
+}
+
+.competition-item__thumbnail--contain .competition-item__thumb-img {
+  display: block;
+  height: auto;
+  aspect-ratio: 2048 / 1075;
+  object-fit: contain;
+}
+
+.competition-item[data-competition]:hover .competition-item__thumbnail--contain .competition-item__thumb-img {
+  transform: none;
+}
+
+/* Featured entry: the most prominent item in the timeline */
+.competition-item--featured .competition-item__name {
+  font-size: 1.375rem;
+}
+
+.competition-item--featured .competition-item__thumbnail {
+  max-width: 600px;
+}
+
 .competition-item__thumbnail.no-img::after {
   content: 'Add photos to activate';
   position: absolute;
@@ -3102,6 +3057,10 @@ html.light .competition-item__dot {
   .competition-item__thumbnail {
     max-width: 100%;
     height: 160px;
+  }
+
+  .competition-item__thumbnail--contain {
+    height: auto;
   }
 }
 

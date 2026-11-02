@@ -73,6 +73,13 @@
   var LABEL_PAD_X = 4;      // clearance kept between label boxes
   var LABEL_PAD_Y = 3;
 
+  /* Share of the scene box the portrait may take: fitted by height first,
+     then capped by width, so the graph keeps open bands above and below him
+     and margins on both sides. The crop carries complete shoulders and the
+     torso dissolves at the bottom, so the box can be taller than he is. */
+  var PORTRAIT_H = 0.62;
+  var PORTRAIT_W = 0.58;
+
   /* The content comes from hero-graph-data.js. Without it the portrait still
      draws; the graph just has nothing to say. */
   function graphData() {
@@ -170,6 +177,9 @@
     this.canvas = canvas;
     this.ctx = canvas.getContext('2d');
     this.card = opts.card || null;
+    /* The box the scene lives in. Keep-out measurement is scoped to it, so
+       type elsewhere on the page never shapes the graph. */
+    this.wrap = opts.wrap || canvas.parentElement || null;
     this.withGraph = opts.withGraph !== false;
     this.crop = opts.crop || null;    // u0,v0,u1,v1 sub-rect of the map
     this.fill = !!opts.fill;          // portrait fills the canvas (nav mark)
@@ -279,37 +289,21 @@
     var mapAspect = c ? ((c[2] - c[0]) * MAP_W) / ((c[3] - c[1]) * MAP_H)
                       : MAP_W / MAP_H;
 
-    /* Fit the portrait into the right of the hero on wide screens, and centre
-       it above the copy once the layout stacks. */
+    /* The scene sizes to its own box (the About column), so the portrait is
+       centred in it and held back from every edge: the graph needs the
+       bands above and below him and the margins beside him to live in. */
     var pH, pW, px0, py0;
     if (this.fill) {
       /* Nav mark: aspect-fit the whole canvas. */
       pH = h; pW = h * mapAspect;
       if (pW > w) { pW = w; pH = w / mapAspect; }
       px0 = (w - pW) / 2; py0 = (h - pH) / 2;
-    } else if (this.compact) {
-      /* Centred above the copy, held back from the full width so the graph
-         still has margins to live in. */
-      pH = h * 0.62;
+    } else {
+      pH = h * PORTRAIT_H;
       pW = pH * mapAspect;
-      if (pW > w * 0.58) { pW = w * 0.58; pH = pW / mapAspect; }
+      if (pW > w * PORTRAIT_W) { pW = w * PORTRAIT_W; pH = pW / mapAspect; }
       px0 = (w - pW) / 2;
       py0 = (h - pH) / 2;
-    } else {
-      /* Matched to the copy block: he stands the same height as the text
-         beside him and shares its baseline, so the two halves of the hero
-         read as one composition rather than a column and a decoration. */
-      var copy = this.copyBox();
-      pH = copy ? copy.height : h * 0.62;
-      pW = pH * mapAspect;
-
-      /* Whatever is left to the right of the copy, minus room for the graph. */
-      var leftEdge = copy ? copy.right : w * 0.44;
-      var avail = w - leftEdge;
-      if (pW > avail * 0.86) { pW = avail * 0.86; pH = pW / mapAspect; }
-
-      px0 = leftEdge + (avail - pW) / 2;
-      py0 = copy ? copy.top + (copy.height - pH) / 2 : (h - pH) / 2;
     }
 
     this.portrait = { x: px0, y: py0, w: pW, h: pH,
@@ -362,57 +356,34 @@
     this.dots = dots;
   };
 
-  /* Where the type actually is, not where its box is. `.hero__name` and
-     `.hero__actions` are block/flex children of an 860px column, so their
-     boxes report 860px while the words inside stop at 580. Ranging over the
-     contents gives the real inked extent, which is what the portrait has to
-     clear and what the graph has to work around. */
+  /* Type the graph must stay clear of. The scene used to share the hero with
+     its headline; it now has a box of its own in the About section and the
+     copy sits in the next grid column, so this normally matches nothing.
+     The query is scoped to the wrapper so type elsewhere on the page never
+     shapes the graph, and anything laid over the canvas later is kept clear
+     of automatically. */
   var COPY_SEL = '.hero__status, .hero__name, .hero__subtitle, .hero__desc, .hero__actions';
 
-  function inkedRect(el) {
-    var r = document.createRange();
-    r.selectNodeContents(el);
-    var b = r.getBoundingClientRect();
-    return b.width ? b : el.getBoundingClientRect();
-  }
-
-  /* The copy block's real extent: top of the status badge to the bottom of
-     the buttons, and the widest line in between. */
-  HeroScene.prototype.copyBox = function () {
-    var base = this.canvas.getBoundingClientRect();
-    var els = document.querySelectorAll(COPY_SEL);
-    var top = Infinity, bottom = -Infinity, right = -Infinity;
-    for (var i = 0; i < els.length; i++) {
-      /* Widest of the two: the portrait has to clear both the visible words
-         and the box that swallows pointer events. */
-      var ink = inkedRect(els[i]), box = els[i].getBoundingClientRect();
-      var r = ink.right >= box.right ? ink : box;
-      if (!r.width) continue;
-      top = Math.min(top, r.top - base.top);
-      bottom = Math.max(bottom, r.bottom - base.top);
-      right = Math.max(right, r.right - base.left);
-    }
-    if (top === Infinity) return null;
-    return { top: top, bottom: bottom, height: bottom - top, right: right };
-  };
-
-  /* Rectangles the graph must not cover. These use the element box, not the
-     inked rect: the box is what captures pointer events, and `.hero__desc`
-     runs 33px wider than its longest line. A node resting in that gap looks
-     free but is unclickable. The default pad also covers the node's drift
-     amplitude, so one placed legally cannot wander under the copy. Labels
-     pass a smaller pad: they are not click targets, they only need to stay
-     visibly clear of the type. */
+  /* Rectangles the graph must not cover, canvas-relative. These use the
+     element box, not the inked text: the box is what captures pointer
+     events, so a node resting in the gap between the words and the box edge
+     looks free but is unclickable. The default pad also covers the node's
+     drift amplitude, so one placed legally cannot wander under the element.
+     Labels pass a smaller pad: they are not click targets, they only need to
+     stay visibly clear. Boxes that do not overlap the canvas are ignored. */
   HeroScene.prototype.keepOutRects = function (pad) {
+    var root = this.wrap || this.canvas.parentElement;
     var base = this.canvas.getBoundingClientRect();
-    var els = document.querySelectorAll(COPY_SEL);
+    var els = root ? root.querySelectorAll(COPY_SEL) : [];
     var out = [];
     if (pad == null) pad = 24;
     for (var i = 0; i < els.length; i++) {
       var r = els[i].getBoundingClientRect();
       if (!r.width) continue;
-      out.push({ x0: r.left - base.left - pad, y0: r.top - base.top - pad,
-                 x1: r.right - base.left + pad, y1: r.bottom - base.top + pad });
+      var box = { x0: r.left - base.left - pad, y0: r.top - base.top - pad,
+                  x1: r.right - base.left + pad, y1: r.bottom - base.top + pad };
+      if (box.x1 <= 0 || box.y1 <= 0 || box.x0 >= base.width || box.y0 >= base.height) continue;
+      out.push(box);
     }
     return out;
   };
@@ -454,8 +425,8 @@
     var ctx = this.ctx, w = this.w, h = this.h;
     var cx = p.cx, cy = p.cy;
     var compact = this.compact, mobile = this.mobile;
-    var keepOut = compact ? [] : this.keepOutRects();
-    var keepOutL = compact ? [] : this.keepOutRects(10);
+    var keepOut = this.keepOutRects();
+    var keepOutL = this.keepOutRects(10);
     var theme = NODE_COLORS[document.documentElement.classList.contains('light')
       ? 'light' : 'dark'];
     var nodes = [], edges = [], links = [];
@@ -1454,7 +1425,9 @@
      ============================================================ */
   function boot() {
     var canvas = document.getElementById('heroScene');
-    var wrap = document.querySelector('.hero__scene');
+    /* The scene lives in the About section now; the hero selector stays so
+       an older page layout still boots. */
+    var wrap = document.querySelector('.about__scene') || document.querySelector('.hero__scene');
     if (!canvas) return;
 
     var withGraph = true;
@@ -1466,14 +1439,15 @@
 
     var scene = new HeroScene(canvas, {
       card: document.getElementById('heroNodeCard'),
+      wrap: wrap,
       withGraph: withGraph
     });
 
     scene.init().then(function () {
       if (wrap) wrap.classList.add('is-ready');
     }).catch(function () {
-      /* Nothing to draw without the map, so drop the layer and the hero falls
-         back to its text-only layout instead of leaving a hole. */
+      /* Nothing to draw without the map, so drop the box and the About
+         section falls back to its text instead of leaving a hole. */
       if (wrap) wrap.remove();
     });
 

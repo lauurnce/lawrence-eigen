@@ -450,56 +450,42 @@ body.cursor-grabbing .cursor-dot {
   justify-content: space-between;
 }
 
-.nav__logo {
-  font-family: var(--font-wordmark);
-  font-size: 1.0625rem;
-  font-weight: 700;
-  color: var(--on-surface);
-  display: flex;
+/* Status pill in the wordmark's slot. It links down to what is being built. */
+.nav__status {
+  display: inline-flex;
   align-items: center;
   gap: var(--space-sm);
-  letter-spacing: -0.02em;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  color: var(--on-surface-variant);
+  padding: 5px 12px;
+  border: 1px solid var(--outline-variant);
+  border-radius: 999px;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
+  white-space: nowrap;
+  flex-shrink: 0;
+  /* The nav is transparent until you scroll, and this sits over the footage,
+     so the pill carries a little of the surface with it. */
+  background: color-mix(in srgb, var(--surface) 55%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: color var(--transition-fast), border-color var(--transition-fast);
 }
 
-.nav__logo-dot {
+.nav__status:hover,
+.nav__status:focus-visible {
+  border-color: var(--outline);
+  color: var(--on-surface);
+}
+
+.nav__status-dot {
   width: 5px;
   height: 5px;
   border-radius: 50%;
-  background: var(--primary);
+  background: #4ADE80;
   flex-shrink: 0;
-  transition: opacity var(--transition-base), width var(--transition-base);
-}
-
-/* The logo's dot resolves into his face once you scroll off the hero, so the
-   portrait stays with you down the page. On touch, where there is no hover to
-   spend on the big one, this is what keeps him present. */
-/* The canvas keeps a stable box at all times. A zero-width element has no
-   layout for the renderer to measure, so the reveal is done with transform
-   and a negative margin rather than by animating its width. */
-.nav__avatar {
-  display: block;
-  width: 24px;
-  height: 27px;
-  flex-shrink: 0;
-  margin-right: -24px;
-  opacity: 0;
-  pointer-events: none;
-  transform: scale(0.5);
-  transform-origin: left center;
-  transition: margin-right var(--transition-base), opacity var(--transition-base),
-              transform var(--transition-base);
-}
-
-.nav.scrolled .nav__logo--avatar .nav__avatar {
-  margin-right: 0;
-  opacity: 1;
-  transform: scale(1);
-}
-
-.nav.scrolled .nav__logo--avatar .nav__logo-dot {
-  width: 0;
-  opacity: 0;
 }
 
 .nav__links {
@@ -590,26 +576,20 @@ body.cursor-grabbing .cursor-dot {
 /* ============================================================
    HERO
    ============================================================ */
+/* A full-bleed muted montage with the copy sitting low over a scrim. The
+   section is a column that pushes its container to the end, so the text
+   lands bottom-left where the scrim is densest. */
 .hero {
   min-height: 100vh;
+  min-height: 100svh;
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: stretch;
   position: relative;
   overflow: hidden;
   padding-top: 80px;
-}
-
-/* CSS-only dot grid - top-right corner fades in */
-.hero::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image: radial-gradient(circle, rgba(233, 200, 106, 0.2) 1px, transparent 1px);
-  background-size: 34px 34px;
-  -webkit-mask-image: radial-gradient(ellipse at 80% 25%, black 0%, transparent 50%);
-  mask-image: radial-gradient(ellipse at 80% 25%, black 0%, transparent 50%);
-  pointer-events: none;
-  z-index: 0;
+  padding-bottom: 96px;
 }
 
 .hero__bg {
@@ -619,161 +599,47 @@ body.cursor-grabbing .cursor-dot {
   pointer-events: none;
 }
 
-/* Soft glow orbs - radial-gradient instead of filter: blur(100px),
-   which forced an expensive blur rasterization on every repaint. */
-.hero__gradient {
+.hero__video {
   position: absolute;
-  width: 700px;
-  height: 700px;
-  border-radius: 50%;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Legibility layer over the footage: fades down into the page surface, leans
+   heavier on the left under the copy, and carries a short band at the top so
+   the nav row reads over bright frames. Every stop comes from the surface
+   token, so the scrim goes light with the theme. */
+.hero__scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
   pointer-events: none;
+  background:
+    linear-gradient(to bottom,
+      color-mix(in srgb, var(--surface) 80%, transparent) 0,
+      transparent 180px),
+    linear-gradient(to bottom,
+      transparent 35%,
+      color-mix(in srgb, var(--surface) 72%, transparent) 68%,
+      var(--surface) 100%),
+    linear-gradient(to right,
+      color-mix(in srgb, var(--surface) 75%, transparent) 0%,
+      color-mix(in srgb, var(--surface) 35%, transparent) 45%,
+      transparent 75%);
 }
 
-.hero__gradient--1 {
-  top: -250px;
-  right: -150px;
-  background: radial-gradient(circle, var(--primary-container) 0%, transparent 65%);
-  opacity: 0.07;
-}
-
-.hero__gradient--2 {
-  bottom: -250px;
-  left: -150px;
-  background: radial-gradient(circle, var(--tertiary-container) 0%, transparent 65%);
-  opacity: 0.05;
+.hero > .container {
+  position: relative;
+  z-index: 2;
 }
 
 .hero__content {
   position: relative;
   z-index: 2;
   max-width: 860px;
-  /* This box is 860px wide but its text lines are far narrower, and it sits
-     over the scene canvas. Left solid it swallows every pointer event in the
-     empty space beside the copy, which is most of the portrait and graph.
-     The real content boxes below take their events back. */
-  pointer-events: none;
-}
-
-/* Each of these takes its events back, but only over its own text. Left as
-   full-width blocks in an 860px column they would still cover the portrait, so
-   fit-content shrinks the box to the words actually in it. */
-.hero__status,
-.hero__name,
-.hero__subtitle,
-.hero__desc,
-.hero__actions {
-  pointer-events: auto;
-  width: fit-content;
-  max-width: 100%;
-}
-
-/* ---------- Hero scene: dot portrait + node graph ----------
-   A canvas laid over the hero, under the copy. The portrait is a halftone
-   plate that the cursor pushes apart; around it sits a small graph whose
-   edges run from drifting nodes back to the outline of his silhouette.
-   It matches the container's width so he lines up with the content's right
-   edge rather than the viewport's. */
-.hero__scene {
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100%;
-  max-width: 1200px;
-  height: 100%;
-  padding: 80px var(--space-lg) 0;
-  z-index: 1;
-  opacity: 0;
-  transition: opacity 700ms ease;
-}
-
-.hero__scene.is-ready {
-  opacity: 1;
-}
-
-.hero__scene canvas {
-  display: block;
-  width: 100%;
-  height: 100%;
-  /* Vertical drags still scroll the page; only lateral movement works the
-     field. Without this the portrait would trap a thumb on mobile. */
-  touch-action: pan-y;
-}
-
-/* The node readout. Deliberately chrome-less: a hairline and two lines of
-   very small type, so opening one barely disturbs the page. */
-.hero__node-card {
-  position: absolute;
-  max-width: 210px;
-  padding: 4px 8px 5px 10px;
-  border-left: 1px solid var(--primary);
-  /* The readout can land over the halftone. Just enough scrim to keep the
-     type legible without turning it into a tooltip. */
-  background: color-mix(in srgb, var(--surface) 82%, transparent);
-  backdrop-filter: blur(3px);
-  -webkit-backdrop-filter: blur(3px);
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 220ms ease, visibility 220ms;
-  pointer-events: none;
-}
-
-.hero__node-card.is-open {
-  opacity: 1;
-  visibility: visible;
-}
-
-.hero__node-card.is-flipped {
-  border-left: none;
-  border-right: 1px solid var(--primary);
-  padding: 4px 10px 5px 8px;
-  text-align: right;
-}
-
-.hero__node-label {
-  display: block;
-  font-family: var(--font-mono);
-  font-size: 0.5625rem;
-  font-weight: 400;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--primary);
-  margin-bottom: 3px;
-}
-
-.hero__node-detail {
-  display: block;
-  font-family: var(--font-body);
-  font-size: 0.75rem;
-  font-weight: 400;
-  line-height: 1.5;
-  color: var(--on-surface-variant);
-}
-
-/* Static status badge - replaces typing animation */
-.hero__status {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-sm);
-  font-family: var(--font-mono);
-  font-size: 0.6875rem;
-  font-weight: 500;
-  color: var(--on-surface-variant);
-  margin-bottom: var(--space-xl);
-  padding: 5px 14px;
-  border: 1px solid var(--outline-variant);
-  border-radius: 999px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  width: fit-content;
-}
-
-.hero__status-dot {
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: #4ADE80;
-  flex-shrink: 0;
 }
 
 /* Old typing element - hidden */
@@ -860,74 +726,90 @@ body.cursor-grabbing .cursor-dot {
    ============================================================ */
 .about__inner {
   display: grid;
-  grid-template-columns: 340px 1fr;
+  /* Two equal columns: the scene needs as much room as the copy, and
+     minmax(0, ...) stops a long tag from squeezing the canvas. */
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: var(--space-4xl);
   align-items: center;
 }
 
-.about__photo-wrap {
+/* ---------- About scene: dot portrait + node graph ----------
+   The canvas that used to sit under the hero copy now fills the left column
+   of the About section, where the photo was. The portrait is a halftone
+   plate that the cursor pushes apart; around it floats a small graph whose
+   spokes converge on a point behind him. 4:5 is a portrait box: it gives
+   the graph the open bands above and below him that its hubs settle into,
+   and sits level with the copy beside it. */
+.about__scene {
   position: relative;
-  flex-shrink: 0;
-}
-
-.about__photo-frame {
   width: 100%;
-  max-width: 340px;
-  aspect-ratio: 3 / 4;
-  overflow: hidden;
-  border-radius: var(--radius-md);
-  background: var(--surface-container);
-  border: 1px solid var(--outline-variant);
-  position: relative;
+  aspect-ratio: 4 / 5;
+  opacity: 0;
+  transition: opacity 700ms ease;
 }
 
-.about__photo-frame.no-photo::after {
-  content: 'LP';
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-wordmark);
-  font-size: 6rem;
-  font-weight: 700;
-  color: var(--primary);
-  letter-spacing: -0.02em;
-  opacity: 0.25;
+.about__scene.is-ready {
+  opacity: 1;
 }
 
-.about__photo {
+.about__scene canvas {
+  display: block;
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  object-position: top center;
-  filter: grayscale(0.15);
-  transition: filter var(--transition-slow), transform var(--transition-slow);
+  /* Vertical drags still scroll the page; only lateral movement works the
+     field. Without this the portrait would trap a thumb on mobile. */
+  touch-action: pan-y;
 }
 
-.about__photo-frame:hover .about__photo {
-  filter: grayscale(0);
-  transform: scale(1.03);
-}
-
-.about__location-badge {
+/* The node readout. Deliberately chrome-less: a hairline and two lines of
+   very small type, so opening one barely disturbs the page. Positioned
+   against .about__scene. */
+.hero__node-card {
   position: absolute;
-  bottom: -14px;
-  right: -14px;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
+  max-width: 210px;
+  padding: 4px 8px 5px 10px;
+  border-left: 1px solid var(--primary);
+  /* The readout can land over the halftone. Just enough scrim to keep the
+     type legible without turning it into a tooltip. */
+  background: color-mix(in srgb, var(--surface) 82%, transparent);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 220ms ease, visibility 220ms;
+  pointer-events: none;
+}
+
+.hero__node-card.is-open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.hero__node-card.is-flipped {
+  border-left: none;
+  border-right: 1px solid var(--primary);
+  padding: 4px 10px 5px 8px;
+  text-align: right;
+}
+
+.hero__node-label {
+  display: block;
   font-family: var(--font-mono);
-  font-size: 0.6875rem;
-  font-weight: 500;
-  letter-spacing: 0.06em;
+  font-size: 0.5625rem;
+  font-weight: 400;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  padding: 6px 14px;
-  background: var(--primary);
-  color: var(--on-primary);
-  border-radius: 999px;
-  border: 2px solid var(--surface-container-low);
-  white-space: nowrap;
+  color: var(--primary);
+  margin-bottom: 3px;
+}
+
+.hero__node-detail {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--on-surface-variant);
 }
 
 .about__heading {
@@ -970,14 +852,12 @@ body.cursor-grabbing .cursor-dot {
     gap: var(--space-2xl);
   }
 
-  .about__photo-wrap {
-    display: flex;
-    justify-content: center;
-  }
-
-  .about__photo-frame {
-    max-width: 240px;
-    aspect-ratio: 1;
+  /* Stacked: the scene sits above the copy. A square box capped in height
+     keeps it from taking a whole phone screen; below 640px the graph shows
+     hub labels only and opens a branch on tap. */
+  .about__scene {
+    aspect-ratio: 1 / 1;
+    max-height: 440px;
   }
 }
 
@@ -1133,11 +1013,14 @@ body.cursor-grabbing .cursor-dot {
   margin-top: 0.55em;
 }
 
-.now-card__link {
+.now-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
   margin-top: var(--space-lg);
 }
 
-.now-card__link svg {
+.now-card__actions .btn svg {
   width: 16px;
   height: 16px;
   flex-shrink: 0;
@@ -1174,6 +1057,152 @@ body.cursor-grabbing .cursor-dot {
   }
   .now-card__lead {
     font-size: 1rem;
+  }
+}
+
+/* Team panel, opened by the "Meet the team" button in the Now Building card.
+   The photo stays put at the top; only the bios scroll when the viewport is short.
+   visibility keeps the closed panel out of the tab order. */
+.team-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-lg);
+  background: rgba(7, 7, 16, 0.9);
+  backdrop-filter: blur(12px);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--transition-base), visibility 0s linear 250ms;
+}
+
+.team-overlay.open {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity var(--transition-base), visibility 0s;
+}
+
+.team-panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 820px;
+  max-height: 92vh;
+  background: var(--surface-container-low);
+  border: 1px solid var(--outline-variant);
+  border-top: 2px solid var(--primary);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  transform: translateY(16px) scale(0.98);
+  transition: transform var(--transition-base);
+}
+
+.team-overlay.open .team-panel {
+  transform: none;
+}
+
+.team-close {
+  position: absolute;
+  top: var(--space-md);
+  right: var(--space-md);
+  z-index: 1;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface-container-highest);
+  border: 1px solid var(--outline-variant);
+  border-radius: 50%;
+  color: var(--on-surface);
+  cursor: pointer;
+  transition: border-color var(--transition-fast), color var(--transition-fast);
+}
+
+.team-close:hover,
+.team-close:focus-visible {
+  border-color: var(--outline);
+  color: var(--primary);
+}
+
+.team-close:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.team-photo {
+  flex: 0 0 auto;
+  aspect-ratio: 2 / 1;
+  max-height: 44vh;
+  overflow: hidden;
+  background: var(--surface-container-lowest);
+}
+
+.team-photo__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 55%;
+}
+
+.team-bios {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-xl);
+  padding: var(--space-xl);
+}
+
+.team-bio + .team-bio {
+  border-left: 1px solid var(--outline-variant);
+  padding-left: var(--space-xl);
+}
+
+.team-bio__name {
+  font-family: var(--font-display);
+  font-size: 1.375rem;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: var(--on-surface);
+}
+
+.team-bio__role {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--on-surface-variant);
+  margin: var(--space-xs) 0 var(--space-md);
+}
+
+.team-bio__text {
+  font-size: 0.9375rem;
+  line-height: 1.7;
+  color: var(--on-surface-variant);
+}
+
+@media (max-width: 720px) {
+  .team-overlay {
+    padding: var(--space-md);
+  }
+  .team-photo {
+    aspect-ratio: 4 / 3;
+  }
+  .team-bios {
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
+    padding: var(--space-lg);
+  }
+  .team-bio + .team-bio {
+    border-left: none;
+    padding-left: 0;
+    border-top: 1px solid var(--outline-variant);
+    padding-top: var(--space-lg);
   }
 }
 
@@ -1327,40 +1356,16 @@ body.cursor-grabbing .cursor-dot {
               border-top-color var(--transition-base);
   cursor: pointer;
   position: relative;
-  border-top: 2px solid transparent;
+  /* Plain box: tags, name, description, links. The top edge is the only
+     accent, lit on hover like the Now Building card. */
+  border: 1px solid var(--outline-variant);
+  border-top: 2px solid var(--outline-variant);
 }
 
 .project-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 24px 56px rgba(0, 0, 0, 0.45);
   border-top-color: var(--primary);
-}
-
-.project-card__image {
-  width: 100%;
-  height: 210px;
-  object-fit: cover;
-  transition: transform var(--transition-slow);
-}
-
-.project-card:hover .project-card__image {
-  transform: scale(1.04);
-}
-
-.project-card__image-wrap {
-  overflow: hidden;
-  position: relative;
-}
-
-.project-card__image-wrap::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 50%;
-  background: linear-gradient(to top, var(--surface-container), transparent);
-  pointer-events: none;
 }
 
 .project-card__body {
@@ -1599,11 +1604,59 @@ html.light .tech__logo {
   margin-bottom: 0;
 }
 
+/* Location after the organisation, set off the way the duration follows the
+   period line. */
+.experience-item__location::before {
+  content: '\00a0\00b7\00a0';
+  color: var(--outline);
+}
+
 .experience-item__desc {
   color: var(--on-surface-variant);
   font-size: 0.9375rem;
   line-height: 1.7;
   max-width: 600px;
+}
+
+/* Organisation marks beside the names in the timeline. Each PNG in
+   assets/logos is a white silhouette with alpha, generated from the original
+   logo and trimmed to one shared height. Used as a mask, the mark takes a
+   theme text colour instead of the brand colour, so it flips with the theme.
+   Heights match; width follows each logo's own proportions. */
+.org-logo {
+  display: inline-block;
+  height: 20px;
+  vertical-align: -5px;
+  margin-right: var(--space-sm);
+  background-color: var(--on-surface-variant);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-position: center;
+  mask-position: center;
+}
+
+.org-logo--zvv {
+  aspect-ratio: 479 / 160;
+  -webkit-mask-image: url('assets/logos/zvv.png');
+  mask-image: url('assets/logos/zvv.png');
+}
+
+.org-logo--adi {
+  aspect-ratio: 563 / 160;
+  -webkit-mask-image: url('assets/logos/analog-devices.png');
+  mask-image: url('assets/logos/analog-devices.png');
+}
+
+/* A circle reads smaller than a wordmark of the same height, so the badge
+   gets more room. */
+.org-logo--aws {
+  aspect-ratio: 1;
+  height: 32px;
+  vertical-align: -11px;
+  -webkit-mask-image: url('assets/logos/aws-sbg-pup.png');
+  mask-image: url('assets/logos/aws-sbg-pup.png');
 }
 
 /* Duration appended by script.js ("· 2 yrs 2 mos"); hidden until filled. */
@@ -1615,12 +1668,13 @@ html.light .tech__logo {
   display: none;
 }
 
-/* One organisation, several roles. The header carries the org and its total
-   span; the roles hang off an inner rail, newest first, the way LinkedIn
-   stacks positions held at the same company. */
+/* One organisation, several roles. The header reads like any other entry
+   (current role, its dates, org, description); the earlier positions hang off
+   an inner rail with their own dates, newest first, the way LinkedIn stacks
+   positions held at the same company. */
 .experience-group {
   list-style: none;
-  margin: var(--space-sm) 0 0 3px;
+  margin: var(--space-md) 0 0 3px;
   padding: 0 0 0 var(--space-lg);
   border-left: 1px solid var(--outline-variant);
 }
@@ -1646,11 +1700,6 @@ html.light .tech__logo {
   border-radius: 50%;
   background: var(--outline);
   box-shadow: 0 0 0 3px var(--surface-container-low);
-}
-
-/* The current role gets the accent, like the company line above it. */
-.experience-group__role:first-child::before {
-  background: var(--primary);
 }
 
 .experience-group__title {
@@ -2417,8 +2466,7 @@ html.light .tech__logo {
     grid-template-columns: 1fr;
   }
 
-  /* The copy needs the full column once the hero narrows, so the portrait
-     moves behind it and drops back to a texture. */
+  /* The copy needs the full column once the hero narrows. */
   .hero__content {
     max-width: 560px;
   }
@@ -2432,28 +2480,60 @@ html.light .tech__logo {
   }
 }
 
-@media (max-width: 768px) {
-  /* Stacked layout: the portrait sits above the copy rather than beside it,
-     and the hero grows to hold both. */
-  .hero {
-    min-height: auto;
-    padding-top: 96px;
-    padding-bottom: var(--space-4xl);
-    /* The hero is a flex row on desktop; stacking the portrait above the copy
-       means the scene rejoins the flow, so the axis has to turn. */
+/* The desktop nav needs about 1000px for the status pill, nine links and
+   the controls. Tighten the link spacing first, then hand over to the menu
+   button well before anything can overflow. */
+@media (max-width: 1200px) {
+  .nav__links {
+    gap: 20px;
+  }
+}
+
+@media (max-width: 1000px) {
+  .nav__links {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(11, 11, 16, 0.97);
+    backdrop-filter: blur(20px);
     flex-direction: column;
-    align-items: stretch;
-    justify-content: flex-start;
+    justify-content: center;
+    gap: var(--space-2xl);
+    transform: translateX(100%);
+    transition: transform var(--transition-base);
+    z-index: calc(var(--z-nav) - 1);
   }
 
-  .hero__scene {
-    position: relative;
-    left: auto;
-    transform: none;
-    max-width: none;
-    height: 420px;
-    padding: 0 var(--space-lg);
-    margin-bottom: var(--space-lg);
+  .nav__links.open {
+    transform: translateX(0);
+  }
+
+  .nav__link {
+    font-size: 1rem;
+  }
+
+  .nav__controls {
+    z-index: calc(var(--z-nav) + 1);
+  }
+
+  .nav__toggle {
+    display: flex;
+  }
+
+  .nav__cta {
+    margin-top: var(--space-md);
+  }
+}
+
+@media (max-width: 768px) {
+  /* The copy still sits at the foot of the video; it just needs less room
+     under it on a phone. .section's phone padding is declared later in this
+     block, so the second class is what lets this win. */
+  .hero.section {
+    padding-top: 96px;
+    padding-bottom: 56px;
   }
 
   .hero__node-card {
@@ -2523,42 +2603,6 @@ html.light .tech__logo {
 
   .tier-header__rule {
     display: none;
-  }
-
-  .nav__links {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(11, 11, 16, 0.97);
-    backdrop-filter: blur(20px);
-    flex-direction: column;
-    justify-content: center;
-    gap: var(--space-2xl);
-    transform: translateX(100%);
-    transition: transform var(--transition-base);
-    z-index: calc(var(--z-nav) - 1);
-  }
-
-  .nav__links.open {
-    transform: translateX(0);
-  }
-
-  .nav__link {
-    font-size: 1rem;
-  }
-
-  .nav__controls {
-    z-index: calc(var(--z-nav) + 1);
-  }
-
-  .nav__toggle {
-    display: flex;
-  }
-
-  .nav__cta {
-    margin-top: var(--space-md);
   }
 
   .projects__carousel {
@@ -2768,9 +2812,12 @@ html.light .tech__logo {
   .contact__social-link {
     transition: none;
   }
-  .hero__scene,
-  .hero__node-card,
-  .nav__avatar {
+  .about__scene,
+  .hero__node-card {
+    transition: none;
+  }
+  .team-overlay,
+  .team-panel {
     transition: none;
   }
   /* No auto-scroll. The script also skips starting its loop, so the lane becomes
@@ -2875,19 +2922,8 @@ html.light .nav.scrolled {
   box-shadow: 0 1px 0 var(--outline-variant);
 }
 
-html.light .hero::before {
-  background-image: radial-gradient(circle, rgba(138, 100, 16, 0.16) 1px, transparent 1px);
-}
-
-html.light .hero__gradient--1 {
-  opacity: 0.09;
-}
-
-html.light .hero__gradient--2 {
-  opacity: 0.06;
-}
-
-html.light .modal-overlay {
+html.light .modal-overlay,
+html.light .team-overlay {
   background: rgba(220, 216, 206, 0.9);
 }
 

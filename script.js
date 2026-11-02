@@ -162,6 +162,36 @@ document.addEventListener('DOMContentLoaded', () => {
   }, { rootMargin: '-25% 0px -65% 0px' });
   document.querySelectorAll('section[id]').forEach(s => spyObserver.observe(s));
 
+  // ─── Hero Video ───
+  // The montage only runs while it can be seen: it pauses when the hero scrolls
+  // off or the tab is hidden, and resumes when both are true again. Under
+  // reduced motion it never starts and the poster frame stands in for it. A
+  // rejected play() (autoplay policy, data saver) also just leaves the poster.
+  const heroSection = document.getElementById('home');
+  const heroVideo = heroSection ? heroSection.querySelector('.hero__video') : null;
+  if (heroVideo) {
+    const playHeroVideo = () => {
+      const attempt = heroVideo.play();
+      if (attempt && typeof attempt.catch === 'function') attempt.catch(() => {});
+    };
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      heroVideo.removeAttribute('autoplay');
+      heroVideo.pause();
+    } else {
+      let heroInView = true;
+      if ('IntersectionObserver' in window) {
+        new IntersectionObserver(entries => {
+          heroInView = entries[0].isIntersecting;
+          if (heroInView && !document.hidden) playHeroVideo(); else heroVideo.pause();
+        }).observe(heroSection);
+      }
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) heroVideo.pause();
+        else if (heroInView) playHeroVideo();
+      });
+    }
+  }
+
   // ─── Custom Cursor ───
   const cursorDot = document.getElementById('cursorDot');
   const cursorRing = document.getElementById('cursorRing');
@@ -1240,6 +1270,39 @@ document.addEventListener('DOMContentLoaded', () => {
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && modalOverlay.classList.contains('open')) closeModal();
   });
+
+  // ─── Team Panel (Now Building: Meet the team) ───
+  const teamOverlay = document.getElementById('teamOverlay');
+  const teamOpen = document.getElementById('teamOpen');
+  const teamClose = document.getElementById('teamClose');
+  if (teamOverlay && teamOpen && teamClose) {
+    let teamReturnFocus = null;
+
+    function openTeam() {
+      teamReturnFocus = document.activeElement;
+      teamOverlay.classList.add('open');
+      teamOverlay.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+      teamClose.focus();
+    }
+
+    function closeTeam() {
+      teamOverlay.classList.remove('open');
+      teamOverlay.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+      if (teamReturnFocus && typeof teamReturnFocus.focus === 'function') teamReturnFocus.focus();
+      teamReturnFocus = null;
+    }
+
+    teamOpen.addEventListener('click', openTeam);
+    teamClose.addEventListener('click', closeTeam);
+    teamOverlay.addEventListener('click', (e) => {
+      if (e.target === teamOverlay) closeTeam();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && teamOverlay.classList.contains('open')) closeTeam();
+    });
+  }
 
   // ─── Toast ───
   function showToast(message) {

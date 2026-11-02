@@ -46,11 +46,7 @@
   <!-- ========== NAVIGATION ========== -->
   <nav class="nav" id="nav">
     <div class="container nav__inner">
-      <a href="#home" class="nav__logo">
-        <span class="nav__logo-dot"></span>
-        <canvas class="nav__avatar" id="navAvatar" width="34" height="38" aria-hidden="true"></canvas>
-        Lawrence
-      </a>
+      <a href="#now-building" class="nav__status"><span class="nav__status-dot" aria-hidden="true"></span>Building ILPP</a>
       <div class="nav__links" id="navLinks">
         <a href="#home" class="nav__link active" data-nav="home">Home</a>
         <a href="#about" class="nav__link" data-nav="about">About</a>
@@ -77,22 +73,11 @@
   <!-- ========== HERO ========== -->
   <section class="hero section" id="home">
     <div class="hero__bg">
-      <div class="hero__gradient hero__gradient--1"></div>
-      <div class="hero__gradient hero__gradient--2"></div>
-    </div>
-    <div class="hero__scene" aria-hidden="true">
-      <canvas id="heroScene"></canvas>
-      <div class="hero__node-card" id="heroNodeCard">
-        <span class="hero__node-label"></span>
-        <span class="hero__node-detail"></span>
-      </div>
+      <video class="hero__video" autoplay muted loop playsinline preload="metadata" poster="assets/hero-poster.jpg" aria-hidden="true"><source src="assets/hero-montage.mp4" type="video/mp4"></video>
+      <div class="hero__scrim" aria-hidden="true"></div>
     </div>
     <div class="container">
       <div class="hero__content">
-        <div class="hero__status">
-          <span class="hero__status-dot"></span>
-          Building I Love Product People
-        </div>
         <h1 class="hero__name text-display-lg">
           <span>Law<span class="name-suffix">rence</span></span>
         </h1>
@@ -112,33 +97,22 @@
         </div>
       </div>
     </div>
-    <!-- The graph lives on a canvas, so mirror what it holds into the document
-         for screen readers and anyone not using a pointer. -->
-    <ul class="visually-hidden" id="heroNodeList" aria-label="About Lawrence"></ul>
   </section>
 
   <!-- ========== ABOUT ========== -->
   <section class="section section--alt" id="about">
     <div class="container">
       <div class="about__inner reveal">
-        <div class="about__photo-wrap">
-          <div class="about__photo-frame" id="aboutPhotoFrame">
-            <img
-              src="assets/profile.jpg"
-              alt="Lawrence Panes"
-              class="about__photo"
-              width="600"
-              height="800"
-              loading="lazy"
-              decoding="async"
-              onerror="this.closest('.about__photo-frame').classList.add('no-photo'); this.remove();"
-            />
-          </div>
-          <div class="about__location-badge">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-            Manila, PH
+        <div class="about__scene" id="aboutScene" aria-hidden="true">
+          <canvas id="heroScene"></canvas>
+          <div class="hero__node-card" id="heroNodeCard">
+            <span class="hero__node-label"></span>
+            <span class="hero__node-detail"></span>
           </div>
         </div>
+        <!-- The graph lives on a canvas, so mirror what it holds into the document
+             for screen readers and anyone not using a pointer. -->
+        <ul class="visually-hidden" id="heroNodeList" aria-label="About Lawrence"></ul>
         <div class="about__content">
           <p class="section-header__label">About</p>
           <h2 class="about__heading text-display-md">A founder<br>who builds.</h2>
@@ -222,10 +196,16 @@
               <span>Co-founded with Sylvester Mobley.</span>
             </li>
           </ul>
-          <a class="btn btn--ghost now-card__link" href="https://iloveproductpeople.com/" target="_blank" rel="noopener noreferrer">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-            iloveproductpeople.com
-          </a>
+          <div class="now-card__actions">
+            <a class="btn btn--ghost now-card__link" href="https://iloveproductpeople.com/" target="_blank" rel="noopener noreferrer">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              iloveproductpeople.com
+            </a>
+            <button type="button" class="btn btn--ghost now-card__team" id="teamOpen" aria-haspopup="dialog" aria-controls="teamPanel">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              Meet the team
+            </button>
+          </div>
         </div>
       </article>
     </div>
@@ -243,9 +223,6 @@
         <div class="projects__track" id="projectsTrack">
         <!-- Project 1 -->
         <div class="project-card" data-project="survival-kit" id="project-survival-kit">
-          <div class="project-card__image-wrap">
-            <img src="assets/project-survival-kit.jpg" alt="BSIT Survival Kit study companion" class="project-card__image" loading="lazy" decoding="async" width="1200" height="632" />
-          </div>
           <div class="project-card__body">
             <div class="project-card__tags">
               <span class="project-card__tag">Next.js</span>
@@ -271,9 +248,6 @@
 
         <!-- Project 2 -->
         <div class="project-card" data-project="feedy" id="project-feedy">
-          <div class="project-card__image-wrap">
-            <img src="assets/project-feedy.svg" alt="feedy developer blog digest CLI" class="project-card__image" loading="lazy" decoding="async" width="1200" height="632" />
-          </div>
           <div class="project-card__body">
             <div class="project-card__tags">
               <span class="project-card__tag">Python</span>
@@ -294,9 +268,6 @@
 
         <!-- Project 3 -->
         <div class="project-card" data-project="kalinga" id="project-kalinga">
-          <div class="project-card__image-wrap">
-            <img src="assets/project-hyperledger.jpg" alt="Kalinga Mental Wellness App" class="project-card__image" loading="lazy" decoding="async" width="800" height="800" />
-          </div>
           <div class="project-card__body">
             <div class="project-card__tags">
               <span class="project-card__tag">React Native</span>
@@ -318,9 +289,6 @@
 
         <!-- Project 4 -->
         <div class="project-card" data-project="greenproof" id="project-greenproof">
-          <div class="project-card__image-wrap">
-            <img src="assets/project-amberflow.jpg" alt="GreenProof Recycle-to-Earn" class="project-card__image" loading="lazy" decoding="async" width="800" height="800" />
-          </div>
           <div class="project-card__body">
             <div class="project-card__tags">
               <span class="project-card__tag">Rust</span>
@@ -346,9 +314,6 @@
 
         <!-- Project 5 -->
         <div class="project-card" data-project="02a-manila" id="project-02a-manila">
-          <div class="project-card__image-wrap">
-            <img src="assets/project-nebula.jpg" alt="Zero to Agent Manila Official Website" class="project-card__image" loading="lazy" decoding="async" width="800" height="800" />
-          </div>
           <div class="project-card__body">
             <div class="project-card__tags">
               <span class="project-card__tag">Next.js</span>
@@ -591,23 +556,21 @@
           <div class="experience-item__dot"></div>
           <p class="experience-item__period">Jul 2026 to Present<span class="experience-item__duration" data-start="2026-07" data-end="present"></span></p>
           <h3 class="experience-item__role">AI Enablement Lead</h3>
-          <p class="experience-item__company">Analog Devices</p>
+          <p class="experience-item__company"><span class="org-logo org-logo--adi" aria-hidden="true"></span>Analog Devices<span class="experience-item__location">Cavite, Philippines</span></p>
           <p class="experience-item__desc">Lead the design and delivery of the AI Enablement Program for ADI's Supply Chain Procurement team in the Philippines. I work with Category Managers and Operations Buyers, and every session is built around real procurement tasks they already do.</p>
         </div>
 
-        <!-- One organisation, four roles: grouped under a single header with an
-             inner rail, the way LinkedIn stacks positions at the same company. -->
+        <!-- One organisation, four roles. The header reads like every other
+             entry (current role, its dates, organisation, description); the rail
+             below lists the earlier positions with their own dates, newest
+             first, the way LinkedIn stacks positions at the same company. -->
         <div class="experience-item experience-item--group reveal">
           <div class="experience-item__dot"></div>
-          <p class="experience-item__period">Oct 2024 to Present<span class="experience-item__duration" data-start="2024-10" data-end="present"></span></p>
-          <h3 class="experience-item__role">AWS Student Builder Group PUP</h3>
-          <p class="experience-item__company">Metro Manila</p>
+          <p class="experience-item__period">Oct 2026 to Present<span class="experience-item__duration" data-start="2026-10" data-end="present"></span></p>
+          <h3 class="experience-item__role">Executive Director</h3>
+          <p class="experience-item__company"><span class="org-logo org-logo--aws" aria-hidden="true"></span>AWS Student Builder Group PUP<span class="experience-item__location">Metro Manila, Philippines</span></p>
+          <p class="experience-item__desc">Lead the first student-led AWS user group in the Philippines (formerly AWS Cloud Club PUP), a 1,434-member org operating across PUP campuses.</p>
           <ol class="experience-group">
-            <li class="experience-group__role">
-              <p class="experience-item__period">Sep 2026 to Present<span class="experience-item__duration" data-start="2026-09" data-end="present"></span></p>
-              <h4 class="experience-group__title">Executive Director</h4>
-              <p class="experience-item__desc">Lead the first student-led AWS user group in the Philippines (formerly AWS Cloud Club PUP), a 1,434-member org operating across PUP campuses.</p>
-            </li>
             <li class="experience-group__role">
               <p class="experience-item__period">Oct 2025 to Oct 2026<span class="experience-item__duration" data-start="2025-10" data-end="2026-10"></span></p>
               <h4 class="experience-group__title">Lead, Department of Artificial Intelligence</h4>
@@ -628,7 +591,7 @@
           <div class="experience-item__dot"></div>
           <p class="experience-item__period">May 2026 to Sep 2026<span class="experience-item__duration" data-start="2026-05" data-end="2026-09"></span></p>
           <h3 class="experience-item__role">Founder Apprentice</h3>
-          <p class="experience-item__company">Zero Vector Ventures</p>
+          <p class="experience-item__company"><span class="org-logo org-logo--zvv" aria-hidden="true"></span>Zero Vector Ventures<span class="experience-item__location">Philadelphia, Pennsylvania, USA</span></p>
           <p class="experience-item__desc">Selected for an apprenticeship at a Philadelphia-based venture studio. Trained remotely with the US team on venture evaluation, bottom-up market sizing, funding mechanics (SAFEs, notes, cap tables), and problem validation.</p>
         </div>
       </div>
@@ -828,6 +791,30 @@
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
             View Source
           </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== TEAM PANEL (Now Building: Meet the team) ========== -->
+  <div class="team-overlay" id="teamOverlay" aria-hidden="true">
+    <div class="team-panel" id="teamPanel" role="dialog" aria-modal="true" aria-label="Meet the team">
+      <button type="button" class="team-close" id="teamClose" aria-label="Close">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+      <div class="team-photo">
+        <img class="team-photo__img" src="assets/Sylvester%20and%20I.jpeg" alt="Sylvester Mobley and Lawrence Panes" width="1448" height="1086" loading="lazy" decoding="async" />
+      </div>
+      <div class="team-bios">
+        <div class="team-bio">
+          <h3 class="team-bio__name">Sylvester Mobley</h3>
+          <p class="team-bio__role">Co-founder</p>
+          <p class="team-bio__text">Sylvester has spent 15+ years around early-stage teams as a founder, investor, and screener. He founded Red Creek Media and Conexted Health, led Coded by: for a decade helping underrepresented founders build venture-backed startups, and screened for Techstars New York. Since 2020 he's been Managing Partner at Plain Sight Capital, investing in pre-seed and seed product-led SaaS, so he knows which founders are worth a senior operator's time.</p>
+        </div>
+        <div class="team-bio">
+          <h3 class="team-bio__name">Lawrence Panes</h3>
+          <p class="team-bio__role">Co-founder &amp; CEO</p>
+          <p class="team-bio__text">Lawrence runs ILPP day to day: vetting, matching, and every first conversation with founders and operators. He built our stage-based vetting system and ran our first validation wave, interviewing senior product people across the US and Europe before we made a single match. He's also AI Enablement Lead at Analog Devices and studies IT at the Polytechnic University of the Philippines.</p>
         </div>
       </div>
     </div>

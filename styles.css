@@ -2242,11 +2242,22 @@ html.light .tech__logo {
   gap: var(--space-md);
 }
 
-.footer__copy {
+.footer__meta {
+  display: grid;
+  gap: var(--space-xs);
+}
+
+.footer__copy,
+.footer__visits {
   font-family: var(--font-mono);
   font-size: 0.6875rem;
   color: var(--outline);
   letter-spacing: 0.04em;
+}
+
+/* Filled by script.js from /api/visits; stays hidden until a count arrives. */
+.footer__visits[hidden] {
+  display: none;
 }
 
 .footer__links {

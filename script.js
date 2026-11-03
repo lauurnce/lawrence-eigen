@@ -101,6 +101,25 @@ document.addEventListener('DOMContentLoaded', () => {
   // ─── Year ───
   document.getElementById('year').textContent = new Date().getFullYear();
 
+  // ─── Visitor counter (footer) ───
+  // Counts once per browser session via POST, otherwise just reads. The line
+  // stays hidden unless a number comes back, so a missing store or a static
+  // preview without the function costs nothing visible.
+  const footerVisits = document.getElementById('footerVisits');
+  if (footerVisits && window.fetch) {
+    let counted = false;
+    try { counted = sessionStorage.getItem('visitCounted') === '1'; } catch (e) {}
+    fetch('/api/visits', { method: counted ? 'GET' : 'POST', headers: { Accept: 'application/json' } })
+      .then(r => (r.ok ? r.json() : null))
+      .then(data => {
+        if (!data || typeof data.visits !== 'number') return;
+        try { sessionStorage.setItem('visitCounted', '1'); } catch (e) {}
+        footerVisits.textContent = data.visits.toLocaleString('en-US') + (data.visits === 1 ? ' visit' : ' visits') + ' since Nov 2026';
+        footerVisits.hidden = false;
+      })
+      .catch(() => {});
+  }
+
   // ─── Mobile Nav ───
   const navToggle = document.getElementById('navToggle');
   const navLinks = document.getElementById('navLinks');

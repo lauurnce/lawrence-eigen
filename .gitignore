@@ -51,3 +51,5 @@ assets/events ive attended/
 # Vision cutout, 1.6MB. Only needed to regenerate the inlined dotmap in
 # hero-scene.js — see tools-build-dotmap.py.
 assets/lawrence-cutout.png
+.vercel
+.env*

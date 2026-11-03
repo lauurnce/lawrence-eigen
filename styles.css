@@ -1454,6 +1454,21 @@ body.cursor-grabbing .cursor-dot {
   padding-top: var(--space-4xl);
 }
 
+/* Two lanes share the hairlines: top of the first, one between, bottom of the
+   second. Each lane keeps its own edge fade and drag handling. */
+.stack-lanes {
+  margin-top: var(--space-2xl);
+}
+
+.stack-lanes .stack-lane {
+  margin-top: 0;
+  padding: var(--space-xl) 0;
+}
+
+.stack-lanes .stack-lane + .stack-lane {
+  border-top: 0;
+}
+
 .stack-lane {
   position: relative;
   overflow: hidden;

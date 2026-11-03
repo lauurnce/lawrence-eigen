@@ -455,8 +455,11 @@
         <p class="section-header__desc">Tools and technologies I use daily to architect and ship production systems.</p>
       </div>
     </div>
-    <!-- One continuous lane. The moving unit is the category block, not the individual
-         tech. JS clones the track to loop it, pauses on hover, and allows drag to scrub. -->
+    <!-- Two lanes drifting in opposite directions, so the categories one lane
+         cannot show at a given moment are passing by in the other. The moving
+         unit is the category block, not the individual tech. JS clones each
+         track to loop it, pauses on hover, and allows drag to scrub. -->
+    <div class="stack-lanes">
     <div class="stack-lane" id="stackLane">
       <div class="stack-lane__track" id="stackTrack" role="list">
           <div class="stack-group">
@@ -491,6 +494,11 @@
             <span class="tech"><img class="tech__logo" src="assets/tech/jupyter.svg" alt="" width="26" height="26" loading="lazy" decoding="async" onerror="this.remove()" /><span class="tech__name">Jupyter</span></span>
             <span class="tech"><img class="tech__logo" src="assets/tech/huggingface.svg" alt="" width="26" height="26" loading="lazy" decoding="async" onerror="this.remove()" /><span class="tech__name">Hugging Face</span></span>
           </div>
+      </div>
+    </div>
+    <!-- Second lane: the shipping side of the stack, drifting left to right. -->
+    <div class="stack-lane stack-lane--reverse" id="stackLaneAlt">
+      <div class="stack-lane__track" id="stackTrackAlt" role="list">
           <div class="stack-group">
             <span class="stack-group__name">Cloud &amp; Infrastructure</span>
             <span class="tech"><span class="tech__name">AWS</span></span>
@@ -528,6 +536,7 @@
             <span class="tech"><img class="tech__logo" src="assets/tech/stellar.svg" alt="" width="26" height="26" loading="lazy" decoding="async" onerror="this.remove()" /><span class="tech__name">Stellar</span></span>
           </div>
       </div>
+    </div>
     </div>
   </section>
 

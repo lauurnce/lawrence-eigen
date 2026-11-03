@@ -269,13 +269,14 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // ─── Tech Stack Marquee ───
-  // A single lane whose moving units are whole category blocks. It drifts
-  // continuously, pauses when you point at it, and can be dragged to scrub.
-  // The loop only runs while the section is on screen, so the page is not
-  // animating for viewers who never scroll this far.
-  (function initStackMarquee() {
-    const lane = document.getElementById('stackLane');
-    const track = document.getElementById('stackTrack');
+  // Two lanes whose moving units are whole category blocks, drifting in
+  // opposite directions (dir is 1 for right to left, -1 for left to right).
+  // Each pauses when you point at it and can be dragged to scrub. The loops
+  // only run while the section is on screen, so the page is not animating
+  // for viewers who never scroll this far.
+  function initStackMarquee(laneId, trackId, dir) {
+    const lane = document.getElementById(laneId);
+    const track = document.getElementById(trackId);
     if (!lane || !track) return;
 
     // Reduced motion: leave the lane as a plain scrollable strip (see styles.css).
@@ -355,7 +356,7 @@ document.addEventListener('DOMContentLoaded', () => {
       lane.classList.remove('is-dragging');
       document.body.classList.remove('cursor-grabbing');
       // Carry the fling into the loop, then let it decay back to the drift.
-      speed = -velocity * 12;
+      speed = -velocity * 12 * dir;
       target = lane.matches(':hover') ? 0 : BASE_SPEED;
     };
 
@@ -370,7 +371,7 @@ document.addEventListener('DOMContentLoaded', () => {
       last = now;
       if (!dragging) {
         speed += (target - speed) * EASE;
-        offset += speed * dt;
+        offset += dir * speed * dt;
         draw();
       }
       rafId = requestAnimationFrame(tick);
@@ -407,7 +408,10 @@ document.addEventListener('DOMContentLoaded', () => {
       if (document.hidden) stop();
       else if (inView) start();
     });
-  })();
+  }
+
+  initStackMarquee('stackLane', 'stackTrack', 1);
+  initStackMarquee('stackLaneAlt', 'stackTrackAlt', -1);
 
   // ─── Stats Count-Up ───
   const statNumbers = document.querySelectorAll('.stat-item__number[data-target]');

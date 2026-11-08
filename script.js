@@ -663,6 +663,163 @@ document.addEventListener('DOMContentLoaded', () => {
   setCount('countSpeaking', communitySpeaking);
   setCount('countOrganizing', communityOrganizing);
 
+  // ─── Community storyboard ───
+  // Both tiers as one run of events. The panel stays pinned while the page
+  // scrolls through the section, and each slice of that scroll is one event:
+  // the photo slides onto the stage, the caption changes, and the list keeps
+  // the reader's place. The stage carries data-community for the active
+  // event, so the gallery wiring below opens its photos. Under reduced motion
+  // the two-tier grid rendered above is shown instead and this never runs.
+  const communityStory = document.getElementById('communityStory');
+  const communityGrid  = document.getElementById('communityGrid');
+  if (communityStory && communityGrid) {
+    const storyItems = [
+      ...communitySpeaking.map(it => ({ ...it, kind: 'Speaking & Roles' })),
+      ...communityOrganizing.map(it => ({ ...it, kind: 'Organizing team', desc: it.contributed })),
+    ].filter(it => it.images && it.images.length);
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || storyItems.length < 2) {
+      communityGrid.hidden = false;
+    } else {
+      communityStory.hidden = false;
+      initCommunityStory(communityStory, storyItems);
+    }
+  }
+
+  function initCommunityStory(root, items) {
+    const N      = items.length;
+    const list   = root.querySelector('#storyList');
+    const stage  = root.querySelector('#storyStage');
+    const caps   = root.querySelector('#storyCaps');
+    const pin    = root.querySelector('.story__pin');
+    const pad2   = (n) => String(n).padStart(2, '0');
+    const photos = (n) => `${n} photo${n === 1 ? '' : 's'}`;
+    // "Speaker" sits in the date field for two older entries; only real dates are shown.
+    const dated  = (it) => /\d/.test(it.date || '');
+    const name   = (it) => it.title.split('·').pop().trim();
+
+    // The last event keeps half a slice of pinned scroll for its push-in, then
+    // the panel releases rather than holding a whole empty step.
+    const TAIL  = 0.5;
+    const STEPS = N - 1 + TAIL;
+    root.style.setProperty('--steps', STEPS);
+
+    list.innerHTML = items.map((it, i) => `
+      <li class="story__item" data-i="${i}">
+        <button type="button" class="story__jump">
+          <span class="story__num">${pad2(i + 1)}</span>
+          <span class="story__name">${escHtml(name(it))}</span>
+          <span class="story__meta">${dated(it) ? `${escHtml(it.date)} · ` : ''}${photos(it.images.length)}</span>
+        </button>
+        <i class="story__bar" aria-hidden="true"></i>
+      </li>`).join('');
+
+    stage.innerHTML = items.map((it, i) => `
+      <figure class="story__layer" data-i="${i}">
+        <img src="${escHtml(it.images[0])}" alt="${escHtml(it.title)}" loading="${i < 2 ? 'eager' : 'lazy'}" decoding="async" />
+        <span class="story__fallback" aria-hidden="true">${communityIcon(COMMUNITY_ICONS[it.icon] || COMMUNITY_ICONS.users)}</span>
+      </figure>`).join('')
+      + `<span class="story__counter" aria-hidden="true"><span data-counter>01</span> / ${pad2(N)}</span>`;
+
+    // A photo that fails to load leaves the event's icon on the stage rather
+    // than a broken-image glyph. Error events do not bubble, so capture.
+    stage.addEventListener('error', (e) => {
+      const layer = e.target.closest && e.target.closest('.story__layer');
+      if (layer) layer.classList.add('is-missing');
+    }, true);
+
+    caps.innerHTML = items.map((it, i) => `
+      <div class="story__cap" data-i="${i}">
+        <span class="story__kind">${escHtml(it.kind)}</span>
+        <h3 class="story__title">${escHtml(it.title)}</h3>
+        <p class="story__org">${escHtml(it.org)}${dated(it) ? ` · ${escHtml(it.date)}` : ''}</p>
+        <p class="story__desc">${escHtml(it.desc)}</p>
+        <span class="story__photos">${photos(it.images.length)} · click to open</span>
+      </div>`).join('');
+
+    const layers  = [...stage.querySelectorAll('.story__layer')];
+    const imgs    = layers.map(l => l.querySelector('img'));
+    const capEls  = [...caps.querySelectorAll('.story__cap')];
+    const itemEls = [...list.querySelectorAll('.story__item')];
+    const bars    = [...list.querySelectorAll('.story__bar')];
+    const counter = stage.querySelector('[data-counter]');
+    let active = -1;
+    let navH   = 0;
+    let pinH   = 0;
+    let pinTop = 0;
+    let inView = true;
+
+    const setState = (els, idx, announce) => els.forEach((el, i) => {
+      el.classList.toggle('is-active', i === idx);
+      el.classList.toggle('is-past', i < idx);
+      if (announce) el.setAttribute('aria-hidden', i === idx ? 'false' : 'true');
+    });
+
+    // The panel is only as tall as its content and sits centred between the
+    // fixed nav (which changes height once scrolled) and the bottom of the
+    // window, so both are re-read whenever they move.
+    const syncPin = () => {
+      const h  = nav ? nav.offsetHeight : 0;
+      const ph = pin.offsetHeight;
+      if (h === navH && ph === pinH) return;
+      navH = h;
+      pinH = ph;
+      pinTop = h + Math.max(0, (window.innerHeight - h - ph) / 2);
+      root.style.setProperty('--story-top', `${h}px`);
+      root.style.setProperty('--pin-h', `${ph}px`);
+      root.style.setProperty('--pin-top', `${Math.round(pinTop)}px`);
+    };
+
+    const update = () => {
+      syncPin();
+      const rect  = root.getBoundingClientRect();
+      const range = Math.max(1, root.offsetHeight - pinH);
+      const p     = Math.min(1, Math.max(0, (pinTop - rect.top) / range));
+      const pos   = p * STEPS;
+      const idx   = Math.min(N - 1, Math.floor(pos));
+      const f     = Math.min(1, pos - idx);
+      if (idx !== active) {
+        active = idx;
+        setState(layers, idx, true);
+        setState(capEls, idx, true);
+        setState(itemEls, idx, false);
+        counter.textContent = pad2(idx + 1);
+        stage.dataset.community = items[idx].id;
+      }
+      bars.forEach((b, i) => { b.style.transform = `scaleX(${i < idx ? 1 : i === idx ? f : 0})`; });
+      // A slow push-in across the step keeps the photo moving between events.
+      imgs.forEach((img, i) => { img.style.transform = i === idx ? `scale(${1 + 0.07 * f})` : ''; });
+    };
+
+    // The list doubles as navigation: a click scrolls the page to that event's
+    // slice, just past the point where its photo has landed.
+    itemEls.forEach((el, i) => {
+      el.querySelector('.story__jump').addEventListener('click', () => {
+        const range = root.offsetHeight - pinH;
+        const top   = root.getBoundingClientRect().top + window.pageYOffset - pinTop + range * ((i + 0.15) / STEPS);
+        window.scrollTo({ top, behavior: 'smooth' });
+      });
+    });
+
+    let frame = null;
+    window.addEventListener('scroll', () => {
+      if (!inView || frame) return;
+      frame = requestAnimationFrame(() => { frame = null; update(); });
+    }, { passive: true });
+    window.addEventListener('resize', () => { pinH = 0; update(); });
+    // Web fonts land after first paint and change the panel's height.
+    window.addEventListener('load', () => { pinH = 0; update(); });
+
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(entries => {
+        inView = entries[0].isIntersecting;
+        if (inView) update();
+      }, { rootMargin: '200px 0px' }).observe(root);
+    }
+
+    update();
+  }
+
   // ─── Scroll Reveal ───
   const revealElements = document.querySelectorAll('.reveal');
   const revealObserver = new IntersectionObserver(
@@ -851,12 +1008,7 @@ document.addEventListener('DOMContentLoaded', () => {
       window.setTimeout(() => {
         // The linked card may be parked off to the side of the carousel.
         const track = card.closest('.projects__track');
-        if (track) {
-          const left = card.getBoundingClientRect().left
-            - track.getBoundingClientRect().left
-            + track.scrollLeft;
-          track.scrollTo({ left, behavior: 'smooth' });
-        }
+        if (track && typeof track.revealCard === 'function') track.revealCard(card);
         card.classList.add('project-card--highlight');
         window.setTimeout(() => {
           card.classList.remove('project-card--highlight');
@@ -866,15 +1018,23 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // ─── Projects carousel ───
-  // The track scrolls natively, so this only drives the arrows, the progress
-  // rail, and the range readout off whatever position the browser reports.
+  // The strip of cards moves with the page. With motion allowed, the track is
+  // a transform-driven strip tied to where the section sits in the window: it
+  // slides left as the reader scrolls down and back as they scroll up, like
+  // the speaker strip on speedrun.a16z.com. A drag, a horizontal trackpad
+  // swipe, or the arrows add their own offset on top of that. Under reduced
+  // motion the track stays a plain native scroller and the script only drives
+  // the arrows, the progress rail, and the range readout off the browser's
+  // position.
   const projectsTrack = document.getElementById('projectsTrack');
   if (projectsTrack) {
+    const carousel      = projectsTrack.closest('.projects__carousel');
     const projectsPrev  = document.getElementById('projectsPrev');
     const projectsNext  = document.getElementById('projectsNext');
     const projectsCount = document.getElementById('projectsCount');
     const projectsThumb = document.querySelector('.projects__progress-thumb');
-    const projectCards  = projectsTrack.querySelectorAll('.project-card');
+    const projectCards  = [...projectsTrack.querySelectorAll('.project-card')];
+    const reduceMotion  = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     const cardStep = () => {
       const first = projectCards[0];
@@ -885,63 +1045,295 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const pad = (n) => String(n).padStart(2, '0');
 
-    const syncCarousel = () => {
-      const maxScroll = projectsTrack.scrollWidth - projectsTrack.clientWidth;
-      const progress  = maxScroll > 0 ? projectsTrack.scrollLeft / maxScroll : 0;
+    // Arrows, rail, and readout for any offset of a strip fullWidth wide seen
+    // through a window viewWidth wide. Both engines below feed this.
+    const renderControls = (offset, viewWidth, fullWidth) => {
+      const maxOffset = Math.max(0, fullWidth - viewWidth);
+      projectsPrev.disabled = offset <= 1;
+      projectsNext.disabled = offset >= maxOffset - 1;
 
-      projectsPrev.disabled = projectsTrack.scrollLeft <= 1;
-      projectsNext.disabled = projectsTrack.scrollLeft >= maxScroll - 1;
-
-      const visible = Math.min(1, projectsTrack.clientWidth / projectsTrack.scrollWidth);
+      const visible  = fullWidth > 0 ? Math.min(1, viewWidth / fullWidth) : 1;
+      const progress = maxOffset > 0 ? offset / maxOffset : 0;
       projectsThumb.style.width = `${visible * 100}%`;
       projectsThumb.style.left  = `${progress * (100 - visible * 100)}%`;
 
-      const perView = Math.max(1, Math.round(projectsTrack.clientWidth / cardStep()));
-      const first   = Math.min(
+      const step    = cardStep() || viewWidth || 1;
+      const perView = Math.max(1, Math.round(viewWidth / step));
+      const first   = Math.max(1, Math.min(
         projectCards.length - perView + 1,
-        Math.round(projectsTrack.scrollLeft / cardStep()) + 1
-      );
+        Math.round(offset / step) + 1
+      ));
       const last = Math.min(projectCards.length, first + perView - 1);
       projectsCount.textContent = perView > 1
         ? `${pad(first)}–${pad(last)}`
         : pad(first);
     };
 
-    // Successive clicks queue off the pending target, not the live scrollLeft,
-    // so tapping the arrow three times fast advances three cards instead of
-    // being swallowed by the smooth scroll already in flight.
-    let carouselTarget = null;
+    const initNativeCarousel = () => {
+      const sync = () => renderControls(
+        projectsTrack.scrollLeft, projectsTrack.clientWidth, projectsTrack.scrollWidth
+      );
 
-    const stepBy = (direction) => {
-      const maxScroll = projectsTrack.scrollWidth - projectsTrack.clientWidth;
-      const from = carouselTarget === null ? projectsTrack.scrollLeft : carouselTarget;
-      carouselTarget = Math.max(0, Math.min(maxScroll, from + direction * cardStep()));
-      projectsTrack.scrollTo({ left: carouselTarget, behavior: 'smooth' });
+      // Successive clicks queue off the pending target, not the live scrollLeft,
+      // so tapping the arrow three times fast advances three cards instead of
+      // being swallowed by the smooth scroll already in flight.
+      let carouselTarget = null;
+
+      const stepBy = (direction) => {
+        const maxScroll = projectsTrack.scrollWidth - projectsTrack.clientWidth;
+        const from = carouselTarget === null ? projectsTrack.scrollLeft : carouselTarget;
+        carouselTarget = Math.max(0, Math.min(maxScroll, from + direction * cardStep()));
+        projectsTrack.scrollTo({ left: carouselTarget, behavior: 'smooth' });
+      };
+
+      projectsPrev.addEventListener('click', () => stepBy(-1));
+      projectsNext.addEventListener('click', () => stepBy(1));
+
+      // Hand control back the moment the reader scrolls the track themselves.
+      const releaseTarget = () => { carouselTarget = null; };
+      projectsTrack.addEventListener('wheel', releaseTarget, { passive: true });
+      projectsTrack.addEventListener('touchstart', releaseTarget, { passive: true });
+      projectsTrack.addEventListener('scrollend', releaseTarget);
+
+      let carouselFrame = null;
+      projectsTrack.addEventListener('scroll', () => {
+        if (carouselFrame) return;
+        carouselFrame = requestAnimationFrame(() => {
+          carouselFrame = null;
+          if (carouselTarget !== null && Math.abs(projectsTrack.scrollLeft - carouselTarget) < 2) {
+            carouselTarget = null;
+          }
+          sync();
+        });
+      }, { passive: true });
+
+      // Used by the competition cross-links to bring a parked card into view.
+      projectsTrack.revealCard = (card) => {
+        const left = card.getBoundingClientRect().left
+          - projectsTrack.getBoundingClientRect().left
+          + projectsTrack.scrollLeft;
+        projectsTrack.scrollTo({ left, behavior: 'smooth' });
+      };
+
+      window.addEventListener('resize', sync);
+      sync();
     };
 
-    projectsPrev.addEventListener('click', () => stepBy(-1));
-    projectsNext.addEventListener('click', () => stepBy(1));
+    const initDrivenCarousel = () => {
+      carousel.classList.add('projects__carousel--driven');
 
-    // Hand control back the moment the reader scrolls the track themselves.
-    const releaseTarget = () => { carouselTarget = null; };
-    projectsTrack.addEventListener('wheel', releaseTarget, { passive: true });
-    projectsTrack.addEventListener('touchstart', releaseTarget, { passive: true });
-    projectsTrack.addEventListener('scrollend', releaseTarget);
+      const EASE = 0.14;        // share of the remaining distance closed per 60fps frame
+      const DRAG_THRESHOLD = 6; // px of travel before a press counts as a drag, not a click
 
-    let carouselFrame = null;
-    projectsTrack.addEventListener('scroll', () => {
-      if (carouselFrame) return;
-      carouselFrame = requestAnimationFrame(() => {
-        carouselFrame = null;
-        if (carouselTarget !== null && Math.abs(projectsTrack.scrollLeft - carouselTarget) < 2) {
-          carouselTarget = null;
+      let viewWidth = 0;   // the container window the strip is read through
+      let fullWidth = 0;   // the strip itself, first card to last
+      let maxOffset = 0;   // how far it can travel: fullWidth - viewWidth
+      let scrollShift = 0; // the part of the offset that comes from the page position
+      let manual = 0;      // the part the reader added by dragging, swiping, or the arrows
+      let shown = 0;       // what is painted right now
+      let rafId = null;
+      let last = 0;
+
+      // The section skips layout until it is near the viewport
+      // (content-visibility: auto), so sizes are read fresh on every scroll
+      // rather than once at load, when they would all come back zero.
+      const measure = () => {
+        viewWidth = projectsTrack.clientWidth;
+        fullWidth = projectsTrack.scrollWidth;
+        maxOffset = Math.max(0, fullWidth - viewWidth);
+      };
+
+      const clampOffset = (v) => Math.min(maxOffset, Math.max(0, v));
+
+      // The strip starts moving as its top enters at the bottom of the window
+      // and has finished its run by the time it reaches the nav, so the whole
+      // sweep happens while it can be seen. The rate is capped so a narrow
+      // screen, where the strip is many cards longer than the window, does not
+      // fly past; there the arrows or a swipe reach the rest.
+      const MAX_RATE = 1.2;  // strip px per page px, at most
+      const pageShift = () => {
+        const rect   = carousel.getBoundingClientRect();
+        const vh     = window.innerHeight;
+        const travel = Math.max(1, vh - (nav ? nav.offsetHeight : 0));
+        const rate   = Math.min(MAX_RATE, maxOffset / travel);
+        return clampOffset((vh - rect.top) * rate);
+      };
+
+      const paint = () => {
+        projectsTrack.style.transform = `translate3d(${-shown}px, 0, 0)`;
+        renderControls(shown, viewWidth, fullWidth);
+      };
+
+      // A card held in place through a smooth page scroll (competition
+      // cross-link, keyboard focus); released once the scroll settles.
+      let hold = null;
+      let holdTimer = null;
+      const releaseHold = () => { hold = null; };
+      const armHoldRelease = () => {
+        clearTimeout(holdTimer);
+        holdTimer = setTimeout(releaseHold, 160);
+      };
+
+      const tick = (now) => {
+        const dt = Math.min((now - last) / 1000, 0.05);  // clamp so tab switches do not jump
+        last = now;
+        if (hold) manual = clampOffset(hold.offsetLeft) - scrollShift;
+        const target = clampOffset(scrollShift + manual);
+        const diff = target - shown;
+        if (Math.abs(diff) < 0.5) {
+          shown = target;
+          paint();
+          rafId = null;
+          return;
         }
-        syncCarousel();
-      });
-    }, { passive: true });
+        // Frame-rate independent ease: close the same share of the gap per 60fps frame.
+        shown += diff * (1 - Math.pow(1 - EASE, dt * 60));
+        paint();
+        rafId = requestAnimationFrame(tick);
+      };
 
-    window.addEventListener('resize', syncCarousel);
-    syncCarousel();
+      const wake = () => {
+        if (rafId !== null) return;
+        last = performance.now();
+        rafId = requestAnimationFrame(tick);
+      };
+
+      const snap = () => {
+        measure();
+        scrollShift = pageShift();
+        manual = clampOffset(scrollShift + manual) - scrollShift;
+        shown = clampOffset(scrollShift + manual);
+        paint();
+      };
+
+      // Reader input moves the target, and the target is kept inside the
+      // strip at the moment of the push so a long drag past the end does not
+      // bank distance that has to be dragged back.
+      const nudge = (delta) => {
+        hold = null;
+        manual = clampOffset(scrollShift + manual + delta) - scrollShift;
+        wake();
+      };
+
+      const stepBy = (direction) => {
+        const step = cardStep() || viewWidth;
+        if (!step) return;
+        const at   = (scrollShift + manual) / step;
+        const next = direction > 0 ? Math.floor(at + 0.02) + 1 : Math.ceil(at - 0.02) - 1;
+        nudge(next * step - (scrollShift + manual));
+      };
+
+      projectsPrev.addEventListener('click', () => stepBy(-1));
+      projectsNext.addEventListener('click', () => stepBy(1));
+
+      // Horizontal trackpad swipes over the strip move it; vertical ones keep
+      // scrolling the page.
+      projectsTrack.addEventListener('wheel', (e) => {
+        if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
+        e.preventDefault();
+        nudge(e.deltaX);
+      }, { passive: false });
+
+      // Drag 1:1 with the pointer. Capture is only taken once the pointer has
+      // actually travelled, so a plain tap or click still reaches the card and
+      // its links; a drag swallows the click that follows it.
+      let dragging = false;
+      let pointerId = null;
+      let startX = 0;
+      let lastX = 0;
+      let moved = false;
+      let swallowClick = false;
+
+      projectsTrack.addEventListener('pointerdown', (e) => {
+        if (e.pointerType === 'mouse' && e.button !== 0) return;
+        dragging = true;
+        pointerId = e.pointerId;
+        startX = lastX = e.clientX;
+        moved = false;
+      });
+
+      projectsTrack.addEventListener('pointermove', (e) => {
+        if (!dragging || e.pointerId !== pointerId) return;
+        if (!moved) {
+          if (Math.abs(e.clientX - startX) < DRAG_THRESHOLD) return;
+          moved = true;
+          projectsTrack.setPointerCapture(pointerId);
+          projectsTrack.classList.add('is-dragging');
+          document.body.classList.add('cursor-grabbing');
+        }
+        const dx = e.clientX - lastX;
+        lastX = e.clientX;
+        nudge(-dx);
+      });
+
+      const endDrag = (e) => {
+        if (!dragging || e.pointerId !== pointerId) return;
+        dragging = false;
+        if (projectsTrack.hasPointerCapture(pointerId)) {
+          projectsTrack.releasePointerCapture(pointerId);
+        }
+        pointerId = null;
+        projectsTrack.classList.remove('is-dragging');
+        document.body.classList.remove('cursor-grabbing');
+        if (moved) {
+          swallowClick = true;
+          setTimeout(() => { swallowClick = false; }, 0);
+        }
+      };
+      projectsTrack.addEventListener('pointerup', endDrag);
+      projectsTrack.addEventListener('pointercancel', endDrag);
+      projectsTrack.addEventListener('click', (e) => {
+        if (!swallowClick) return;
+        swallowClick = false;
+        e.stopPropagation();
+        e.preventDefault();
+      }, true);
+
+      // Used by the competition cross-links to bring a parked card into view.
+      projectsTrack.revealCard = (card) => {
+        hold = card;
+        armHoldRelease();
+        wake();
+      };
+
+      // Keyboard readers tabbing into a card that is parked off the window.
+      projectsTrack.addEventListener('focusin', (e) => {
+        const card = e.target.closest('.project-card');
+        if (!card || !card.matches(':focus-visible')) return;
+        const target = clampOffset(scrollShift + manual);
+        const left = card.offsetLeft;
+        const right = left + card.offsetWidth;
+        if (left >= target - 1 && right <= target + viewWidth + 1) return;
+        projectsTrack.revealCard(card);
+      });
+
+      let inView = false;
+      window.addEventListener('scroll', () => {
+        if (!inView) return;
+        measure();
+        scrollShift = pageShift();
+        if (hold) armHoldRelease();
+        wake();
+      }, { passive: true });
+
+      window.addEventListener('resize', snap);
+
+      // Off screen, the reader's own offset is forgotten so the strip starts
+      // fresh each time it comes back into view.
+      new IntersectionObserver((entries) => {
+        inView = entries[0].isIntersecting;
+        if (!inView) { manual = 0; hold = null; }
+        snap();
+      }, { rootMargin: '20% 0px' }).observe(carousel);
+
+      snap();
+    };
+
+    if (reduceMotion || !('IntersectionObserver' in window)) {
+      initNativeCarousel();
+    } else {
+      initDrivenCarousel();
+    }
   }
 
   // ─── Project Modal ───

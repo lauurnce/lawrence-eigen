@@ -2371,6 +2371,12 @@ html.light .tech__logo {
   align-items: start;
 }
 
+/* The section header sits in the left column so its label lines up with the
+   top of the form card and the column is not left half empty. */
+.contact__info .section-header {
+  margin-bottom: var(--space-xl);
+}
+
 .contact__info h3 {
   font-family: var(--font-display);
   font-size: 1.375rem;
@@ -2380,17 +2386,20 @@ html.light .tech__logo {
   letter-spacing: -0.008em;
 }
 
-.contact__info p {
+.contact__info > p {
   color: var(--on-surface-variant);
   font-size: 1rem;
   line-height: 1.7;
-  margin-bottom: var(--space-xl);
+  margin-bottom: var(--space-lg);
 }
 
+/* Pulled left by the link padding so the icons share the text's left edge
+   while the hover background still has room around them. */
 .contact__socials {
   display: flex;
   flex-direction: column;
   gap: var(--space-xs);
+  margin-left: calc(-1 * var(--space-md));
 }
 
 .contact__social-link {

@@ -1338,6 +1338,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ─── Project Modal ───
   const projectData = {
+    zeitgeber: {
+      title: 'Zeitgeber',
+      desc: 'A body-clock planner for night-shift workers. You enter your shifts, commutes, and current sleep, and it simulates your circadian clock with published models, then searches for the changes to light, sleep, naps, and caffeine that bring your body clock in line with your work. Each recommended change shows what it is worth. A wellness planning tool, not medical advice.',
+      image: 'assets/project-zeitgeber.jpg',
+      tags: ['Python', 'FastAPI', 'Next.js', 'TypeScript', 'Vercel'],
+      features: [
+        '14-day plan for light, sleep, naps, and caffeine around your shifts',
+        'Forger99 circadian model, with Hannay19 as a cross-check on every plan',
+        'Calendar file with reminders in Manila time',
+        'Nudges in English and Taglish',
+        'Stateless API: schedules are processed in memory and never stored',
+      ],
+      liveUrl: 'https://zeitgeber-web.vercel.app',
+      sourceUrl: 'https://github.com/lauurnce/zeitgeber',
+    },
     'survival-kit': {
       title: 'BSIT Survival Kit',
       desc: 'A study companion for Philippine BSIT students. Lessons are free to read; a one-time payment unlocks practice drills, quizzes, in-app code labs, exam solutions, and progress tracking. Built on Next.js and Supabase, with PayMongo handling GCash-friendly one-time payments so students without cards can still pay.',

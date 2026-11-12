@@ -1353,6 +1353,21 @@ document.addEventListener('DOMContentLoaded', () => {
       liveUrl: 'https://zeitgeber-web.vercel.app',
       sourceUrl: 'https://github.com/lauurnce/zeitgeber',
     },
+    blagden: {
+      title: 'Blagden',
+      desc: 'Heat intelligence for runners in the tropics. Blagden estimates core body temperature from the heart rate in a run file, forecasts race-morning heat stress (WBGT) for Metro Manila venues, and slows a finish-time prediction for the humid heat you will run through. Every equation and threshold is recorded with its published source. Training insight, not medical advice.',
+      image: 'assets/project-blagden.jpg',
+      tags: ['Python', 'NumPy', 'Next.js', 'TypeScript', 'Open-Meteo'],
+      features: [
+        'Core temperature from heart rate, minute by minute, with the ECTemp Kalman filter',
+        'Hourly race-morning WBGT from Open-Meteo forecasts through the Liljegren model',
+        'Heat-adjusted finish time with a range',
+        'Reads .fit, .gpx, and .tcx files, processed on your device and never uploaded',
+        'TypeScript port checked against the Python reference with golden fixtures',
+      ],
+      liveUrl: 'https://blagden.vercel.app',
+      sourceUrl: 'https://github.com/lauurnce/blagden',
+    },
     'survival-kit': {
       title: 'BSIT Survival Kit',
       desc: 'A study companion for Philippine BSIT students. Lessons are free to read; a one-time payment unlocks practice drills, quizzes, in-app code labs, exam solutions, and progress tracking. Built on Next.js and Supabase, with PayMongo handling GCash-friendly one-time payments so students without cards can still pay.',

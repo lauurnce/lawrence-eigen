@@ -1368,6 +1368,21 @@ document.addEventListener('DOMContentLoaded', () => {
       liveUrl: 'https://blagden.vercel.app',
       sourceUrl: 'https://github.com/lauurnce/blagden',
     },
+    ersatz: {
+      title: 'Ersatz',
+      desc: 'Replacement parts you can verify. Ersatz checks form, fit, and function replacements for discontinued LDO regulators and op-amps. No part number is ever generated as free text: every part comes from a distributor response, and every value links to the provider record or datasheet page it came from. v0.1 is in progress, and results are not engineering sign-off.',
+      image: 'assets/project-ersatz.svg',
+      tags: ['Python', 'Typer', 'Pydantic', 'Anthropic API', 'Digi-Key API'],
+      features: [
+        'Look up a part number with its source record from Digi-Key',
+        'Rank replacement candidates with a form, fit, and function diff',
+        'Verify a suggested replacement: VERIFIED, PARTIAL, MISMATCH, or NOT FOUND',
+        'Check every part number in a pasted chatbot answer',
+        'Extract cited values from a datasheet, each tied to its page',
+      ],
+      liveUrl: '',
+      sourceUrl: 'https://github.com/lauurnce/ersatz',
+    },
     'survival-kit': {
       title: 'BSIT Survival Kit',
       desc: 'A study companion for Philippine BSIT students. Lessons are free to read; a one-time payment unlocks practice drills, quizzes, in-app code labs, exam solutions, and progress tracking. Built on Next.js and Supabase, with PayMongo handling GCash-friendly one-time payments so students without cards can still pay.',
